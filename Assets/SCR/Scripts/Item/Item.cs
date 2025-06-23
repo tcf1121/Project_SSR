@@ -7,6 +7,7 @@ namespace SCR
     public class Item : MonoBehaviour
     {
         // 아이템 이미지
+        public Sprite Image { get { return _image; } }
         [SerializeField] private Sprite _image;
 
         // 아이템 부위

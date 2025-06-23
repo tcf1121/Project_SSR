@@ -8,6 +8,8 @@ namespace SCR
     {
         [SerializeField] private GameObject _pickTrigger;
         [SerializeField] private Equipped equipped;
+        [SerializeField] private ItemInfoUI itemInfoUI;
+
         private Rigidbody2D _rigid;
         Coroutine pickCor;
 
@@ -18,7 +20,7 @@ namespace SCR
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Z))
+            if (Input.GetKeyDown(KeyCode.F))
             {
                 if (pickCor == null)
                 {
@@ -51,6 +53,8 @@ namespace SCR
             {
                 equipped.EquipItem(item);
                 item.SetActive(false);
+                itemInfoUI.SetItem(item);
+                itemInfoUI.gameObject.SetActive(true);
             }
 
         }

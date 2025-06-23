@@ -5,6 +5,7 @@ namespace SCR
 {
     public class Equipped : MonoBehaviour
     {
+        private Player player;
         private int _headMaxNum;
         private int _bodyMaxNum;
         private int _armMaxNum;
@@ -25,6 +26,7 @@ namespace SCR
 
         private void Init()
         {
+            player = GetComponent<Player>();
             _head = new();
             _body = new();
             _arm = new();

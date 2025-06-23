@@ -71,17 +71,6 @@
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "a5f94c5d-a17f-4b34-a740-c3ca9cbcbb21",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
                     "name": "2D Vector",
                     "id": "419d386f-793d-4a7c-9e43-3664997f2a33",
                     "path": "2DVector",
@@ -140,17 +129,6 @@
                     "name": "",
                     "id": "ebf43ad5-ec26-4b0c-8ebc-484c6fcc1760",
                     "path": "<Keyboard>/z",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1e66187e-5782-4cda-a9a9-64163017e05b",
-                    "path": "",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

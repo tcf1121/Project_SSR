@@ -21,6 +21,12 @@ namespace LHE
         [SerializeField] public float jumpForce = 5f;
         public float jumpPressure;
 
+        [Header("대쉬")]
+        public float dashForce = 20f;
+        public float dashDuration = 0.2f;
+        public float dashCooldown = 1f;
+
+
         [Header("그라운드 체크")]
         public Transform groundCheck;
         public Vector2 groundCheckBoxSize = new Vector2(0.5f, 0.1f);
@@ -32,7 +38,9 @@ namespace LHE
         // 인풋
         private Vector2 moveInput;
         private bool jumpInput;
+        private bool jumpInputDown;
         private bool dashInput;
+        private Vector2 dashDirection;
 
         // 중복 방지
         private float jumpBufferTime = 0.2f;
@@ -48,6 +56,7 @@ namespace LHE
         // 대쉬용
         private bool isDashing;
         private float dashCooldownLeft;
+        private float dashTimeLeft;
 
         #region 유니티 주기
         void Awake()
@@ -65,12 +74,20 @@ namespace LHE
             // 바닥(플랫폼, 블록 체크)
 
             // 핸들러 (타이머 +, 인풋, )
+            // 타이머
             HandleTimers();
+            // 매프레임 키 초기화
+            HandleInput();
         }
 
         void FixedUpdate()
         {
             // 핸들러 및 체크로 조건 확인 후에 실제 작동
+            if (isDashing)
+            {
+                HandleDash();
+            }
+
             Movement();
 
             if (isGrounded)
@@ -91,9 +108,9 @@ namespace LHE
 
         public void OnJump(InputValue inputValue)
         {
-            // 누르는 동안
             if (inputValue.isPressed)
             {
+                jumpInputDown = true;
                 jumpBufferCounter = jumpBufferTime;
             }
         }
@@ -121,15 +138,6 @@ namespace LHE
         /// </summary>
         void HandleTimers()
         {
-            if (isGrounded)
-            {
-                // coyoteTimeCounter = coyoteTime;
-            }
-            else
-            {
-                // coyoteTimeCounter -= Time.deltaTime;
-            }
-
             if (jumpBufferCounter > 0)
             {
                 jumpBufferCounter -= Time.deltaTime;
@@ -139,19 +147,26 @@ namespace LHE
             {
                 dashCooldownLeft -= Time.deltaTime;
             }
-
-            //if (isWallJumping)
-            //{
-            //    wallJumpingCounter -= Time.deltaTime;
-            //    if (wallJumpingCounter <= 0f)
-            //    {
-            //        isWallJumping = false;
-            //    }
-            //}
         }
         #endregion
 
-        #region Movement
+        void HandleInput()
+        {
+            if (jumpInputDown)
+            {
+                jumpInputDown = false;
+            }
+
+            if (dashInput)
+            {
+                dashInput = false;
+            }
+        }
+
+        #region 이동
+        /// <summary>
+        /// 이동을 위한 물리력 가함
+        /// </summary>
         void Movement()
         {
             float targetSpeed = moveInput.x * moveSpeed;
@@ -196,7 +211,7 @@ namespace LHE
             {
                 Jump();
             }
-            
+
             jumpBufferCounter = 0f;
         }
 
@@ -208,6 +223,56 @@ namespace LHE
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
 
+        #endregion
+
+        #region 대쉬
+        void HandleDash()
+        {
+            if (dashInput && dashCooldownLeft <= 0f && !isDashing)
+            {
+                StartDash();
+            }
+
+            if (isDashing)
+            {
+                dashTimeLeft -= Time.fixedDeltaTime;
+
+                if (dashTimeLeft <= 0f)
+                {
+                    EndDash();
+                }
+                else
+                {
+                    rb.velocity = dashDirection * dashForce;
+                }
+            }
+        }
+
+        void StartDash()
+        {
+            isDashing = true;
+            dashTimeLeft = dashDuration;
+            dashCooldownLeft = dashCooldown;
+
+            if (moveInput != Vector2.zero)
+            {
+                dashDirection = moveInput.normalized;
+            }
+            else
+            {
+                dashDirection = new Vector2(facingRight ? 1 : -1, 0);
+            }
+
+            rb.gravityScale = 0f;
+        }
+
+        void EndDash()
+        {
+            isDashing = false;
+            rb.gravityScale = 1f;
+
+            rb.velocity *= 0.5f;
+        }
         #endregion
 
         #region 디버그용 기즈모

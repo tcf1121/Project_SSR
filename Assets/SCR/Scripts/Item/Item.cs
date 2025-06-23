@@ -1,27 +1,65 @@
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace SCR
 {
     public class Item : MonoBehaviour
     {
+        // 아이템 이미지
+        [SerializeField] private Sprite _image;
+
         // 아이템 부위
         public ItemPart ItemPart { get { return _itemPart; } }
-        [SerializeField] private ItemPart _itemPart;
+        [SerializeField] protected ItemPart _itemPart;
 
         // 아이템 이름
         public string Name { get { return _name; } }
-        [SerializeField] private string _name;
+        [SerializeField] protected string _name;
 
         // 아이템 설명
         public string Description { get { return _description; } }
-        [SerializeField] private string _description;
+        [SerializeField] protected string _description;
+
+        // 강화 단계
+        public int Enhance { get { return _enhance; } }
+        protected int _enhance;
+
+        // 해금 방법
+        public string UnlockDescription { get { return _unlockDescription; } }
+        [SerializeField] protected string _unlockDescription;
+
+        // 해금 상태
+        public bool IsUnlock { get { return _isUnlock; } }
+        [SerializeField] protected bool _isUnlock;
+
+
+        private void Awake() => Init();
+
+        virtual protected void Init()
+        {
+            _enhance = 0;
+        }
+
+        public void Unlock()
+        {
+            _isUnlock = true;
+        }
+
+        virtual protected void ItemEnhancement()
+        {
+            _enhance++;
+
+
+        }
+
     }
     public enum ItemPart
     {
         Head,
+        Body,
         Arm,
-        Foot,
-        Body
+        Leg
     }
 }
 

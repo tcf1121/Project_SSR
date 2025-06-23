@@ -24,10 +24,19 @@ namespace SCR
 
         void OnTriggerEnter2D(Collider2D collision)
         {
+            if (collision.gameObject.CompareTag("Tele"))
+            {
+                return;
+            }
+            if (collision.gameObject.CompareTag("Box"))
+            {
+                return;
+            }
             if (collision.gameObject.CompareTag("Item"))
             {
                 Debug.Log("추가");
                 itemObject.Add(collision.gameObject);
+                return;
             }
             Debug.Log("충돌감지");
         }

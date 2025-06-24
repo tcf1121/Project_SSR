@@ -10,8 +10,11 @@ namespace PHG
     public enum StateID
     {
         Idle,
+        Patrol,
         Chase,
         Attack,
+        Climb,
+        MoveToLadder,
         Dead
     }
 }

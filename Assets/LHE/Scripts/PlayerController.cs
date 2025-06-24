@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 namespace LHE
 {
@@ -13,8 +14,11 @@ namespace LHE
         [SerializeField] public float deceleration = 30f;
 
         [Header("점프 설정")]
-        [SerializeField] private float jumpForce = 5f;
+        [SerializeField] private float jumpForce = 6f;
         [SerializeField] private float jumpBufferTime = 0.2f;
+
+        [Header("하단 점프 설정")]
+        [SerializeField] private float dropThroughTime = 0.3f;  // 하단점프 관통 지속 시간
 
         [Header("대쉬 설정")]
         [SerializeField] private float dashForce = 50f;
@@ -26,14 +30,15 @@ namespace LHE
         [SerializeField] private float crouchSpeedMultiplier = 0.5f;  // 앉기 시 속도 배율
 
         [Header("벽 붙잡기 설정")]
-        [SerializeField] private float wallSlideSpeed = 2f; // 벽 슬라이드 속도
+        [SerializeField] private float wallSlideSpeed = 1.5f; // 벽 슬라이드 속도
         [SerializeField] private float wallCheckDistance = 0.6f; // 벽 감지 거리
 
         [Header("환경 감지")]
         [SerializeField] private Transform groundCheck;
         [SerializeField] private Vector2 groundCheckBoxSize = new Vector2(0.8f, 0.05f);
-        [SerializeField] private LayerMask groundLayerMask = 1 << 9;
-        [SerializeField] private LayerMask wallLayerMask = 1 << 9;
+        [SerializeField] private LayerMask groundLayerMask = 1 << 9; // 관통 불가능 (돌, 벽돌 등)
+        [SerializeField] private LayerMask platformLayer = 1 << 10; // 관통 가능 (나무 판자, 구름 등)
+        [SerializeField] private LayerMask allGroundLayers = (1 << 9) | (1 << 10); // 모든 바닥
 
         // ===== 컴포넌트 =====
         private Rigidbody2D rb;
@@ -87,9 +92,6 @@ namespace LHE
             HandleMove();
             HandleWallSlide();
             HandleDash();
-
-                
-                
             HandleJump();
         }
         #endregion
@@ -145,7 +147,7 @@ namespace LHE
         /// </summary>
         void CheckGrounded()
         {
-            isGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckBoxSize, 0f, groundLayerMask);
+            isGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckBoxSize, 0f, allGroundLayers);
         }
 
         /// <summary>
@@ -155,7 +157,7 @@ namespace LHE
         {
             // 현재 바라보는 방향으로 레이캐스트
             Vector2 wallCheckDirection = facingRight ? Vector2.right : Vector2.left;
-            RaycastHit2D wallHit = Physics2D.Raycast(transform.position, wallCheckDirection, wallCheckDistance, wallLayerMask);
+            RaycastHit2D wallHit = Physics2D.Raycast(transform.position, wallCheckDirection, wallCheckDistance, allGroundLayers);
 
             isTouchingWall = wallHit.collider != null;
         }
@@ -242,7 +244,15 @@ namespace LHE
         {
             if (jumpInputDown && jumpBufferCounter > 0f && isGrounded)
             {
-                Jump();
+                if (isCrouching)
+                {
+                    // 앉기 + 점프 = 하단 점프
+                    TryDropThroughPlatform();
+                }
+                else
+                {
+                    Jump();
+                }
             }
         }
 
@@ -256,8 +266,43 @@ namespace LHE
             // 점프 상태 업데이트
             jumpInputDown = false; // 점프 입력 소모
             jumpBufferCounter = 0f; // 점프 버퍼 소모
+        }
 
-            Debug.Log("점프 실행!");
+        /// <summary>
+        /// 하단 점프 시도
+        /// </summary>
+        void TryDropThroughPlatform()
+        {
+            // 발 밑에 관통 가능한 플랫폼이 있는지 확인
+            Collider2D platformBelow = Physics2D.OverlapBox(groundCheck.position, groundCheckBoxSize, 0f, platformLayer);
+
+            if (platformBelow != null)
+            {
+                StartCoroutine(DropThroughPlatform(platformBelow));
+
+                jumpInputDown = false;
+                jumpBufferCounter = 0f;
+            }
+            else
+            {
+                // 관통 가능한 플랫폼이 없으면 일반 점프
+                Jump();
+            }
+        }
+
+        /// <summary>
+        /// 플랫폼 관통 코루틴
+        /// </summary>
+        IEnumerator DropThroughPlatform(Collider2D platform)
+        {
+            // 플레이어와 플랫폼 간의 충돌 무시
+            Physics2D.IgnoreCollision(col, platform, true);
+
+            // 관통 시간 대기
+            yield return new WaitForSeconds(dropThroughTime);
+
+            // 충돌 복구
+            Physics2D.IgnoreCollision(col, platform, false);
         }
 
         #endregion
@@ -289,8 +334,6 @@ namespace LHE
             Vector3 scale = transform.localScale;
             scale.y = 0.5f;
             transform.localScale = scale;
-
-            Debug.Log("앉기 시작");
         }
 
         /// <summary>
@@ -304,8 +347,6 @@ namespace LHE
             Vector3 scale = transform.localScale;
             scale.y = 1f;
             transform.localScale = scale;
-
-            Debug.Log("앉기 종료");
         }
         #endregion
 
@@ -355,8 +396,6 @@ namespace LHE
             dashDirection = new Vector2(facingRight ? 1 : -1, 0);
 
             // 무적 시작 하는 메서드 추가
-
-            Debug.Log("대쉬 시작!");
         }
 
         /// <summary>
@@ -389,8 +428,6 @@ namespace LHE
             isDashing = false;
             // 대쉬 종료 시 속도 조절 (급정거 방지)
             rb.velocity *= 0.3f;
-
-            Debug.Log("대쉬 종료!");
         }
         #endregion
 

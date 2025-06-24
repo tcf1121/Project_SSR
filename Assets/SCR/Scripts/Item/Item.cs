@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SCR
 {
@@ -34,11 +35,14 @@ namespace SCR
         public bool IsUnlock { get { return _isUnlock; } }
         [SerializeField] protected bool _isUnlock;
 
+        public GameObject itemPrefab;
+
 
         private void Awake() => Init();
 
         virtual protected void Init()
         {
+            GetComponent<SpriteRenderer>().sprite = _image;
             _enhance = 0;
         }
 
@@ -47,7 +51,7 @@ namespace SCR
             _isUnlock = true;
         }
 
-        virtual protected void ItemEnhancement()
+        virtual public void ItemEnhancement()
         {
             _enhance++;
 

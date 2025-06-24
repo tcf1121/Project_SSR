@@ -31,7 +31,7 @@ namespace SCR
             _currentDamage = _basicDamage;
         }
 
-        override protected void ItemEnhancement()
+        override public void ItemEnhancement()
         {
             base.ItemEnhancement();
             _currentDamage += _strengthening;

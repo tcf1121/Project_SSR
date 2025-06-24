@@ -2,13 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace SCR
 {
     public class Player : MonoBehaviour
     {
         [SerializeField] private GameObject _pickTrigger;
-        [SerializeField] private Equipped equipped;
-        [SerializeField] private ItemInfoUI itemInfoUI;
+        public Equipped Equipped { get { return _equipped; } }
+        [SerializeField] private Equipped _equipped;
+        public ItemInfoUI ItemInfoUI { get { return _itemInfoUI; } }
+        [SerializeField] private ItemInfoUI _itemInfoUI;
+        public EquipUI EquipUI { get { return EquipUI; } }
+        [SerializeField] private EquipUI _equipUI;
+        public GameObject WaitItem { get { return _waitItem; } }
+        private GameObject _waitItem;
 
         private Rigidbody2D _rigid;
         Coroutine pickCor;
@@ -16,6 +23,7 @@ namespace SCR
         void Awake()
         {
             _rigid = GetComponent<Rigidbody2D>();
+            _equipUI.SetEquipped(this);
         }
 
         void Update()
@@ -25,6 +33,20 @@ namespace SCR
                 if (pickCor == null)
                 {
                     pickCor = StartCoroutine(pickup());
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                if (_equipUI.gameObject.activeSelf)
+                {
+                    _equipUI.gameObject.SetActive(false);
+                    Time.timeScale = 1f;
+                }
+                else
+                {
+                    _equipUI.gameObject.SetActive(true);
+                    _equipUI.IsChangeEquip(false);
+                    Time.timeScale = 0f;
                 }
             }
             Move();
@@ -49,20 +71,35 @@ namespace SCR
 
         public void Equip(GameObject item)
         {
-            if (equipped.CheckItem(item))
+            if (_equipped.CheckItem(item))
             {
-                equipped.EquipItem(item);
                 item.SetActive(false);
-                itemInfoUI.SetItem(item);
-                itemInfoUI.gameObject.SetActive(true);
             }
+            else
+            {
+                if (_equipped.CheckFull(item))
+                {
+                    _equipped.EquipItem(item);
+                    item.SetActive(false);
+                    _itemInfoUI.SetItem(item);
+                    _itemInfoUI.GetItem();
+                }
+                else
+                {
+                    //교체하기
+                    _waitItem = item;
+                    _equipUI.gameObject.SetActive(true);
+                    _equipUI.IsChangeEquip(true);
+                    _equipUI.OpenEquip((int)item.GetComponent<Item>().ItemPart);
+                    Time.timeScale = 0f;
 
+                }
+            }
         }
 
         IEnumerator pickup()
         {
             _pickTrigger.SetActive(true);
-            Debug.Log("줍기");
             yield return new WaitForSeconds(1.0f);
             _pickTrigger.SetActive(false);
             StopCoroutine(pickCor);

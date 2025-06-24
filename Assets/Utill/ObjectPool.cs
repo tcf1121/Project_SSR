@@ -10,7 +10,7 @@ namespace Utill
         public static ObjectPool instance;
 
         public int PoolCount;
-        public GameObject overlappingPrefab;
+        public List<GameObject> overlappingPrefab;
 
         public Queue<GameObject> Pool;
 
@@ -30,14 +30,14 @@ namespace Utill
             // 미리 오브젝트 생성 해놓기
             for (int i = 0; i < PoolCount; i++)
             {
-                Pool.Enqueue(CreatePoolObject());
+                Pool.Enqueue(CreatePoolObject(i));
             }
         }
 
         // 생성
-        private GameObject CreatePoolObject()
+        private GameObject CreatePoolObject(int num)
         {
-            GameObject poolGO = Instantiate(overlappingPrefab);
+            GameObject poolGO = Instantiate(overlappingPrefab[num % overlappingPrefab.Count]);
             poolGO.SetActive(false);
             poolGO.transform.parent = transform;
             return poolGO;

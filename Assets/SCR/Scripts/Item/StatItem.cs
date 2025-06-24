@@ -13,6 +13,10 @@ namespace SCR
         public float CurrentStat { get { return _currentStat; } }
         private float _currentStat;
 
+        // 특수 스탯
+        public float SpecialStat { get { return _specialStat; } }
+        private float _specialStat;
+
         // 강화 비율
         [SerializeField] private float _strengthening;
 
@@ -22,7 +26,7 @@ namespace SCR
             _itemPart = ItemPart.Leg;
         }
 
-        override protected void ItemEnhancement()
+        override public void ItemEnhancement()
         {
             base.ItemEnhancement();
             _currentStat = _basicStat + (int)(_basicStat * _strengthening);

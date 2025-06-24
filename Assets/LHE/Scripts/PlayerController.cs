@@ -19,8 +19,11 @@ namespace LHE
         [Header("대쉬 설정")]
         [SerializeField] private float dashForce = 50f;
         [SerializeField] private float dashDuration = 0.2f;
-        [SerializeField] private float dashCooldown = 1f;
+        [SerializeField] private float dashCooldown = 2f;
         [SerializeField] private float dashEndSpeedRatio = 0.2f;
+
+        [Header("앉기 설정")]
+        [SerializeField] private float crouchSpeedMultiplier = 0.5f;  // 앉기 시 속도 배율
 
         [Header("벽 붙잡기 설정")]
         [SerializeField] private float wallSlideSpeed = 2f; // 벽 슬라이드 속도
@@ -37,9 +40,12 @@ namespace LHE
         private Collider2D col;
 
         // ===== 입력 상태 =====
-        private Vector2 moveInput;
+        private float horizontalInput; // 좌우 입력 (-1 ~ 1)
+        private float verticalInput; // 상하 입력 (-1 ~ 1)
+
         private bool jumpInputDown;
         private bool dashInputDown;
+        private bool crouchInput;  // 앉기 입력 상태
 
         // ===== 이동 상태 =====
         private float currentSpeed;
@@ -59,6 +65,9 @@ namespace LHE
         // ===== 벽 붙잡기 상태 =====
         private bool isTouchingWall;
 
+        // ===== 앉기 상태 =====
+        private bool isCrouching;
+
         #region 유니티 주기
         void Awake()
         {
@@ -69,31 +78,34 @@ namespace LHE
         void Update()
         {
             CheckEnvironment();
+            HandleCrouch();  // 앉기 상태 처리
             UpdateTimers();
         }
 
         void FixedUpdate()
         {
+            HandleMove();
+            HandleWallSlide();
+            HandleDash();
 
-            if (isDashing)
-            {
-                HandleDash();
-            }
-            else
-            {
-                HandleMove();
-                HandleWallSlide();
-            }
-
+                
+                
             HandleJump();
-
         }
         #endregion
 
         #region 입력
-        public void OnMove(InputValue inputValue)
+        public void OnHorizon(InputValue inputValue)
         {
-            moveInput = inputValue.Get<Vector2>();
+            horizontalInput = inputValue.Get<float>();
+        }
+
+        public void OnVertical(InputValue inputValue) // 화살표 위아래 키를 가져옴
+        {
+            verticalInput = inputValue.Get<float>();
+
+            // 아래 화살표 입력 체크 (음수 값이면 아래키)
+            crouchInput = verticalInput < -0.1f;  // -0.1f 이하면 아래키로 인식
         }
 
         public void OnJump(InputValue inputValue)
@@ -107,11 +119,12 @@ namespace LHE
 
         public void OnDash(InputValue inputValue)
         {
-            if (inputValue.isPressed)
+            if (inputValue.isPressed && dashCooldownLeft <= 0f)
             {
                 dashInputDown = true;
             }
         }
+
         #endregion
 
         #region 체크 및 타이머
@@ -170,15 +183,21 @@ namespace LHE
         /// </summary>
         void HandleMove()
         {
-            float targetSpeed = moveInput.x * moveSpeed;
+            float targetSpeed = horizontalInput * moveSpeed;
 
             // 사다리 오르는 중일 경우 타겟 스피드 속도 조절하여 위 아래로만 적용
+
+            // 앉기 상태일 때 속도 감소
+            if (isCrouching)
+            {
+                targetSpeed *= crouchSpeedMultiplier;
+            }
 
             // 벽에 닿았을 때 이동 제한
             if (isTouchingWall)
             {
                 // 벽 쪽으로 이동하려고 할 때만 막기
-                bool tryingToMoveIntoWall = (facingRight && moveInput.x > 0) || (!facingRight && moveInput.x < 0);
+                bool tryingToMoveIntoWall = (facingRight && horizontalInput > 0) || (!facingRight && horizontalInput < 0);
 
                 if (tryingToMoveIntoWall)
                 {
@@ -193,11 +212,11 @@ namespace LHE
             rb.velocity = new Vector2(currentSpeed, rb.velocity.y);
 
             // 방향키 방향에 따라 바라보기 
-            if (moveInput.x > 0 && !facingRight)
+            if (horizontalInput > 0 && !facingRight)
             {
                 Flip();
             }
-            else if (moveInput.x < 0 && facingRight)
+            else if (horizontalInput < 0 && facingRight)
             {
                 Flip();
             }
@@ -243,6 +262,53 @@ namespace LHE
 
         #endregion
 
+        #region 앉기
+        /// <summary>
+        /// 앉기 상태 처리
+        /// </summary>
+        void HandleCrouch()
+        {
+                if (crouchInput && !isCrouching)
+                {
+                    StartCrouch();
+                }
+                else if (!crouchInput && isCrouching)
+                {
+                    EndCrouch();
+                }
+        }
+
+        /// <summary>
+        /// 앉기 시작
+        /// </summary>
+        void StartCrouch()
+        {
+            isCrouching = true;
+
+            // 스프라이트 스케일로 앉기 표현 (높이 50% 감소)
+            Vector3 scale = transform.localScale;
+            scale.y = 0.5f;
+            transform.localScale = scale;
+
+            Debug.Log("앉기 시작");
+        }
+
+        /// <summary>
+        /// 앉기 종료
+        /// </summary>
+        void EndCrouch()
+        {
+            isCrouching = false;
+
+            // 원래 스케일로 복원
+            Vector3 scale = transform.localScale;
+            scale.y = 1f;
+            transform.localScale = scale;
+
+            Debug.Log("앉기 종료");
+        }
+        #endregion
+
         #region 벽잡기
         /// <summary>
         /// 벽 슬라이드 처리
@@ -263,25 +329,15 @@ namespace LHE
         #region 대쉬
         void HandleDash()
         {
-
             if (dashInputDown && dashCooldownLeft <= 0f && !isDashing)
             {
                 StartDash();
+                dashInputDown = false;
             }
 
             if (isDashing)
             {
                 UpdateDash();
-                dashTimeLeft -= Time.fixedDeltaTime;
-
-                if (dashTimeLeft <= 0f)
-                {
-                    EndDash();
-                }
-                else
-                {
-                    rb.velocity = dashDirection * dashForce;
-                }
             }
         }
 
@@ -299,6 +355,8 @@ namespace LHE
             dashDirection = new Vector2(facingRight ? 1 : -1, 0);
 
             // 무적 시작 하는 메서드 추가
+
+            Debug.Log("대쉬 시작!");
         }
 
         /// <summary>
@@ -307,8 +365,6 @@ namespace LHE
         void UpdateDash()
         {
             dashTimeLeft -= Time.fixedDeltaTime;
-
-            // 대쉬 진행도 계산 (0~1)
             dashProgress = 1f - (dashTimeLeft / dashDuration);
 
             if (dashTimeLeft <= 0f)
@@ -331,7 +387,6 @@ namespace LHE
         void EndDash()
         {
             isDashing = false;
-            dashInputDown = false;
             // 대쉬 종료 시 속도 조절 (급정거 방지)
             rb.velocity *= 0.3f;
 
@@ -362,6 +417,13 @@ namespace LHE
             {
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawWireSphere(transform.position, 0.5f);
+            }
+
+            // 앉기 상태 표시
+            if (isCrouching)
+            {
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawWireCube(transform.position, new Vector3(1f, 0.5f, 1f));
             }
         }
         #endregion

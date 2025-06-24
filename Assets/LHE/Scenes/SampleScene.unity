@@ -162,12 +162,13 @@ MonoBehaviour:
   jumpBufferTime: 0.2
   dashForce: 20
   dashDuration: 0.2
-  dashCooldown: 1
+  dashCooldown: 2
   dashEndSpeedRatio: 0.2
+  crouchSpeedMultiplier: 0.5
   wallSlideSpeed: 2
   wallCheckDistance: 0.6
   groundCheck: {fileID: 1493242018}
-  groundCheckBoxSize: {x: 0.5, y: 0.1}
+  groundCheckBoxSize: {x: 0.8, y: 0.05}
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 512
@@ -496,7 +497,7 @@ Transform:
   m_GameObject: {fileID: 395361496}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.67, y: -1.66, z: 0}
+  m_LocalPosition: {x: -3.39, y: 1.02, z: 0}
   m_LocalScale: {x: 18.16428, y: 1.1467, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

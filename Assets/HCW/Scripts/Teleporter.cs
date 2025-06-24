@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,26 +7,26 @@ namespace HCW
 {
     public class Teleporter : MonoBehaviour
     {
-        [Header("»óÈ£ÀÛ¿ë")]
-        [SerializeField] private KeyCode interactionKey = KeyCode.F; // »óÈ£ÀÛ¿ë Å°
+        [Header("ìƒí˜¸ì‘ìš©")]
+        [SerializeField] private KeyCode interactionKey = KeyCode.F; // ìƒí˜¸ì‘ìš© í‚¤
 
-        [Header("ÀÌº¥Æ®")]
-        [SerializeField] private GameObject bossPrefab; // º¸½º ÇÁ¸®ÆÕ
-        [SerializeField] Transform bossSpawnPoint; // º¸½º ½ºÆù À§Ä¡
-        [SerializeField] private float eventDuration = 90f; // ÀÌº¥Æ® Áö¼Ó ½Ã°£
-        // [SerializeField] ¸ó½ºÅÍ ÇÁ¸®ÆÕµé (¸ó½ºÅÍ ½ºÆùÀº ÅÚ·¹Æ÷ÅÍ¿¡ ¾ø¾îµµ µÉµí?)
-        // [SerializeField] ¸ó½ºÅÍ ½ºÆù À§Ä¡µé
+        [Header("ì´ë²¤íŠ¸")]
+        [SerializeField] private GameObject bossPrefab; // ë³´ìŠ¤ í”„ë¦¬íŒ¹
+        [SerializeField] Transform bossSpawnPoint; // ë³´ìŠ¤ ìŠ¤í° ìœ„ì¹˜
+        [SerializeField] private float eventDuration = 90f; // ì´ë²¤íŠ¸ ì§€ì† ì‹œê°„
+        // [SerializeField] ëª¬ìŠ¤í„° í”„ë¦¬íŒ¹ë“¤ (ëª¬ìŠ¤í„° ìŠ¤í°ì€ í…”ë ˆí¬í„°ì— ì—†ì–´ë„ ë ë“¯?)
+        // [SerializeField] ëª¬ìŠ¤í„° ìŠ¤í° ìœ„ì¹˜ë“¤
 
-        [Header("¾À ÀüÈ¯")]
-        [SerializeField] private string nextSceneName; // ´ÙÀ½ ¾À ÀÌ¸§
+        [Header("ì”¬ ì „í™˜")]
+        [SerializeField] private string nextSceneName; // ë‹¤ìŒ ì”¬ ì´ë¦„
 
-        private bool isPlayerTouch = false; // ÇÃ·¹ÀÌ¾î°¡ ´êÀº »óÅÂ ÀÎÁö
-        private bool isEventStart = false; // ÀÌº¥Æ® ½ÃÀÛ ¿©ºÎ
-        private bool isTimerFinished = false; // 90ÃÊ Å¸ÀÌ¸Ó°¡ ³¡³µ´ÂÁö
-        private bool isBossDied = false; // º¸½º »ç¸Á¿©ºÎ
-        private bool isTeleporterActivated = false; // ÅÚ·¹Æ÷ÅÍ°¡ ´ÙÀ½ ½ºÅ×ÀÌÁö·Î ³Ñ¾î°¥ ÁØºñ°¡ µÇ¾ú´ÂÁö
+        private bool isPlayerTouch = false; // í”Œë ˆì´ì–´ê°€ ë‹¿ì€ ìƒíƒœ ì¸ì§€
+        private bool isEventStart = false; // ì´ë²¤íŠ¸ ì‹œì‘ ì—¬ë¶€
+        private bool isTimerFinished = false; // 90ì´ˆ íƒ€ì´ë¨¸ê°€ ëë‚¬ëŠ”ì§€
+        private bool isBossDied = false; // ë³´ìŠ¤ ì‚¬ë§ì—¬ë¶€
+        private bool isTeleporterActivated = false; // í…”ë ˆí¬í„°ê°€ ë‹¤ìŒ ìŠ¤í…Œì´ì§€ë¡œ ë„˜ì–´ê°ˆ ì¤€ë¹„ê°€ ë˜ì—ˆëŠ”ì§€
 
-        private GameObject currentBoss; // ¼ÒÈ¯µÈ º¸½º
+        private GameObject currentBoss; // ì†Œí™˜ëœ ë³´ìŠ¤
 
         private void Awake()
         {
@@ -40,7 +40,7 @@ namespace HCW
         {
             if (isPlayerTouch && Input.GetKeyDown(interactionKey))
             {
-                // ÀÌº¥Æ®°¡ ½ÃÀÛµÇÁö ¾Ê¾ÒÀ¸¸é ÀÌº¥Æ® ½ÃÀÛ
+                // ì´ë²¤íŠ¸ê°€ ì‹œì‘ë˜ì§€ ì•Šì•˜ìœ¼ë©´ ì´ë²¤íŠ¸ ì‹œì‘
                 if (!isEventStart)
                 {
                     StartTeleporterEvent();
@@ -59,7 +59,7 @@ namespace HCW
         }
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Player")) // Player ÅÂ±×¸¦ °¡Áø ¿ÀºêÁ§Æ®¿Í Ãæµ¹ ½Ã
+            if (other.CompareTag("Player")) // Player íƒœê·¸ë¥¼ ê°€ì§„ ì˜¤ë¸Œì íŠ¸ì™€ ì¶©ëŒ ì‹œ
             {
                 isPlayerTouch = true;
             }
@@ -73,26 +73,26 @@ namespace HCW
         }
         private void StartTeleporterEvent()
         {
-            if (isEventStart) return; // Áßº¹ È®ÀÎ
+            if (isEventStart) return; // ì¤‘ë³µ í™•ì¸
 
             isEventStart = true;
 
             SpawnBoss();
 
-            // ¸ó½ºÅÍ ½ºÆ÷³Ê °¡¼Ó?
+            // ëª¬ìŠ¤í„° ìŠ¤í¬ë„ˆ ê°€ì†?
 
             StartCoroutine(EventTimerRoutine());
 
         }
         private void CheckEventCompletion()
         {
-            // º¸½º°¡ Á×¾ú´ÂÁö È®ÀÎ (º¸½º ¿ÀºêÁ§Æ®°¡ ÆÄ±«µÇ¸é nullÀÌ µÊ)
+            // ë³´ìŠ¤ê°€ ì£½ì—ˆëŠ”ì§€ í™•ì¸ (ë³´ìŠ¤ ì˜¤ë¸Œì íŠ¸ê°€ íŒŒê´´ë˜ë©´ nullì´ ë¨)
             if (!isBossDied && currentBoss == null)
             {
                 isBossDied = true;
             }
 
-            // Å¸ÀÌ¸Ó¿Í º¸½º Ã³Ä¡°¡ ¸ğµÎ ¿Ï·áµÇ¸é ÅÚ·¹Æ÷ÅÍ È°¼ºÈ­
+            // íƒ€ì´ë¨¸ì™€ ë³´ìŠ¤ ì²˜ì¹˜ê°€ ëª¨ë‘ ì™„ë£Œë˜ë©´ í…”ë ˆí¬í„° í™œì„±í™”
             if (isTimerFinished && isBossDied)
             {
                 ActivateTeleporter();
@@ -103,14 +103,14 @@ namespace HCW
         {
             isTeleporterActivated = true;
 
-            // ¸ó½ºÅÍ ½ºÆ÷³Ê ÁßÁö
+            // ëª¬ìŠ¤í„° ìŠ¤í¬ë„ˆ ì¤‘ì§€
         }
 
         private void SpawnBoss()
         {
             if (bossPrefab != null)
             {
-                // º¸½º ½ºÆùÀ§Ä¡°¡ ¼³Á¤µÇ¾î ÀÖÀ¸¸é ÇØ´ç À§Ä¡¿¡ ¼ÒÈ¯ ¾Æ´Ï¸é ÅÚ·¹Æ÷ÅÍ À§Ä¡¿¡ ¼ÒÈ¯
+                // ë³´ìŠ¤ ìŠ¤í°ìœ„ì¹˜ê°€ ì„¤ì •ë˜ì–´ ìˆìœ¼ë©´ í•´ë‹¹ ìœ„ì¹˜ì— ì†Œí™˜ ì•„ë‹ˆë©´ í…”ë ˆí¬í„° ìœ„ì¹˜ì— ì†Œí™˜
                 Vector3 spawnPos = (bossSpawnPoint != null) ? bossSpawnPoint.position : transform.position;
                 currentBoss = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
             }
@@ -118,7 +118,7 @@ namespace HCW
 
         private IEnumerator EventTimerRoutine()
         {
-            // 90ÃÊ Å¸ÀÌ¸Ó ½ÃÀÛ
+            // 90ì´ˆ íƒ€ì´ë¨¸ ì‹œì‘
             yield return new WaitForSeconds(eventDuration);
             isTimerFinished = true;
         }

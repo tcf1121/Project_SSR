@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -36,21 +36,21 @@ namespace Utill
         public void PauseGame()
         {
             pauseMenuPanel.SetActive(true);
-            Time.timeScale = 0f; // °ÔÀÓ ½Ã°£À» 0À¸·Î ¸¸µé¾î ÀÏ½ÃÁ¤Áö
+            Time.timeScale = 0f; // ê²Œì„ ì‹œê°„ì„ 0ìœ¼ë¡œ ë§Œë“¤ì–´ ì¼ì‹œì •ì§€
             isPaused = true;
         }
 
         public void ResumeGame()
         {
-            pauseMenuPanel.SetActive(false); // ¸Ş´º ÆĞ³Î ºñÈ°¼ºÈ­
-            Time.timeScale = 1f; // °ÔÀÓ ½Ã°£À» ¿ø·¡´ë·Î
+            pauseMenuPanel.SetActive(false); // ë©”ë‰´ íŒ¨ë„ ë¹„í™œì„±í™”
+            Time.timeScale = 1f; // ê²Œì„ ì‹œê°„ì„ ì›ë˜ëŒ€ë¡œ
             isPaused = false;
         }
 
         public void GoToLobby()
         {
             Time.timeScale = 1f;
-            SceneManager.LoadScene("·Îºñ ¾À ÀÌ¸§À» ³Ö¾î¾ßÇÔ");
+            SceneManager.LoadScene("ë¡œë¹„ ì”¬ ì´ë¦„ì„ ë„£ì–´ì•¼í•¨");
         }
 
         public void SetVolume(float volume)

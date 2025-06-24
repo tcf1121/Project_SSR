@@ -19,18 +19,18 @@ namespace LHE
 
         [Header("점프")]
         [SerializeField] public float jumpForce = 5f;
-        public float jumpPressure;
 
         [Header("대쉬")]
-        public float dashForce = 20f;
-        public float dashDuration = 0.2f;
-        public float dashCooldown = 1f;
+        [SerializeField] public float dashForce = 50f;           // 대쉬 시작 속도 (최고속도)
+        [SerializeField] public float dashDuration = 0.2f;       // 대쉬 지속 시간
+        [SerializeField] public float dashCooldown = 1f;         // 대쉬 쿨다운
+        [SerializeField] public float dashEndSpeedRatio = 0.2f;  // 대쉬 종료 시 속도 비율 (0~1)
 
 
         [Header("그라운드 체크")]
         public Transform groundCheck;
         public Vector2 groundCheckBoxSize = new Vector2(0.5f, 0.1f);
-        public LayerMask groundLayerMask = 1 << 6;
+        public LayerMask groundLayerMask = 1 << 9;
 
         // 컨트롤 (카운터 등)
         private float jumpBufferCounter;
@@ -39,11 +39,12 @@ namespace LHE
         private Vector2 moveInput;
         private bool jumpInput;
         private bool jumpInputDown;
-        private bool dashInput;
+
+        private bool dashInputDown;
         private Vector2 dashDirection;
 
         // 중복 방지
-        private float jumpBufferTime = 0.2f;
+        private float jumpBufferTime = 0.2f; // 점프 버퍼
 
         // 컴포넌트
         private Rigidbody2D rb;
@@ -57,6 +58,8 @@ namespace LHE
         private bool isDashing;
         private float dashCooldownLeft;
         private float dashTimeLeft;
+        private float dashProgress;
+
 
         #region 유니티 주기
         void Awake()
@@ -68,36 +71,16 @@ namespace LHE
         void Update()
         {
             CheckGrounded();
-
-            // 벽체크
-            // 사다리
-            // 바닥(플랫폼, 블록 체크)
-
-            // 핸들러 (타이머 +, 인풋, )
-            // 타이머
             HandleTimers();
-            // 매프레임 키 초기화
-            HandleInput();
         }
 
         void FixedUpdate()
         {
-            // 핸들러 및 체크로 조건 확인 후에 실제 작동
-            if (isDashing)
-            {
-                HandleDash();
-            }
-
+            
             Movement();
-
-            if (isGrounded)
-            {
-                HandleJump();
-            }
-            
-            
+            HandleJump();
+            HandleDash();
         }
-
         #endregion
 
         #region 인풋
@@ -105,7 +88,7 @@ namespace LHE
         {
             moveInput = inputValue.Get<Vector2>();
         }
-
+        
         public void OnJump(InputValue inputValue)
         {
             if (inputValue.isPressed)
@@ -119,7 +102,7 @@ namespace LHE
         {
             if (inputValue.isPressed)
             {
-                dashInput = true;
+                dashInputDown = true;
             }
         }
         #endregion
@@ -134,7 +117,7 @@ namespace LHE
         }
 
         /// <summary>
-        /// 조작키 중복을 방지하기 위한 타이머들
+        /// 조작키 중복을 방지하기 위한 타이머 및 쿨타임
         /// </summary>
         void HandleTimers()
         {
@@ -149,19 +132,6 @@ namespace LHE
             }
         }
         #endregion
-
-        void HandleInput()
-        {
-            if (jumpInputDown)
-            {
-                jumpInputDown = false;
-            }
-
-            if (dashInput)
-            {
-                dashInput = false;
-            }
-        }
 
         #region 이동
         /// <summary>
@@ -196,7 +166,6 @@ namespace LHE
         void Flip()
         {
             facingRight = !facingRight;
-            // 뒤집기
             transform.Rotate(0, 180, 0);
         }
         #endregion
@@ -207,12 +176,10 @@ namespace LHE
         /// </summary>
         void HandleJump()
         {
-            if (jumpBufferCounter > 0f) // 코요테 카운터 추가 &&
+            if (jumpInputDown && jumpBufferCounter > 0f && isGrounded) 
             {
                 Jump();
             }
-
-            jumpBufferCounter = 0f;
         }
 
         /// <summary>
@@ -221,6 +188,12 @@ namespace LHE
         void Jump()
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+
+            // 점프 상태 업데이트
+            jumpInputDown = false; // 점프 입력 소모
+            jumpBufferCounter = 0f; // 점프 버퍼 소모
+
+            Debug.Log("점프 실행!");
         }
 
         #endregion
@@ -228,13 +201,15 @@ namespace LHE
         #region 대쉬
         void HandleDash()
         {
-            if (dashInput && dashCooldownLeft <= 0f && !isDashing)
+            
+            if (dashInputDown && dashCooldownLeft <= 0f && !isDashing)
             {
                 StartDash();
             }
 
             if (isDashing)
             {
+                UpdateDash();
                 dashTimeLeft -= Time.fixedDeltaTime;
 
                 if (dashTimeLeft <= 0f)
@@ -248,30 +223,56 @@ namespace LHE
             }
         }
 
+        /// <summary>
+        /// 대쉬 시작
+        /// </summary>
         void StartDash()
         {
             isDashing = true;
             dashTimeLeft = dashDuration;
             dashCooldownLeft = dashCooldown;
 
-            if (moveInput != Vector2.zero)
+            // 대쉬 방향 결정 (바라보는 방향)
+            dashDirection = new Vector2(facingRight ? 1 : -1, 0);
+
+            // 무적 시작 하는 메서드 추가
+        }
+
+        /// <summary>
+        /// 대쉬 진행 업데이트
+        /// </summary>
+        void UpdateDash()
+        {
+            dashTimeLeft -= Time.fixedDeltaTime;
+
+            // 대쉬 진행도 계산 (0~1)
+            dashProgress = 1f - (dashTimeLeft / dashDuration);
+
+            if (dashTimeLeft <= 0f)
             {
-                dashDirection = moveInput.normalized;
+                EndDash();
             }
             else
             {
-                dashDirection = new Vector2(facingRight ? 1 : -1, 0);
-            }
+                // 시작속도에서 끝속도로 부드럽게 감소
+                float speedRatio = Mathf.Lerp(1f, dashEndSpeedRatio, dashProgress);
+                Vector2 dashVelocity = dashDirection * dashForce * speedRatio;
 
-            rb.gravityScale = 0f;
+                rb.velocity = dashVelocity;
+            }
         }
 
+        /// <summary>
+        /// 대쉬 종료
+        /// </summary>
         void EndDash()
         {
             isDashing = false;
-            rb.gravityScale = 1f;
+            dashInputDown = false;
+            // 대쉬 종료 시 속도 조절 (급정거 방지)
+            rb.velocity = rb.velocity * 0.3f;
 
-            rb.velocity *= 0.5f;
+            Debug.Log("대쉬 종료!");
         }
         #endregion
 

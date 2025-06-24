@@ -1,6 +1,6 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
 
 namespace LHE
 {
@@ -21,7 +21,7 @@ namespace LHE
         [SerializeField] private float dropThroughTime = 0.3f;  // 하단점프 관통 지속 시간
 
         [Header("대쉬 설정")]
-        [SerializeField] private float dashForce = 50f;
+        [SerializeField] private float dashForce = 40f;
         [SerializeField] private float dashDuration = 0.2f;
         [SerializeField] private float dashCooldown = 2f;
         [SerializeField] private float dashEndSpeedRatio = 0.2f;
@@ -32,6 +32,11 @@ namespace LHE
         [Header("벽 붙잡기 설정")]
         [SerializeField] private float wallSlideSpeed = 1.5f; // 벽 슬라이드 속도
         [SerializeField] private float wallCheckDistance = 0.6f; // 벽 감지 거리
+        [SerializeField] private float wallSlideDelayTime = 0.1f; // 벽잡기 활성화 지연 시간
+
+        [Header("사다리/밧줄 설정")]
+        [SerializeField] private float climbSpeed = 3f; // 사다리 오르는 속도
+        [SerializeField] private float ladderActionDelay = 0.3f; // 사다리 재진입 딜레이
 
         [Header("환경 감지")]
         [SerializeField] private Transform groundCheck;
@@ -39,6 +44,7 @@ namespace LHE
         [SerializeField] private LayerMask groundLayerMask = 1 << 9; // 관통 불가능 (돌, 벽돌 등)
         [SerializeField] private LayerMask platformLayer = 1 << 10; // 관통 가능 (나무 판자, 구름 등)
         [SerializeField] private LayerMask allGroundLayers = (1 << 9) | (1 << 10); // 모든 바닥
+        [SerializeField] private LayerMask ladderLayer = 1 << 8;  // 사다리/밧줄 레이어
 
         // ===== 컴포넌트 =====
         private Rigidbody2D rb;
@@ -47,7 +53,6 @@ namespace LHE
         // ===== 입력 상태 =====
         private float horizontalInput; // 좌우 입력 (-1 ~ 1)
         private float verticalInput; // 상하 입력 (-1 ~ 1)
-
         private bool jumpInputDown;
         private bool dashInputDown;
         private bool crouchInput;  // 앉기 입력 상태
@@ -69,29 +74,49 @@ namespace LHE
 
         // ===== 벽 붙잡기 상태 =====
         private bool isTouchingWall;
+        private bool isWallSliding;
+        private float wallTouchTimer;
 
         // ===== 앉기 상태 =====
         private bool isCrouching;
+
+        // ===== 사다리/밧줄 상태 =====
+        private bool isOnLadder;
+        private bool isClimbing;
+        private Collider2D currentLadder;
+        private float originalGravityScale;
+        private float ladderActionTimer;
+        private float originalPlayerHeight;
 
         #region 유니티 주기
         void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
             col = GetComponent<Collider2D>();
+            originalGravityScale = rb.gravityScale;
+            originalPlayerHeight = col.bounds.size.y;
         }
 
         void Update()
         {
             CheckEnvironment();
+            HandleLadder();  // 사다리 처리
             HandleCrouch();  // 앉기 상태 처리
             UpdateTimers();
         }
 
         void FixedUpdate()
         {
-            HandleMove();
-            HandleWallSlide();
-            HandleDash();
+            if (isClimbing)
+            {
+                HandleClimbing();
+            }
+            else
+            {
+                HandleMove();
+                HandleWallSlide();
+                HandleDash();
+            }
             HandleJump();
         }
         #endregion
@@ -105,8 +130,6 @@ namespace LHE
         public void OnVertical(InputValue inputValue) // 화살표 위아래 키를 가져옴
         {
             verticalInput = inputValue.Get<float>();
-
-            // 아래 화살표 입력 체크 (음수 값이면 아래키)
             crouchInput = verticalInput < -0.1f;  // -0.1f 이하면 아래키로 인식
         }
 
@@ -121,7 +144,7 @@ namespace LHE
 
         public void OnDash(InputValue inputValue)
         {
-            if (inputValue.isPressed && dashCooldownLeft <= 0f)
+            if (inputValue.isPressed && dashCooldownLeft <= 0f && !isClimbing)
             {
                 dashInputDown = true;
             }
@@ -131,7 +154,7 @@ namespace LHE
 
         #region 체크 및 타이머
         /// <summary>
-        /// 땅과 벽 감지
+        /// 땅과 벽, 사다리 감지
         /// </summary>
         void CheckEnvironment()
         {
@@ -140,6 +163,9 @@ namespace LHE
 
             // 벽 감지
             CheckWall();
+
+            // 사다리 감지
+            CheckLadder();
         }
 
         /// <summary>
@@ -159,7 +185,56 @@ namespace LHE
             Vector2 wallCheckDirection = facingRight ? Vector2.right : Vector2.left;
             RaycastHit2D wallHit = Physics2D.Raycast(transform.position, wallCheckDirection, wallCheckDistance, allGroundLayers);
 
-            isTouchingWall = wallHit.collider != null;
+            bool currentlyTouchingWall = wallHit.collider != null;
+
+            if (currentlyTouchingWall)
+            {
+                isTouchingWall = true;
+                wallTouchTimer += Time.deltaTime;  // 벽에 닿은 시간 누적
+            }
+            else
+            {
+                isTouchingWall = false;
+                wallTouchTimer = 0f;  // 벽에서 떨어지면 타이머 리셋
+            }
+        }
+
+        /// <summary>
+        /// 사다리 감지
+        /// </summary>
+        void CheckLadder()
+        {
+            // 클라이밍 중이 아닐 때만 사다리 감지
+            if (!isClimbing)
+            {
+                // 새로운 사다리 찾기
+                Collider2D newLadder = Physics2D.OverlapBox(
+                    col.bounds.center,
+                    col.bounds.size,
+                    0f,
+                    ladderLayer
+                );
+
+                if (newLadder != null)
+                {
+                    isOnLadder = true;
+                    currentLadder = newLadder;
+                }
+                else
+                {
+                    isOnLadder = false;
+                    currentLadder = null;
+                }
+            }
+            else
+            {
+                if (currentLadder == null)
+                {
+                    // 사다리 오브젝트가 삭제된 경우에만 강제 탈출
+                    Debug.Log("사다리 오브젝트 삭제로 인한 강제 탈출");
+                    ExitLadder();
+                }
+            }
         }
 
         /// <summary>
@@ -176,6 +251,10 @@ namespace LHE
             {
                 dashCooldownLeft -= Time.deltaTime;
             }
+            if (ladderActionTimer > 0)
+            {
+                ladderActionTimer -= Time.deltaTime;
+            }
         }
         #endregion
 
@@ -187,10 +266,8 @@ namespace LHE
         {
             float targetSpeed = horizontalInput * moveSpeed;
 
-            // 사다리 오르는 중일 경우 타겟 스피드 속도 조절하여 위 아래로만 적용
-
             // 앉기 상태일 때 속도 감소
-            if (isCrouching)
+            if (isCrouching && isGrounded)
             {
                 targetSpeed *= crouchSpeedMultiplier;
             }
@@ -236,22 +313,220 @@ namespace LHE
 
         #endregion
 
+        #region 사다리/밧줄
+        /// <summary>
+        /// 사다리 상호작용 처리
+        /// </summary>
+        void HandleLadder()
+        {
+            // 사다리 탈출 딜레이 중이면 진입 불가
+            if (ladderActionTimer > 0f) return;
+
+            // 사다리 근처에서 상하 방향키를 누르면 클라이밍 시작
+            if (isOnLadder && !isClimbing && Mathf.Abs(verticalInput) > 0.1f)
+            {
+                EnterLadder();
+            }
+        }
+
+        /// <summary>
+        /// 사다리 타기 시작
+        /// </summary>
+        void EnterLadder()
+        {
+            isClimbing = true;
+            rb.gravityScale = 0f;  // 중력 제거
+
+            // 대쉬 중이었다면 강제 종료
+            if (isDashing)
+            {
+                isDashing = false;
+                dashTimeLeft = 0f;
+                dashProgress = 0f;
+            }
+
+            // 앉기 상태였다면 일어서기
+            if (isCrouching)
+            {
+                EndCrouch();
+            }
+
+            // 사다리 경계값 계산
+            float ladderTop = currentLadder.bounds.max.y;
+            float ladderBottom = currentLadder.bounds.min.y;
+            float ladderCenterX = currentLadder.bounds.center.x;
+            float playerY = transform.position.y;
+
+            // 플레이어 위치 보정
+            Vector3 playerPos = transform.position;
+
+            // X축: 사다리 중심으로 맞추기
+            playerPos.x = ladderCenterX;
+
+            // Y축: 플레이어 위치에 따라 보정
+            if (playerY < ladderBottom)
+            {
+                // 사다리보다 아래에서 잡으면 → 사다리 가장 아래로 이동
+                playerPos.y = ladderBottom;
+            }
+            else if (playerY > ladderTop)
+            {
+                // 사다리보다 위에서 잡으면 → 사다리 가장 위로 이동
+                playerPos.y = ladderTop;
+            }
+
+            // 사다리 범위 내에 있으면 Y축은 그대로 유지
+            transform.position = playerPos;
+
+            // 속도 초기화
+            rb.velocity = Vector2.zero;
+            currentSpeed = 0f;
+
+            // 충돌 무시
+            col.enabled = false;
+
+            // 사다리 진입 딜레이 시작 (진입 직후 탈출 방지)
+            ladderActionTimer = ladderActionDelay;
+        }
+
+        /// <summary>
+        /// 사다리 타기 중 이동 처리
+        /// </summary>
+        void HandleClimbing()
+        {
+            if (currentLadder == null)
+            {
+                Debug.Log("currentLadder가 null이어서 강제 탈출");
+                ExitLadder();
+                return;
+            }
+
+            float ladderTop = currentLadder.bounds.max.y;
+            float ladderBottom = currentLadder.bounds.min.y;
+            float playerY = transform.position.y;
+            float playerHalfHeight = originalPlayerHeight * 0.5f;
+
+            // 상하 이동 입력
+            float climbDirection = verticalInput;
+
+            // 사다리 끝에서 이동 제한 (더 여유있게)
+            if (climbDirection > 0 && playerY >= ladderTop + playerHalfHeight)
+            {
+                // 위쪽 끝 근처에서 더 올라가려고 하면 이동 제한
+                climbDirection = 0f;
+            }
+            else if (climbDirection < 0 && playerY <= ladderBottom - playerHalfHeight)
+            {
+                // 아래쪽 끝 근처에서 더 내려가려고 하면 이동 제한
+                climbDirection = 0f;
+            }
+
+            rb.velocity = new Vector2(0f, climbDirection * climbSpeed);
+
+            // 경계 체크
+            CheckLadderBounds();
+        }
+
+        /// <summary>
+        /// 사다리 경계 체크
+        /// </summary>
+        void CheckLadderBounds()
+        {
+            if (currentLadder == null) return;
+
+            if (ladderActionTimer > 0f) return;
+
+            float ladderTop = currentLadder.bounds.max.y;
+            float ladderBottom = currentLadder.bounds.min.y;
+            float playerY = transform.position.y;
+
+            // 플레이어 높이의 절반
+            float playerHalfHeight = originalPlayerHeight * 0.5f;
+
+            // 위쪽 경계 체크
+            if (playerY >= ladderTop + playerHalfHeight)
+            {
+                ExitLadder();
+                return;
+            }
+
+            // 아래쪽 경계 체크  
+            if (playerY <= ladderBottom - playerHalfHeight && isGrounded)
+            {
+                ExitLadder();
+                return;
+            }
+        }
+
+        /// <summary>
+        /// 사다리에서 내리기
+        /// </summary>
+        void ExitLadder()
+        {
+            if (!isClimbing) return;
+
+            isClimbing = false;
+            rb.gravityScale = originalGravityScale;
+
+            // 사다리 탈출 시 속도 초기화
+            rb.velocity = Vector2.zero;
+            currentSpeed = 0f;
+
+            // 충돌 복구
+            col.enabled = true;
+
+            // 사다리 탈출 딜레이 시작
+            ladderActionTimer = ladderActionDelay;
+
+            // 상태 정리
+            isOnLadder = false;
+            currentLadder = null;
+        }
+
+        /// <summary>
+        /// 사다리에서 점프
+        /// </summary>
+        void LadderJump()
+        {
+            ExitLadder();  // 먼저 사다리에서 내리기
+
+            // 대쉬 초기화
+            isDashing = false;
+            dashTimeLeft = 0f;
+
+            // 바라보는 방향으로 점프
+            Vector2 jumpDirection = new Vector2(facingRight ? 1f : -1f, 1f).normalized;
+            rb.velocity = jumpDirection * jumpForce;
+
+            jumpInputDown = false;
+            jumpBufferCounter = 0f;
+        }
+        #endregion
+
         #region 점프
         /// <summary>
         /// 점프 가능한 조건 확인
         /// </summary>
         void HandleJump()
         {
-            if (jumpInputDown && jumpBufferCounter > 0f && isGrounded)
+            if (jumpInputDown && jumpBufferCounter > 0f)
             {
-                if (isCrouching)
+                // 사다리 타는 중이면 사다리 점프
+                if (isClimbing)
                 {
-                    // 앉기 + 점프 = 하단 점프
-                    TryDropThroughPlatform();
+                    LadderJump();
                 }
-                else
+                // 땅에 있으면 일반 점프 또는 하단 점프
+                else if (isGrounded)
                 {
-                    Jump();
+                    if (isCrouching)
+                    {
+                        TryDropThroughPlatform();
+                    }
+                    else
+                    {
+                        Jump();
+                    }
                 }
             }
         }
@@ -313,14 +588,17 @@ namespace LHE
         /// </summary>
         void HandleCrouch()
         {
-                if (crouchInput && !isCrouching)
-                {
-                    StartCrouch();
-                }
-                else if (!crouchInput && isCrouching)
-                {
-                    EndCrouch();
-                }
+            // 사다리 타는 중이면 앉기 처리 안함
+            if (isClimbing) return;
+
+            if (crouchInput && !isCrouching)
+            {
+                StartCrouch();
+            }
+            else if (!crouchInput && isCrouching)
+            {
+                EndCrouch();
+            }
         }
 
         /// <summary>
@@ -356,13 +634,19 @@ namespace LHE
         /// </summary>
         void HandleWallSlide()
         {
-            // 벽에 닿아있고, 공중에 있고, 떨어지고 있을 때
-            if (isTouchingWall && !isGrounded && rb.velocity.y < 0)
+            // 벽에 닿아있고, 공중에 있고, 떨어지고 있을 때, 충분히 접촉
+            if (isTouchingWall && !isGrounded && rb.velocity.y < 0 && wallTouchTimer >= wallSlideDelayTime)
             {
+                isWallSliding = true;
+
                 // 낙하 속도를 제한
                 Vector2 velocity = rb.velocity;
                 velocity.y = Mathf.Max(velocity.y, -wallSlideSpeed);
                 rb.velocity = velocity;
+            }
+            else
+            {
+                isWallSliding = false;
             }
         }
         #endregion
@@ -370,6 +654,8 @@ namespace LHE
         #region 대쉬
         void HandleDash()
         {
+            if (isClimbing) return;
+
             if (dashInputDown && dashCooldownLeft <= 0f && !isDashing)
             {
                 StartDash();
@@ -450,17 +736,10 @@ namespace LHE
             }
 
             // 벽 슬라이드 상태 표시
-            if (isTouchingWall && !isGrounded)
+            if (isWallSliding)
             {
                 Gizmos.color = Color.yellow;
-                Gizmos.DrawWireSphere(transform.position, 0.5f);
-            }
-
-            // 앉기 상태 표시
-            if (isCrouching)
-            {
-                Gizmos.color = Color.cyan;
-                Gizmos.DrawWireCube(transform.position, new Vector3(1f, 0.5f, 1f));
+                Gizmos.DrawWireSphere(transform.position, 0.6f);
             }
         }
         #endregion

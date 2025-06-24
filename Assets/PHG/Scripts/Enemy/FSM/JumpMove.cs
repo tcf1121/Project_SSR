@@ -1,7 +1,4 @@
-
 using UnityEngine;
-using PHG;
-
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class JumpMove : MonoBehaviour
@@ -19,6 +16,9 @@ public class JumpMove : MonoBehaviour
 
     private Rigidbody2D rb;
     private float jumpLockTimer;
+    private bool isMidJump;
+
+    public bool IsMidJump => isMidJump;
 
     private void Awake() => rb = GetComponent<Rigidbody2D>();
 
@@ -26,6 +26,8 @@ public class JumpMove : MonoBehaviour
     {
         if (jumpLockTimer > 0f)
             jumpLockTimer -= Time.deltaTime;
+        if (isMidJump && IsGrounded())
+            isMidJump = false;
     }
 
     public bool TryJumpWallOrPlatform(int dir, float targetY)
@@ -75,8 +77,8 @@ public class JumpMove : MonoBehaviour
         Vector2 jumpOrigin = (Vector2)transform.position + new Vector2(dir * 0.2f, 0f);
         rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.AddForce(Vector2.up * yForce, ForceMode2D.Impulse);
-        //rb.AddForce(Vector2.right * dir * xImpulse, ForceMode2D.Impulse);
         jumpLockTimer = jumpLockDuration;
+        isMidJump = true;
         return true;
     }
 

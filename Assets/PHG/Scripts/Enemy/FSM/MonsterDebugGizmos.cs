@@ -52,22 +52,28 @@ public class MonsterDebugGizmos : MonoBehaviour
 
 
         /*──────────────── 원형 감지 범위 ────────────*/
-      //  Vector3 p = transform.position;
-      //  if (brain.patrolRange > 0f)
-      //  {
-      //      Handles.color = new Color(0f, 0.6f, 1f, 0.35f);             // 하늘색
-      //      Handles.DrawWireDisc(p, Vector3.forward, brain.patrolRange);
-      //  }
-      //  if (brain.chaseRange > 0f)
-      //  {
-      //      Handles.color = new Color(1f, 0.85f, 0f, 0.35f);            // 노랑
-      //      Handles.DrawWireDisc(p, Vector3.forward, brain.chaseRange);
-      //  }
-      //  if (brain.attackRange > 0f)
-      //  {
-      //      Handles.color = new Color(1f, 0f, 0f, 0.35f);              // 빨강
-      //      Handles.DrawWireDisc(p, Vector3.forward, brain.stats.attackRange);
-      //  }
+        /*──────────────── 원형 감지 범위 ────────────*/
+        Vector3 p = transform.position;
+        float patrolRange = brain.Stats.PatrolRange;
+        float chaseRange = brain.Stats.ChaseRange;
+        float attackRange = brain.Stats.AttackRange;
+
+        if (patrolRange > 0f)
+        {
+            Handles.color = new Color(0f, 0.6f, 1f, 0.35f); // 하늘색
+            Handles.DrawWireDisc(p, Vector3.forward, patrolRange);
+        }
+        if (chaseRange > 0f)
+        {
+            Handles.color = new Color(1f, 0.85f, 0f, 0.35f); // 노랑
+            Handles.DrawWireDisc(p, Vector3.forward, chaseRange);
+        }
+        if (attackRange > 0f)
+        {
+            Handles.color = new Color(1f, 0f, 0f, 0.35f); // 빨강
+            Handles.DrawWireDisc(p, Vector3.forward, attackRange);
+        }
+
     }
 #endif
 }

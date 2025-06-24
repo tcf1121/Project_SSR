@@ -159,13 +159,19 @@ MonoBehaviour:
   acceleration: 50
   deceleration: 30
   jumpForce: 5
-  jumpPressure: 0
+  jumpBufferTime: 0.2
   dashForce: 20
   dashDuration: 0.2
   dashCooldown: 1
+  dashEndSpeedRatio: 0.2
+  wallSlideSpeed: 2
+  wallCheckDistance: 0.6
   groundCheck: {fileID: 1493242018}
   groundCheckBoxSize: {x: 0.5, y: 0.1}
   groundLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
+  wallLayerMask:
     serializedVersion: 2
     m_Bits: 512
 --- !u!50 &192908935
@@ -359,7 +365,7 @@ Transform:
   m_GameObject: {fileID: 192908933}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 6.21, y: 5.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -831,8 +837,8 @@ Transform:
   m_GameObject: {fileID: 1353939165}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.07, y: -1.63, z: 0}
-  m_LocalScale: {x: 18.16428, y: 1.1467, z: 1}
+  m_LocalPosition: {x: 9.1039, y: 0.0489, z: 0}
+  m_LocalScale: {x: 1.6838645, y: 10.513665, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1020806786}

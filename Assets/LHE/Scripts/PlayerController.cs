@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEditor.Experimental.GraphView.GraphView;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
+using System.Collections;
 
 namespace LHE
 {
@@ -9,54 +8,70 @@ namespace LHE
     [RequireComponent(typeof(Collider2D))]
     public class PlayerController : MonoBehaviour
     {
-        [Header("이동")]
+        [Header("이동 설정")]
         [SerializeField] public float moveSpeed = 5f;
         [SerializeField] public float acceleration = 50f;
         [SerializeField] public float deceleration = 30f;
 
-        private float currentSpeed;
-        private bool facingRight = true;
+        [Header("점프 설정")]
+        [SerializeField] private float jumpForce = 6f;
+        [SerializeField] private float jumpBufferTime = 0.2f;
 
-        [Header("점프")]
-        [SerializeField] public float jumpForce = 5f;
-        public float jumpPressure;
+        [Header("하단 점프 설정")]
+        [SerializeField] private float dropThroughTime = 0.3f;  // 하단점프 관통 지속 시간
 
-        [Header("대쉬")]
-        public float dashForce = 20f;
-        public float dashDuration = 0.2f;
-        public float dashCooldown = 1f;
+        [Header("대쉬 설정")]
+        [SerializeField] private float dashForce = 50f;
+        [SerializeField] private float dashDuration = 0.2f;
+        [SerializeField] private float dashCooldown = 2f;
+        [SerializeField] private float dashEndSpeedRatio = 0.2f;
 
+        [Header("앉기 설정")]
+        [SerializeField] private float crouchSpeedMultiplier = 0.5f;  // 앉기 시 속도 배율
 
-        [Header("그라운드 체크")]
-        public Transform groundCheck;
-        public Vector2 groundCheckBoxSize = new Vector2(0.5f, 0.1f);
-        public LayerMask groundLayerMask = 1 << 6;
+        [Header("벽 붙잡기 설정")]
+        [SerializeField] private float wallSlideSpeed = 1.5f; // 벽 슬라이드 속도
+        [SerializeField] private float wallCheckDistance = 0.6f; // 벽 감지 거리
 
-        // 컨트롤 (카운터 등)
-        private float jumpBufferCounter;
+        [Header("환경 감지")]
+        [SerializeField] private Transform groundCheck;
+        [SerializeField] private Vector2 groundCheckBoxSize = new Vector2(0.8f, 0.05f);
+        [SerializeField] private LayerMask groundLayerMask = 1 << 9; // 관통 불가능 (돌, 벽돌 등)
+        [SerializeField] private LayerMask platformLayer = 1 << 10; // 관통 가능 (나무 판자, 구름 등)
+        [SerializeField] private LayerMask allGroundLayers = (1 << 9) | (1 << 10); // 모든 바닥
 
-        // 인풋
-        private Vector2 moveInput;
-        private bool jumpInput;
-        private bool jumpInputDown;
-        private bool dashInput;
-        private Vector2 dashDirection;
-
-        // 중복 방지
-        private float jumpBufferTime = 0.2f;
-
-        // 컴포넌트
+        // ===== 컴포넌트 =====
         private Rigidbody2D rb;
         private Collider2D col;
 
-        // 점프용
-        private bool isGrounded;
-        private bool wasGrounded;
+        // ===== 입력 상태 =====
+        private float horizontalInput; // 좌우 입력 (-1 ~ 1)
+        private float verticalInput; // 상하 입력 (-1 ~ 1)
 
-        // 대쉬용
+        private bool jumpInputDown;
+        private bool dashInputDown;
+        private bool crouchInput;  // 앉기 입력 상태
+
+        // ===== 이동 상태 =====
+        private float currentSpeed;
+        private bool facingRight = true;
+
+        // ===== 점프 상태 =====
+        private bool isGrounded;
+        private float jumpBufferCounter;
+
+        // ===== 대쉬 상태 =====
         private bool isDashing;
-        private float dashCooldownLeft;
         private float dashTimeLeft;
+        private float dashCooldownLeft;
+        private float dashProgress;
+        private Vector2 dashDirection;
+
+        // ===== 벽 붙잡기 상태 =====
+        private bool isTouchingWall;
+
+        // ===== 앉기 상태 =====
+        private bool isCrouching;
 
         #region 유니티 주기
         void Awake()
@@ -67,43 +82,32 @@ namespace LHE
 
         void Update()
         {
-            CheckGrounded();
-
-            // 벽체크
-            // 사다리
-            // 바닥(플랫폼, 블록 체크)
-
-            // 핸들러 (타이머 +, 인풋, )
-            // 타이머
-            HandleTimers();
-            // 매프레임 키 초기화
-            HandleInput();
+            CheckEnvironment();
+            HandleCrouch();  // 앉기 상태 처리
+            UpdateTimers();
         }
 
         void FixedUpdate()
         {
-            // 핸들러 및 체크로 조건 확인 후에 실제 작동
-            if (isDashing)
-            {
-                HandleDash();
-            }
-
-            Movement();
-
-            if (isGrounded)
-            {
-                HandleJump();
-            }
-            
-            
+            HandleMove();
+            HandleWallSlide();
+            HandleDash();
+            HandleJump();
         }
-
         #endregion
 
-        #region 인풋
-        public void OnMove(InputValue inputValue)
+        #region 입력
+        public void OnHorizon(InputValue inputValue)
         {
-            moveInput = inputValue.Get<Vector2>();
+            horizontalInput = inputValue.Get<float>();
+        }
+
+        public void OnVertical(InputValue inputValue) // 화살표 위아래 키를 가져옴
+        {
+            verticalInput = inputValue.Get<float>();
+
+            // 아래 화살표 입력 체크 (음수 값이면 아래키)
+            crouchInput = verticalInput < -0.1f;  // -0.1f 이하면 아래키로 인식
         }
 
         public void OnJump(InputValue inputValue)
@@ -117,26 +121,51 @@ namespace LHE
 
         public void OnDash(InputValue inputValue)
         {
-            if (inputValue.isPressed)
+            if (inputValue.isPressed && dashCooldownLeft <= 0f)
             {
-                dashInput = true;
+                dashInputDown = true;
             }
         }
+
         #endregion
 
         #region 체크 및 타이머
+        /// <summary>
+        /// 땅과 벽 감지
+        /// </summary>
+        void CheckEnvironment()
+        {
+            // 땅 감지
+            CheckGrounded();
+
+            // 벽 감지
+            CheckWall();
+        }
+
         /// <summary>
         /// 땅에 있는지 체크
         /// </summary>
         void CheckGrounded()
         {
-            isGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckBoxSize, 0f, groundLayerMask);
+            isGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckBoxSize, 0f, allGroundLayers);
         }
 
         /// <summary>
-        /// 조작키 중복을 방지하기 위한 타이머들
+        /// 벽 감지
         /// </summary>
-        void HandleTimers()
+        void CheckWall()
+        {
+            // 현재 바라보는 방향으로 레이캐스트
+            Vector2 wallCheckDirection = facingRight ? Vector2.right : Vector2.left;
+            RaycastHit2D wallHit = Physics2D.Raycast(transform.position, wallCheckDirection, wallCheckDistance, allGroundLayers);
+
+            isTouchingWall = wallHit.collider != null;
+        }
+
+        /// <summary>
+        /// 조작키 중복을 방지하기 위한 타이머 및 쿨타임
+        /// </summary>
+        void UpdateTimers()
         {
             if (jumpBufferCounter > 0)
             {
@@ -150,28 +179,33 @@ namespace LHE
         }
         #endregion
 
-        void HandleInput()
-        {
-            if (jumpInputDown)
-            {
-                jumpInputDown = false;
-            }
-
-            if (dashInput)
-            {
-                dashInput = false;
-            }
-        }
-
         #region 이동
         /// <summary>
         /// 이동을 위한 물리력 가함
         /// </summary>
-        void Movement()
+        void HandleMove()
         {
-            float targetSpeed = moveInput.x * moveSpeed;
+            float targetSpeed = horizontalInput * moveSpeed;
 
             // 사다리 오르는 중일 경우 타겟 스피드 속도 조절하여 위 아래로만 적용
+
+            // 앉기 상태일 때 속도 감소
+            if (isCrouching)
+            {
+                targetSpeed *= crouchSpeedMultiplier;
+            }
+
+            // 벽에 닿았을 때 이동 제한
+            if (isTouchingWall)
+            {
+                // 벽 쪽으로 이동하려고 할 때만 막기
+                bool tryingToMoveIntoWall = (facingRight && horizontalInput > 0) || (!facingRight && horizontalInput < 0);
+
+                if (tryingToMoveIntoWall)
+                {
+                    targetSpeed = 0f;  // 벽 쪽으로는 이동 불가
+                }
+            }
 
             // 가속도 감속도 조절
             float accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? acceleration : deceleration;
@@ -180,11 +214,11 @@ namespace LHE
             rb.velocity = new Vector2(currentSpeed, rb.velocity.y);
 
             // 방향키 방향에 따라 바라보기 
-            if (moveInput.x > 0 && !facingRight)
+            if (horizontalInput > 0 && !facingRight)
             {
                 Flip();
             }
-            else if (moveInput.x < 0 && facingRight)
+            else if (horizontalInput < 0 && facingRight)
             {
                 Flip();
             }
@@ -196,9 +230,10 @@ namespace LHE
         void Flip()
         {
             facingRight = !facingRight;
-            // 뒤집기
             transform.Rotate(0, 180, 0);
         }
+
+
         #endregion
 
         #region 점프
@@ -207,12 +242,18 @@ namespace LHE
         /// </summary>
         void HandleJump()
         {
-            if (jumpBufferCounter > 0f) // 코요테 카운터 추가 &&
+            if (jumpInputDown && jumpBufferCounter > 0f && isGrounded)
             {
-                Jump();
+                if (isCrouching)
+                {
+                    // 앉기 + 점프 = 하단 점프
+                    TryDropThroughPlatform();
+                }
+                else
+                {
+                    Jump();
+                }
             }
-
-            jumpBufferCounter = 0f;
         }
 
         /// <summary>
@@ -221,57 +262,172 @@ namespace LHE
         void Jump()
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+
+            // 점프 상태 업데이트
+            jumpInputDown = false; // 점프 입력 소모
+            jumpBufferCounter = 0f; // 점프 버퍼 소모
         }
 
+        /// <summary>
+        /// 하단 점프 시도
+        /// </summary>
+        void TryDropThroughPlatform()
+        {
+            // 발 밑에 관통 가능한 플랫폼이 있는지 확인
+            Collider2D platformBelow = Physics2D.OverlapBox(groundCheck.position, groundCheckBoxSize, 0f, platformLayer);
+
+            if (platformBelow != null)
+            {
+                StartCoroutine(DropThroughPlatform(platformBelow));
+
+                jumpInputDown = false;
+                jumpBufferCounter = 0f;
+            }
+            else
+            {
+                // 관통 가능한 플랫폼이 없으면 일반 점프
+                Jump();
+            }
+        }
+
+        /// <summary>
+        /// 플랫폼 관통 코루틴
+        /// </summary>
+        IEnumerator DropThroughPlatform(Collider2D platform)
+        {
+            // 플레이어와 플랫폼 간의 충돌 무시
+            Physics2D.IgnoreCollision(col, platform, true);
+
+            // 관통 시간 대기
+            yield return new WaitForSeconds(dropThroughTime);
+
+            // 충돌 복구
+            Physics2D.IgnoreCollision(col, platform, false);
+        }
+
+        #endregion
+
+        #region 앉기
+        /// <summary>
+        /// 앉기 상태 처리
+        /// </summary>
+        void HandleCrouch()
+        {
+                if (crouchInput && !isCrouching)
+                {
+                    StartCrouch();
+                }
+                else if (!crouchInput && isCrouching)
+                {
+                    EndCrouch();
+                }
+        }
+
+        /// <summary>
+        /// 앉기 시작
+        /// </summary>
+        void StartCrouch()
+        {
+            isCrouching = true;
+
+            // 스프라이트 스케일로 앉기 표현 (높이 50% 감소)
+            Vector3 scale = transform.localScale;
+            scale.y = 0.5f;
+            transform.localScale = scale;
+        }
+
+        /// <summary>
+        /// 앉기 종료
+        /// </summary>
+        void EndCrouch()
+        {
+            isCrouching = false;
+
+            // 원래 스케일로 복원
+            Vector3 scale = transform.localScale;
+            scale.y = 1f;
+            transform.localScale = scale;
+        }
+        #endregion
+
+        #region 벽잡기
+        /// <summary>
+        /// 벽 슬라이드 처리
+        /// </summary>
+        void HandleWallSlide()
+        {
+            // 벽에 닿아있고, 공중에 있고, 떨어지고 있을 때
+            if (isTouchingWall && !isGrounded && rb.velocity.y < 0)
+            {
+                // 낙하 속도를 제한
+                Vector2 velocity = rb.velocity;
+                velocity.y = Mathf.Max(velocity.y, -wallSlideSpeed);
+                rb.velocity = velocity;
+            }
+        }
         #endregion
 
         #region 대쉬
         void HandleDash()
         {
-            if (dashInput && dashCooldownLeft <= 0f && !isDashing)
+            if (dashInputDown && dashCooldownLeft <= 0f && !isDashing)
             {
                 StartDash();
+                dashInputDown = false;
             }
 
             if (isDashing)
             {
-                dashTimeLeft -= Time.fixedDeltaTime;
-
-                if (dashTimeLeft <= 0f)
-                {
-                    EndDash();
-                }
-                else
-                {
-                    rb.velocity = dashDirection * dashForce;
-                }
+                UpdateDash();
             }
         }
 
+        /// <summary>
+        /// 대쉬 시작
+        /// </summary>
         void StartDash()
         {
             isDashing = true;
             dashTimeLeft = dashDuration;
             dashCooldownLeft = dashCooldown;
+            dashProgress = 0f;
 
-            if (moveInput != Vector2.zero)
+            // 대쉬 방향 결정 (바라보는 방향)
+            dashDirection = new Vector2(facingRight ? 1 : -1, 0);
+
+            // 무적 시작 하는 메서드 추가
+        }
+
+        /// <summary>
+        /// 대쉬 진행 업데이트
+        /// </summary>
+        void UpdateDash()
+        {
+            dashTimeLeft -= Time.fixedDeltaTime;
+            dashProgress = 1f - (dashTimeLeft / dashDuration);
+
+            if (dashTimeLeft <= 0f)
             {
-                dashDirection = moveInput.normalized;
+                EndDash();
             }
             else
             {
-                dashDirection = new Vector2(facingRight ? 1 : -1, 0);
-            }
+                // 시작속도에서 끝속도로 부드럽게 감소
+                float speedRatio = Mathf.Lerp(1f, dashEndSpeedRatio, dashProgress);
+                Vector2 dashVelocity = dashDirection * dashForce * speedRatio;
 
-            rb.gravityScale = 0f;
+                rb.velocity = dashVelocity;
+            }
         }
 
+        /// <summary>
+        /// 대쉬 종료
+        /// </summary>
         void EndDash()
         {
             isDashing = false;
-            rb.gravityScale = 1f;
-
-            rb.velocity *= 0.5f;
+            // 대쉬 종료 시 속도 조절 (급정거 방지)
+            rb.velocity *= 0.3f;
         }
         #endregion
 
@@ -283,6 +439,28 @@ namespace LHE
             {
                 Gizmos.color = isGrounded ? Color.green : Color.red;
                 Gizmos.DrawWireCube(groundCheck.position, groundCheckBoxSize);
+            }
+
+            // 벽 감지 레이
+            if (Application.isPlaying)
+            {
+                Vector3 rayDirection = facingRight ? Vector3.right : Vector3.left;
+                Gizmos.color = isTouchingWall ? Color.blue : Color.gray;
+                Gizmos.DrawRay(transform.position, rayDirection * wallCheckDistance);
+            }
+
+            // 벽 슬라이드 상태 표시
+            if (isTouchingWall && !isGrounded)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(transform.position, 0.5f);
+            }
+
+            // 앉기 상태 표시
+            if (isCrouching)
+            {
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawWireCube(transform.position, new Vector3(1f, 0.5f, 1f));
             }
         }
         #endregion

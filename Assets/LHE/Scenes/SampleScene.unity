@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 192908936}
   - component: {fileID: 192908935}
   - component: {fileID: 192908934}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -159,15 +159,26 @@ MonoBehaviour:
   acceleration: 50
   deceleration: 30
   jumpForce: 5
-  jumpPressure: 0
+  jumpBufferTime: 0.2
+  dropThroughTime: 0.3
   dashForce: 20
   dashDuration: 0.2
-  dashCooldown: 1
+  dashCooldown: 2
+  dashEndSpeedRatio: 0.2
+  crouchSpeedMultiplier: 0.5
+  wallSlideSpeed: 2
+  wallCheckDistance: 0.6
   groundCheck: {fileID: 1493242018}
-  groundCheckBoxSize: {x: 0.5, y: 0.1}
+  groundCheckBoxSize: {x: 0.8, y: 0.05}
   groundLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 512
+  platformLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  allGroundLayers:
+    serializedVersion: 2
+    m_Bits: 1536
 --- !u!50 &192908935
 Rigidbody2D:
   serializedVersion: 4
@@ -359,7 +370,7 @@ Transform:
   m_GameObject: {fileID: 192908933}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 6.21, y: 5.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -377,7 +388,8 @@ GameObject:
   - component: {fileID: 395361499}
   - component: {fileID: 395361498}
   - component: {fileID: 395361497}
-  m_Layer: 6
+  - component: {fileID: 395361500}
+  m_Layer: 10
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -414,7 +426,7 @@ BoxCollider2D:
     serializedVersion: 2
     m_Bits: 4294967295
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
@@ -490,12 +502,31 @@ Transform:
   m_GameObject: {fileID: 395361496}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.67, y: -1.66, z: 0}
-  m_LocalScale: {x: 18.16428, y: 1.1467, z: 1}
+  m_LocalPosition: {x: -1.99, y: -3.44, z: 0}
+  m_LocalScale: {x: 18.16428, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1020806786}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!251 &395361500
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395361496}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -599,7 +630,7 @@ GameObject:
   - component: {fileID: 647978599}
   - component: {fileID: 647978601}
   - component: {fileID: 647978600}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: Square (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -763,7 +794,7 @@ GameObject:
   - component: {fileID: 1353939167}
   - component: {fileID: 1353939166}
   - component: {fileID: 1353939168}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -831,8 +862,8 @@ Transform:
   m_GameObject: {fileID: 1353939165}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.07, y: -1.63, z: 0}
-  m_LocalScale: {x: 18.16428, y: 1.1467, z: 1}
+  m_LocalPosition: {x: 9.1039, y: 0.0489, z: 0}
+  m_LocalScale: {x: 1.6838645, y: 10.513665, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1020806786}

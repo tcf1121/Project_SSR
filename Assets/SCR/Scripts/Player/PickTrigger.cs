@@ -7,18 +7,26 @@ namespace SCR
 {
     public class PickTrigger : MonoBehaviour
     {
-        Player player;
+        Player _player;
+        [SerializeField] BoxCollider2D _collider;
         [SerializeField] private List<GameObject> itemObject;
 
         void Awake()
         {
-            player = GetComponentInParent<Player>();
+            _player = GetComponentInParent<Player>();
             itemObject = new();
+            _collider.enabled = false;
+        }
+
+        void OnEnable()
+        {
+            _collider.enabled = true;
         }
 
         void OnDisable()
         {
-            player.Equip(CheckDistase());
+            _collider.enabled = false;
+            _player.Equip(CheckDistase());
             itemObject.Clear();
         }
 

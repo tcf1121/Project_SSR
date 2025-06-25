@@ -7,8 +7,11 @@ namespace SCR
     public class Equipped : MonoBehaviour
     {
         private Player player;
+        public int HeadMaxNum { get { return _headMaxNum; } }
         private int _headMaxNum;
+        public int BodyMaxNum { get { return _bodyMaxNum; } }
         private int _bodyMaxNum;
+        public int ArmMaxNum { get { return _armMaxNum; } }
         private int _armMaxNum;
         [SerializeField] private GameObject PosPrefab;
         public List<AttackItem> Head { get { return _head; } }

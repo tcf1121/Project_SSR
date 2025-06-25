@@ -9,13 +9,11 @@ namespace LHE
     public class PlayerController : MonoBehaviour
     {
         [Header("이동 설정")]
-        private float moveSpeed;
         [SerializeField] public float acceleration = 50f;
         [SerializeField] public float deceleration = 30f;
         [SerializeField] public float airMoveSpeedMultiplier = 0.75f; // 공중 이동 속도 배율
 
         [Header("점프 설정")]
-        private float jumpForce;
         [SerializeField] private float jumpBufferTime = 0.2f;
 
         [Header("하단 점프 설정")]
@@ -99,11 +97,8 @@ namespace LHE
             originalPlayerHeight = col.bounds.size.y;
         }
 
-        private void Start()
+        void Start()
         {
-            moveSpeed = playerStats.Speed;
-            jumpForce = playerStats.jump + 5;
-
             // 발밑에 바닥 체크 자동으로 생성
             if (groundCheck == null)
             {
@@ -177,7 +172,6 @@ namespace LHE
                 dashInputDown = true;
             }
         }
-
         #endregion
 
         #region 환경 감지
@@ -299,7 +293,7 @@ namespace LHE
             if (isWallJumpInputBlocked)
                 return 0f;
 
-            float speed = horizontalInput * moveSpeed;
+            float speed = horizontalInput * playerStats.Speed;
 
             // 공중에서 이동 속도 감소
             if (!isGrounded)
@@ -399,7 +393,7 @@ namespace LHE
         /// </summary>
         private void ExecuteJump()
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb.velocity = new Vector2(rb.velocity.x, playerStats.jump + 5);
             ConsumeJumpInput();
         }
 
@@ -647,7 +641,7 @@ namespace LHE
 
             // 바라보는 방향으로 점프 
             Vector2 jumpDirection = new Vector2(facingRight ? 1f : -1f, 1f).normalized;
-            rb.velocity = jumpDirection * jumpForce * 1.1f;
+            rb.velocity = jumpDirection * (playerStats.jump + 5f) * 1.1f;
 
             ConsumeJumpInput();
         }
@@ -677,7 +671,7 @@ namespace LHE
             }
 
             // 기존 속도 초기화 후 벽점프 적용
-            Vector2 wallJumpVelocity = jumpDirection * jumpForce;
+            Vector2 wallJumpVelocity = jumpDirection * (playerStats.jump + 5);
             rb.velocity = wallJumpVelocity;
 
             // 벽 슬라이드 상태 해제
@@ -884,4 +878,3 @@ namespace LHE
         #endregion
     }
 }
-

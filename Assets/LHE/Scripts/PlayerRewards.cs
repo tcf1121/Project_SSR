@@ -43,44 +43,44 @@ namespace LHE
         private void GetExp(float getExp)
         {
             playerStats.currenExp += getExp;
-            LevelUpCheck();
+            // LevelUpCheck();
         }
 
-        /// <summary>
-        /// 레벨업 체크
-        /// </summary>
-        private void LevelUpCheck()
-        {
-            if (playerStats.currenExp > playerStats.reqExp)
-            {
-                LevelUp();
-                playerStats.currenExp -= playerStats.reqExp;
-            }
-        }
+        ///// <summary>
+        ///// 레벨업 체크
+        ///// </summary>
+        //private void LevelUpCheck()
+        //{
+        //    if (playerStats.currenExp > playerStats.reqExp)
+        //    {
+        //        LevelUp();
+        //        playerStats.currenExp -= playerStats.reqExp;
+        //    }
+        //}
 
-        /// <summary>
-        /// 레벨업
-        /// </summary>
-        private void LevelUp()
-        {
-            // 레벨업 이팩트 출력
+        ///// <summary>
+        ///// 레벨업
+        ///// </summary>
+        //private void LevelUp()
+        //{
+        //    // 레벨업 이팩트 출력
 
-            playerStats.level++;
-            playerStats.HPStatsUpdate();
-            playerStats.ATKStatsUpdate();
-            playerStats.HpRegenStatsUpdate();
+        //    playerStats.level++;
+        //    playerStats.HPStatsUpdate();
+        //    playerStats.ATKStatsUpdate();
+        //    playerStats.HpRegenStatsUpdate();
 
-            RequiredLevelUp(playerStats.level);
-        }
+        //    RequiredLevelUp(playerStats.level);
+        //}
 
-        /// <summary>
-        /// 레벨업에 필요한 경험치 계산 레벨업 필요 경험치 (수정중)
-        /// </summary>
-        /// <param name="level">기준 레벨</param>
-        private void RequiredLevelUp(int level)
-        {
-            // 소수 둘째자리에서 반올림
-            playerStats.reqExp = MathF.Round(30 * MathF.Pow(1.6f, level - 1) * 10f) / 10f;
-        }
+        ///// <summary>
+        ///// 레벨업에 필요한 경험치 계산 레벨업 필요 경험치
+        ///// </summary>
+        ///// <param name="level">기준 레벨</param>
+        //private void RequiredLevelUp(int level)
+        //{
+        //    // 소수 둘째자리에서 반올림
+        //    playerStats.reqExp = MathF.Round(30 * MathF.Pow(1.6f, level - 1) * 10f) / 10f;
+        //}
     }
 }

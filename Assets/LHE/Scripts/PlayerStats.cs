@@ -1,44 +1,27 @@
-ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace LHE
+public class NewBehaviourScript : MonoBehaviour
 {
-    public class PlayerStats : MonoBehaviour
+    // ÀüÅõ °ü·Ã ½ºÅÈÀº µû·Î ´Ù¸¥ ½ºÅ©¸³Æ®¿¡¼­ ÁøÇà ¿¹Á¤
+    [Header("ÄÉ¸¯ÅÍ ½ºÅÈ")]
+    public float maximumHp;
+    public float currentHp;
+    public float atk;
+    public float hpRegen;
+    public float speed;
+    public float jump;
+
+    // Start is called before the first frame update
+    void Start()
     {
-        [Header("ì¼€ë¦­í„° ìƒíƒœ")]
-        public int level;
-        public float currentHp;
         
+    }
 
-        [Header("ì¼€ë¦­í„° ìŠ¤íƒ¯")]
-        public float maximumHp;
-        public float atk;
-        public float hpRegen;
-        public float speed;
-        public float jump;
-
-        private float reqExp;
-        private float stackExp;
-
-        // ê²½í—˜ì¹˜í•¨ìˆ˜
-        int GetRequiredExp(int level)
-        {
-            // ëŒ€ëµì ì¸ ê·¼ì‚¬: regExp â‰ˆ 5.7 * level ^ 1.85
-            double exp = 5.7 * Math.Pow(level, 1.85);
-            return (int)Math.Round(exp);
-        }
-
-        int GetStackExp(int level)
-        {
-            int sum = 0;
-            for (int i = 1; i <= level; i++)
-            {
-                sum += GetRequiredExp(i);
-            }
-            return sum;
-        }
+    // Update is called once per frame
+    void Update()
+    {
+        
     }
 }

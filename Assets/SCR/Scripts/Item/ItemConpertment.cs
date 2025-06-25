@@ -59,10 +59,9 @@ namespace SCR
             if (item != null)
             {
                 Info.SetItem(item);
-
+                InfoUI.SetActive(true);
+                InfoUI.transform.position = new Vector2(transform.position.x + 50, transform.position.y + 50);
             }
-            InfoUI.SetActive(true);
-            InfoUI.transform.position = new Vector2(transform.position.x + 50, transform.position.y + 50);
         }
 
         public void OnPointerExit(PointerEventData eventData)

@@ -31,7 +31,8 @@ namespace SCR
 
         void OnEnable()
         {
-            equipPanel.SetActive(false);
+            equipPanel.SetActive(true);
+            OpenEquip(0);
         }
 
         public void SetEquipped(Player player)
@@ -56,30 +57,30 @@ namespace SCR
             equipPanel.SetActive(true);
             if (part == (int)ItemPart.Head)
             {
-                if (_player.Equipped.Head.Count > 0)
-                    for (int i = 0; i < _player.Equipped.Head.Count; i++)
-                    {
+                for (int i = 0; i < _player.Equipped.HeadMaxNum; i++)
+                {
+                    if (i < _player.Equipped.Head.Count)
                         itemList[i].item = _player.Equipped.Head[i];
-                        itemList[i].gameObject.SetActive(true);
-                    }
+                    itemList[i].gameObject.SetActive(true);
+                }
             }
             else if (part == (int)ItemPart.Body)
             {
-                if (_player.Equipped.Body.Count > 0)
-                    for (int i = 0; i < _player.Equipped.Body.Count; i++)
-                    {
+                for (int i = 0; i < _player.Equipped.BodyMaxNum; i++)
+                {
+                    if (i < _player.Equipped.Body.Count)
                         itemList[i].item = _player.Equipped.Body[i];
-                        itemList[i].gameObject.SetActive(true);
-                    }
+                    itemList[i].gameObject.SetActive(true);
+                }
             }
             else if (part == (int)ItemPart.Arm)
             {
-                if (_player.Equipped.Arm.Count > 0)
-                    for (int i = 0; i < _player.Equipped.Arm.Count; i++)
-                    {
+                for (int i = 0; i < _player.Equipped.ArmMaxNum; i++)
+                {
+                    if (i < _player.Equipped.Arm.Count)
                         itemList[i].item = _player.Equipped.Arm[i];
-                        itemList[i].gameObject.SetActive(true);
-                    }
+                    itemList[i].gameObject.SetActive(true);
+                }
             }
             else if (part == (int)ItemPart.Leg)
             {

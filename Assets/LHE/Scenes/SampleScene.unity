@@ -136,8 +136,10 @@ GameObject:
   - component: {fileID: 192908936}
   - component: {fileID: 192908935}
   - component: {fileID: 192908934}
+  - component: {fileID: 192908941}
+  - component: {fileID: 192908940}
   m_Layer: 6
-  m_Name: player
+  m_Name: playerObject
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -155,10 +157,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1cc06a9c40a591498e3f2614c808b0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
   acceleration: 50
   deceleration: 30
-  jumpForce: 6
   jumpBufferTime: 0.2
   dropThroughTime: 0.3
   dashForce: 40
@@ -169,6 +169,8 @@ MonoBehaviour:
   wallSlideSpeed: 1.5
   wallCheckDistance: 0.6
   wallSlideDelayTime: 0.1
+  wallJumpInputBlockTime: 0.3
+  isWallJumpInputBlocked: 0
   climbSpeed: 3
   ladderActionDelay: 0.3
   groundCheck: {fileID: 1493242018}
@@ -375,14 +377,48 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 192908933}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.21, y: 5.25, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2.8089385, y: 5.8442426, z: -0.069375336}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1493242018}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 932897132}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &192908940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 192908933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4baeed425ef4674439c99157f8b797f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 1
+  currenExp: 30
+  reqExp: 0
+  money: 0
+  maximumHp: 0
+  currentHp: 0
+  atk: 0
+  hpRegen: 0
+  Speed: 7
+  jump: 1
+--- !u!114 &192908941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 192908933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60399896a0507914aa42ae2456f5719d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &395361496
 GameObject:
   m_ObjectHideFlags: 0
@@ -885,6 +921,38 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &932897131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 932897132}
+  m_Layer: 0
+  m_Name: player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &932897132
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 932897131}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.4010615, y: -0.5942425, z: 0.069375336}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 192908939}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1020806785
 GameObject:
   m_ObjectHideFlags: 0
@@ -1237,5 +1305,5 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 519420032}
-  - {fileID: 192908939}
+  - {fileID: 932897132}
   - {fileID: 1020806786}

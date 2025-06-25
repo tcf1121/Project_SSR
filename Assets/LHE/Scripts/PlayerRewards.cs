@@ -63,7 +63,13 @@ namespace LHE
         /// </summary>
         private void LevelUp()
         {
+            // 레벨업 이팩트 출력
+
             playerStats.level++;
+            playerStats.HPStatsUpdate();
+            playerStats.ATKStatsUpdate();
+            playerStats.HpRegenStatsUpdate();
+
             RequiredLevelUp(playerStats.level);
         }
 
@@ -73,8 +79,8 @@ namespace LHE
         /// <param name="level">기준 레벨</param>
         private void RequiredLevelUp(int level)
         {
-            // 대략적인 근사:  값 수정중 
-            playerStats.reqExp = MathF.Round(0.571f * MathF.Pow(level, 3) * 100) / 100f; // 둘쨋자리에서 반올림
+            // 소수 둘째자리에서 반올림
+            playerStats.reqExp = MathF.Round(30 * MathF.Pow(1.6f, level - 1) * 10f) / 10f;
         }
     }
 }

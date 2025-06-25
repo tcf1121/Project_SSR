@@ -9,12 +9,12 @@ namespace LHE
     public class PlayerController : MonoBehaviour
     {
         [Header("이동 설정")]
-        [SerializeField] public float moveSpeed = 5f;
+        private float moveSpeed;
         [SerializeField] public float acceleration = 50f;
         [SerializeField] public float deceleration = 30f;
 
         [Header("점프 설정")]
-        [SerializeField] private float jumpForce = 6f;
+        private float jumpForce;
         [SerializeField] private float jumpBufferTime = 0.2f;
 
         [Header("하단 점프 설정")]
@@ -33,6 +33,8 @@ namespace LHE
         [SerializeField] private float wallSlideSpeed = 1.5f; // 벽 슬라이드 속도
         [SerializeField] private float wallCheckDistance = 0.6f; // 벽 감지 거리
         [SerializeField] private float wallSlideDelayTime = 0.1f; // 벽잡기 활성화 지연 시간
+        [SerializeField] private float wallJumpInputBlockTime = 0.3f; // 벽점프 후 입력 차단 시간
+        [SerializeField] private bool isWallJumpInputBlocked = false; // 입력 차단 상태
 
         [Header("사다리/밧줄 설정")]
         [SerializeField] private float climbSpeed = 3f; // 사다리 오르는 속도
@@ -49,6 +51,7 @@ namespace LHE
         // ===== 컴포넌트 =====
         private Rigidbody2D rb;
         private Collider2D col;
+        private PlayerStats playerStats;
 
         // ===== 입력 상태 =====
         private float horizontalInput; // 좌우 입력 (-1 ~ 1)
@@ -76,6 +79,7 @@ namespace LHE
         private float dashCooldownLeft;
         private float wallTouchTimer;
         private float ladderActionTimer;
+        private float wallJumpInputBlockTimer = 0f; // 벽점프 타이머
 
         // ===== 기타 상태 변수 =====
         private float dashProgress;
@@ -89,8 +93,15 @@ namespace LHE
         {
             rb = GetComponent<Rigidbody2D>();
             col = GetComponent<Collider2D>();
+            playerStats = GetComponent<PlayerStats>();
             originalGravityScale = rb.gravityScale;
             originalPlayerHeight = col.bounds.size.y;
+        }
+
+        private void Start()
+        {
+            moveSpeed = playerStats.Speed;
+            jumpForce = playerStats.jump + 5;
         }
 
         void Update()
@@ -263,6 +274,10 @@ namespace LHE
         /// <returns>속도 반환</returns>
         private float CalculateTargetSpeed()
         {
+            // 벽점프 입력 차단 상태일 때 이동 금지
+            if (isWallJumpInputBlocked)
+                return 0f;
+
             float speed = horizontalInput * moveSpeed;
 
             // 앉기 상태일 때 속도 감소
@@ -293,7 +308,17 @@ namespace LHE
         {
             float accelRate = Mathf.Abs(targetSpeed) > 0.01f ? acceleration : deceleration;
             currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, accelRate * Time.fixedDeltaTime);
-            rb.velocity = new Vector2(currentSpeed, rb.velocity.y);
+
+            // 벽점프 중일 때는 수평 속도를 건드리지 않음
+            if (isWallJumpInputBlocked)
+            {
+                // Y축 속도만 유지하고 X축은 그대로 둠
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
+            }
+            else
+            {
+                rb.velocity = new Vector2(currentSpeed, rb.velocity.y);
+            }
         }
 
         /// <summary>
@@ -327,6 +352,8 @@ namespace LHE
 
             if (isClimbing)
                 LadderJump();
+            else if (isWallSliding)
+                WallSlideJump();
             else if (isGrounded)
                 HandleGroundJump();
         }
@@ -588,6 +615,46 @@ namespace LHE
 
             ConsumeJumpInput();
         }
+
+        /// <summary>
+        /// 벽슬라이드 중 점프
+        /// </summary>
+        void WallSlideJump()
+        {
+            // 벽 슬라이드 상태가 아니면 리턴
+            if (!isWallSliding) return;
+
+            // 점프 방향 계산 (현재 바라보는 방향의 반대로 10도 각도)
+            Vector2 jumpDirection;
+
+            if (facingRight)
+            {
+                // 오른쪽을 보고 있다면 왼쪽 위로 점프 (170도)
+                float angle = 150f * Mathf.Deg2Rad;
+                jumpDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            }
+            else
+            {
+                // 왼쪽을 보고 있다면 오른쪽 위로 점프 (10도)
+                float angle = 30f * Mathf.Deg2Rad;
+                jumpDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            }
+
+            // 기존 속도 초기화 후 벽점프 적용
+            Vector2 wallJumpVelocity = jumpDirection * jumpForce;
+            rb.velocity = wallJumpVelocity;
+
+            // 벽 슬라이드 상태 해제
+            isWallSliding = false;
+            isTouchingWall = false;
+            wallTouchTimer = 0f;
+
+            // 입력 차단 시작
+            isWallJumpInputBlocked = true;
+            wallJumpInputBlockTimer = wallJumpInputBlockTime;
+
+            ConsumeJumpInput();
+        }
         #endregion
 
         #region 앉기
@@ -722,6 +789,7 @@ namespace LHE
             UpdateTimer(ref jumpBufferCounter);
             UpdateTimer(ref dashCooldownLeft);
             UpdateTimer(ref ladderActionTimer);
+            UpdateWallJumpInputBlock();
         }
 
         /// <summary>
@@ -733,7 +801,24 @@ namespace LHE
             if (timer > 0)
                 timer -= Time.deltaTime;
         }
-        #endregion 
+
+        /// <summary>
+        /// 벽점프 입력 차단 해제 처리
+        /// </summary>
+        private void UpdateWallJumpInputBlock()
+        {
+            if (isWallJumpInputBlocked)
+            {
+                wallJumpInputBlockTimer -= Time.deltaTime;
+
+                if (wallJumpInputBlockTimer <= 0f)
+                {
+                    isWallJumpInputBlocked = false;
+                    wallJumpInputBlockTimer = 0f;
+                }
+            }
+        }
+        #endregion
 
         #region 디버그용 기즈모
         void OnDrawGizmosSelected()

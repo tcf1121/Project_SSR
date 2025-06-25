@@ -12,6 +12,7 @@ namespace LHE
         private float moveSpeed;
         [SerializeField] public float acceleration = 50f;
         [SerializeField] public float deceleration = 30f;
+        [SerializeField] public float airMoveSpeedMultiplier = 0.75f; // 공중 이동 속도 배율
 
         [Header("점프 설정")]
         private float jumpForce;
@@ -102,6 +103,26 @@ namespace LHE
         {
             moveSpeed = playerStats.Speed;
             jumpForce = playerStats.jump + 5;
+
+            // 발밑에 바닥 체크 자동으로 생성
+            if (groundCheck == null)
+            {
+                GameObject child = new GameObject("GroundCheckPos");
+                child.transform.parent = this.transform;
+
+                Collider2D col = GetComponent<Collider2D>();
+                if (col != null)
+                {
+                    float bottomY = col.bounds.min.y;
+                    Vector3 localBottom = transform.InverseTransformPoint(new Vector3(transform.position.x, bottomY, transform.position.z));
+                    child.transform.localPosition = new Vector3(0, localBottom.y, 0);
+                }
+                else
+                {
+                    child.transform.localPosition = Vector3.zero;
+                }
+            }
+            groundCheck = transform.Find("GroundCheckPos");
         }
 
         void Update()
@@ -280,7 +301,11 @@ namespace LHE
 
             float speed = horizontalInput * moveSpeed;
 
-            // 앉기 상태일 때 속도 감소
+            // 공중에서 이동 속도 감소
+            if (!isGrounded)
+                speed *= airMoveSpeedMultiplier;
+
+            // 바닥에서만 앉기 상태일 때 속도 감소
             if (isCrouching && isGrounded)
                 speed *= crouchSpeedMultiplier;
 
@@ -456,7 +481,6 @@ namespace LHE
             if (isDashing) StopDash();
             if (isCrouching) EndCrouch();
 
-            rb.velocity = Vector2.zero;
             currentSpeed = 0f;
         }
 
@@ -518,7 +542,20 @@ namespace LHE
 
             float climbDirection = CalculateClimbDirection();
             rb.velocity = new Vector2(0f, climbDirection * climbSpeed);
+
+            UpdateFacingWhileClimbing();
             CheckLadderBounds();
+        }
+
+        /// <summary>
+        /// 사다리 타는 중 캐릭터 보는 방향 업데이트
+        /// </summary>
+        private void UpdateFacingWhileClimbing()
+        {
+            if (horizontalInput > 0.1f && !facingRight)
+                Flip();
+            else if (horizontalInput < -0.1f && facingRight)
+                Flip();
         }
 
         /// <summary>
@@ -581,7 +618,6 @@ namespace LHE
         /// </summary>
         private void ResetMovementForExit()
         {
-            rb.velocity = Vector2.zero;
             currentSpeed = 0f;
         }
 
@@ -609,9 +645,9 @@ namespace LHE
         {
             ExitLadder();  // 먼저 사다리에서 내리기
 
-            // 바라보는 방향으로 점프
+            // 바라보는 방향으로 점프 
             Vector2 jumpDirection = new Vector2(facingRight ? 1f : -1f, 1f).normalized;
-            rb.velocity = jumpDirection * jumpForce;
+            rb.velocity = jumpDirection * jumpForce * 1.1f;
 
             ConsumeJumpInput();
         }

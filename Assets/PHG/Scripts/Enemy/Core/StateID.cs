@@ -15,6 +15,8 @@ namespace PHG
         Attack,
         Climb,
         MoveToLadder,
+        FloatChase,
+        meleeAttack,
         Dead
     }
 }

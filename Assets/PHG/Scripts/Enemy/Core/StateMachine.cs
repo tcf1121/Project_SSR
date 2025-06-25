@@ -1,20 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using PHG;
-public class StateMachine
+
+namespace PHG
 {
-    private readonly Dictionary<StateID, IState> states = new();
-    private IState current;
-
-    public void Register(StateID id, IState state) => states[id] = state;
-
-    public void ChangeState(StateID next)
+    public class StateMachine
     {
-        if (!states.TryGetValue(next, out var target)) return;
-        current?.Exit();
-        current = target;
-        current.Enter();
+        private readonly Dictionary<StateID, IState> states = new();
+        private IState current;
+        public StateID CurrentStateID { get; private set; }
+        public void Register(StateID id, IState state) => states[id] = state;
+
+        public void ChangeState(StateID next)
+        {
+            if (!states.TryGetValue(next, out var target)) return;
+            current?.Exit();
+            current = target;
+            CurrentStateID = next; // 추가된 부분
+            current.Enter();
+        }
+        public void Tick() => current?.Tick();
     }
-    public void Tick() => current?.Tick();
 }

@@ -9,7 +9,7 @@ namespace SCR
     {
         public GameObject Icon;
         public Image ItemImage;
-        public Item item;
+        private Item _item;
         public int at;
         private float interval = 0.25f;
         private float doubleClickedTime = -1.0f;
@@ -36,6 +36,11 @@ namespace SCR
             Info = InfoUI.GetComponent<ItemInfoUI>();
         }
 
+        public void SetItem(Item item)
+        {
+            _item = item;
+        }
+
         public void SetChange(bool isChange)
         {
             _isChange = isChange;
@@ -45,7 +50,7 @@ namespace SCR
         {
             if (_isChange)
             {
-                GameManager.SelectEvent?.Invoke(item.ItemPart, at);
+                GameManager.SelectEvent?.Invoke(_item.ItemPart, at);
             }
             else
             {
@@ -56,9 +61,9 @@ namespace SCR
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (item != null)
+            if (_item != null)
             {
-                Info.SetItem(item);
+                Info.SetItem(_item);
                 InfoUI.SetActive(true);
                 InfoUI.transform.position = new Vector2(transform.position.x + 50, transform.position.y + 50);
             }

@@ -10,12 +10,14 @@ namespace PHG
         private readonly Rigidbody2D rb;
         private readonly Transform tf;
         private static Transform sPlayer;
+        private readonly MonsterStatData statData;
 
         public FloatChaseState(MonsterBrain brain)
         {
             this.brain = brain;
             rb = brain.GetComponent<Rigidbody2D>();
             tf = brain.transform;
+            statData = brain.StatData;
         }
 
         public void Enter()
@@ -52,7 +54,11 @@ namespace PHG
 
 
                 if (Mathf.Abs(dir.x) > 0.05f)
-                    tf.localScale = new Vector3(Mathf.Sign(dir.x), 1f, 1f);
+                {
+                    Vector3 scale = tf.localScale;
+                    scale.x = -Mathf.Abs(scale.x) * Mathf.Sign(dir.x);
+                    tf.localScale = scale;
+                }
 
             }
             else

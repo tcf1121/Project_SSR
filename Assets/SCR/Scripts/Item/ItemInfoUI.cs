@@ -12,12 +12,12 @@ namespace SCR
         [SerializeField] private Image itemImage;
         [SerializeField] private TMP_Text nameTxt;
         [SerializeField] private TMP_Text DescriptionTxt;
-        private Transform basePos;
+        [SerializeField] private Vector2 basePos;
         Coroutine DisableCor;
 
         private void Awake()
         {
-            basePos = transform;
+            basePos = transform.position;
             gameObject.SetActive(false);
         }
 
@@ -35,7 +35,7 @@ namespace SCR
 
         public void GetItem()
         {
-            transform.position = basePos.position;
+            transform.position = basePos;
             gameObject.SetActive(true);
             StartCoroutine(DisableItemInfo());
         }

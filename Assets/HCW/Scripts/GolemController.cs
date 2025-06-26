@@ -14,15 +14,17 @@ namespace HCW
         public float detectRange = 10f; // 감지 범위
 
         [Header("공격")]
-        public GameObject attackPrefab; // 팔 프리팹 넣으면 될듯
+        public GameObject attackPrefab;
         public Transform firePoint;
         public float bulletSpeed = 10f;
         public float attackCooldown = 3f;
 
         [Header("레이저")]
         public GameObject laserPrefab;
+        public Transform laserPoint;
         public float laserChargeTime = 2f; // 충전 시간
         public float laserDuration = 3f; // 레이저 지속 시간
+        public float laserYRange = 1f;
 
         [Header("단단해지기")]
         public float hardenDuration = 3f;
@@ -74,6 +76,14 @@ namespace HCW
             // 랜덤 패턴 선택
             int random = Random.Range(0, 3);
 
+            if (random == 2)
+            {
+                float yDiff = Mathf.Abs(player.position.y - transform.position.y);
+                if (yDiff > laserYRange)
+                {
+                    random = Random.Range(0, 2);
+                }
+            }
             switch (random)
             {
                 case 0:
@@ -86,12 +96,12 @@ namespace HCW
                     yield return StartCoroutine(DoLaserAttack());
                     break;
             }
+            yield return new WaitForSeconds(1f);
 
-            yield return new WaitForSeconds(1f); // 패턴 간 대기
             isAttacking = false;
         }
 
-        IEnumerator DoNormalAttack()
+            IEnumerator DoNormalAttack()
         {
             animator.SetTrigger("Attack");
 
@@ -110,15 +120,25 @@ namespace HCW
         {
             animator.SetTrigger("ChargeLaser");
 
-            yield return new WaitForSeconds(laserChargeTime);
+            GameObject laser = Instantiate(laserPrefab, laserPoint.position, Quaternion.identity);
 
-            GameObject laser = Instantiate(laserPrefab, firePoint.position, Quaternion.identity);
-            Vector2 direction = (player.position - firePoint.position).normalized;
-            direction.y = 0; // y 방향 제거
+            Collider2D col = laser.GetComponent<Collider2D>();
+
+            col.enabled = false; // 콜라이더 비활성화
+            LaserDamage laserDamage = laser.GetComponent<LaserDamage>();
+            laserDamage.Init(attackPower);
+            // 레이저 방향 설정
+            Vector2 direction = (player.position - laserPoint.position).normalized;
+            direction.y = 0;
             direction.Normalize();
             laser.transform.right = direction;
+            // 충전 시간 대기
+            yield return new WaitForSeconds(laserChargeTime);
+            col.enabled = true; // 콜라이더 활성화
 
+            // 공격 지속 시간
             yield return new WaitForSeconds(laserDuration);
+
             Destroy(laser);
         }
 
@@ -137,7 +157,8 @@ namespace HCW
         public void FireAniEvent() // 공격 애니메이션 이벤트로 호출됨
         {
             Vector2 dir = (player.position - firePoint.position).normalized;
-            GameObject bullet = Instantiate(attackPrefab, firePoint.position, Quaternion.identity);
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            GameObject bullet = Instantiate(attackPrefab, firePoint.position, Quaternion.Euler(0, 0, angle));
             Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
             rb.velocity = dir * bulletSpeed;
         }
@@ -145,7 +166,6 @@ namespace HCW
         void Die()
         {
             animator.SetTrigger("Die");
-            // 죽는 연출 후 Destroy 가능
             Destroy(gameObject, 2f); // TODO : 시체 남겨야하나?
         }
     }

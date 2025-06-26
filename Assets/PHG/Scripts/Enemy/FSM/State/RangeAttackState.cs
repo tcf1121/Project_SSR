@@ -1,73 +1,105 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UIElements;
+﻿using UnityEngine;
 
 namespace PHG
 {
+    /// <summary>
+    /// 공격/추적 규칙
+    /// 1) d > chaseRange                 → Patrol
+    /// 2) chaseRange ≥ d > readyRange    → Chase
+    /// 3) readyRange ≥ d > attackRange   → Aim (정지)
+    ///    단, hasFired == true           → Chase (계속 추격)
+    /// 4) attackRange ≥ d                → Shoot
+    /// </summary>
     public class RangeAttackState : IState
     {
-        private readonly MonsterBrain brain;
-        private readonly Rigidbody2D rb;
-        private readonly Transform tf;
+        readonly MonsterBrain brain;
+        readonly Rigidbody2D rb;
+        readonly Transform tf;
+        readonly MonsterStatData statData;
 
-        // turnables
-        private const float attackCooldown = 1.5f;
+        Transform player;
+        Transform muzzle;
+        float lastShot;
+        bool hasFired;                     // ★ 발사 여부 플래그
 
-        //runtime
-        private Transform player;
-        private float lastShot;
-
+        float Cooldown => statData.rangedCooldown;
 
         public RangeAttackState(MonsterBrain brain)
         {
             this.brain = brain;
             rb = brain.GetComponent<Rigidbody2D>();
             tf = brain.transform;
+            statData = brain.StatData;
+
+            muzzle = tf.Find("MuzzlePoint");
+            if (muzzle == null)
+                Debug.LogWarning($"{tf.name} 에서 MuzzlePoint를 찾을 수 없습니다.");
         }
 
         public void Enter()
         {
-            brain.ChangeState(StateID.Chase); // ��� �߰����� ����
             player = GameObject.FindWithTag("Player")?.transform;
             rb.velocity = Vector2.zero;
-            lastShot = -attackCooldown;
+            lastShot = -Cooldown;
+            hasFired = false;              // ★ 초기화
         }
 
         public void Tick()
         {
-          if(player == null)
-            {
-                brain.ChangeState(StateID.Patrol);
-                return;
-            }
-            float dist = Vector2.Distance(tf.position, player.position);
-        if(dist > brain.Stats.AttackRange)
-            {
-                brain.ChangeState(StateID.Chase);
-                return;
-            }
+            if (player == null) { brain.ChangeState(StateID.Patrol); return; }
 
-            int dir = player.position.x > tf.position.x ? 1 : -1;
-            tf.localScale = new Vector3(dir, 1f, 1f);
+            float dist = Mathf.Abs(player.position.x - tf.position.x);
+            float attackR = brain.Stats.AttackRange;
+            float readyR = statData.readyRange;
+            float chaseR = brain.Stats.ChaseRange;
 
+            /* 1) 추격 포기 */
+            if (dist > chaseR) { brain.ChangeState(StateID.Patrol); return; }
+
+            /* 2) 추격 유지 */
+            if (dist > readyR) { brain.ChangeState(StateID.Chase); return; }
+
+            /* 3 & 4) readyRange 안 */
             rb.velocity = Vector2.zero;
-            if(Time.time - lastShot >= attackCooldown)
+            FacePlayer();
+
+            if (dist <= attackR)                               // 4) 발사 구간
             {
-                shoot(dir);
-                lastShot = Time.time;
+                if (Time.time - lastShot >= Cooldown)
+                {
+                    Shoot();
+                    lastShot = Time.time;
+                }
             }
-        
+            else                                               // 3) Aim 구간
+            {
+                if (hasFired)                                  // 이미 공격 중이면 추격
+                {
+                    brain.ChangeState(StateID.Chase);
+                }
+                // hasFired == false → 첫 진입 : 그대로 서 있기
+            }
         }
 
-        private void shoot(int dir)
-        {
-            Projectile proj = ProjectilePool.Instance.Get();
-            proj.transform.position = tf.position + Vector3.right * dir * 0.6f;
-            proj.Launch(Vector2.right * dir);
-            //�ִϸ��̼� �� ����;
-        }
         public void Exit() => rb.velocity = Vector2.zero;
-    }
 
+        /* ───── helpers ───── */
+        void Shoot()
+        {
+            if (muzzle == null || player == null) return;
+
+            Vector2 dir = (player.position - muzzle.position).normalized;
+            Projectile p = ProjectilePool.Instance.Get(statData.projectileprefab, muzzle.position);
+            p.Launch(dir);
+            hasFired = true;                 // ★ 발사 플래그 ON
+        }
+
+        void FacePlayer()
+        {
+            int sign = player.position.x > tf.position.x ? 1 : -1;
+            Vector3 s = tf.localScale;
+            s.x = Mathf.Abs(s.x) * sign;
+            tf.localScale = s;
+        }
+    }
 }

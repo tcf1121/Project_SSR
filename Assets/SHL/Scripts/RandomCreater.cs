@@ -16,8 +16,6 @@ namespace SHL
         private Vector2 min;
         private Vector2 max;
         [SerializeField] private GameObject Posprefab;
-        private Vector2 min;
-        private Vector2 max;
 
         private void Awake()
         {
@@ -78,14 +76,14 @@ namespace SHL
                         //ÀÌÈÄ Á¤È®È÷ ¹Ù´Ú¿¡ ¾ÈÂø ½ÃÅ°±â À§ÇØ ´Ù½Ã ¹Ýº¹ÇÑ´Ù.
                         //GameObject posobj = Instantiate(Posprefab); //Å×½ºÆ® Á¾·á·Î ÀÎÇØ ÁÖ¼®Ã³¸®
                         //°Ë»ç¿ë ÇÁ¸®Æé Æ÷Áö¼Ç »ý¼º
-                      
+
                         //Vector2 hitdir = rematch.point; ÇÊ¿ä¾øÀ½.
                         //ÇÑ¹ø´õ °è»êÀ» ÅëÇØ ¿Ïº®ÇÑ À§Ä¡¿¡ ±¸Çö.
                         transformList[i] = rematch.point;
                         //posobj.transform.position = rematch.point; //ÀÓ½Ã    È®ÀÎ¿ë °ª. Å×½ºÆ® Á¾·á·Î ÀÎÇØ ÁÖ¼®Ã³¸®
                         chacker = hit;
                         //Debug($"Hit Position: {rematch.point}"); //ÀÓ½Ã È®ÀÎ¿ë °ª. Å×½ºÆ® Á¾·á·Î ÀÎÇØ ÁÖ¼®Ã³¸®
-                        Debug.DrawRay(rematch.point,Vector2.up*0.1f, Color.green, 100f); //½ºÆùÀ§Ä¡ Ã¼Å©¿ë.
+                        Debug.DrawRay(rematch.point, Vector2.up * 0.1f, Color.green, 100f); //½ºÆùÀ§Ä¡ Ã¼Å©¿ë.
                     }
 
 
@@ -93,7 +91,7 @@ namespace SHL
                 }
             }
         }
-        
+
 
         Vector2 PointSetting(Vector2 min, Vector2 max)
         {

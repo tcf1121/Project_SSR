@@ -10,10 +10,10 @@ namespace SCR
         [SerializeField] private GameObject _pickTrigger;
         public Equipped Equipped { get { return _equipped; } }
         [SerializeField] private Equipped _equipped;
-        public ItemInfoUI ItemInfoUI { get { return _itemInfoUI; } }
-        [SerializeField] private ItemInfoUI _itemInfoUI;
-        public EquipUI EquipUI { get { return EquipUI; } }
-        [SerializeField] private EquipUI _equipUI;
+        public ConditionalUI ConditionalUI { get { return _conditionalUI; } }
+        [SerializeField] private ConditionalUI _conditionalUI;
+        public AlwaysOnUI AlwaysOnUI { get { return _alwaysOnUI; } }
+        [SerializeField] private AlwaysOnUI _alwaysOnUI;
         public GameObject WaitItem { get { return _waitItem; } }
         private GameObject _waitItem;
 
@@ -23,7 +23,8 @@ namespace SCR
         void Awake()
         {
             _rigid = GetComponent<Rigidbody2D>();
-            _equipUI.SetEquipped(this);
+            _alwaysOnUI.LinkedPlayer(this);
+            _conditionalUI.LinkedPlayer(this);
         }
 
         void Update()
@@ -37,17 +38,7 @@ namespace SCR
             }
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                if (_equipUI.gameObject.activeSelf)
-                {
-                    _equipUI.gameObject.SetActive(false);
-                    Time.timeScale = 1f;
-                }
-                else
-                {
-                    _equipUI.gameObject.SetActive(true);
-                    _equipUI.IsChangeEquip(false);
-                    Time.timeScale = 0f;
-                }
+                _conditionalUI.EquipUI.OnOffEquipUI();
             }
             Move();
         }
@@ -81,16 +72,16 @@ namespace SCR
                 {
                     _equipped.EquipItem(item);
                     item.SetActive(false);
-                    _itemInfoUI.SetItem(item);
-                    _itemInfoUI.GetItem();
+                    _conditionalUI.ItemInfoUI.SetItem(item);
+                    _conditionalUI.ItemInfoUI.GetItem();
                 }
                 else
                 {
                     //교체하기
                     _waitItem = item;
-                    _equipUI.gameObject.SetActive(true);
-                    _equipUI.IsChangeEquip(true);
-                    _equipUI.OpenEquip((int)item.GetComponent<Item>().ItemPart);
+                    _conditionalUI.EquipUI.gameObject.SetActive(true);
+                    _conditionalUI.EquipUI.IsChangeEquip(true);
+                    _conditionalUI.EquipUI.OpenEquip((int)item.GetComponent<Item>().ItemPart);
                     Time.timeScale = 0f;
 
                 }

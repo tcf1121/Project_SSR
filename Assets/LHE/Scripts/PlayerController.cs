@@ -22,7 +22,7 @@ namespace LHE
         [Header("대쉬 설정")]
         [SerializeField] private float dashForce = 40f;
         [SerializeField] private float dashDuration = 0.2f;
-        [SerializeField] private float dashCooldown = 2f;
+        [SerializeField] private float dashCooldown = 1.5f;
         [SerializeField] private float dashEndSpeedRatio = 0.2f;
 
         [Header("앉기 설정")]
@@ -293,7 +293,7 @@ namespace LHE
             if (isWallJumpInputBlocked)
                 return 0f;
 
-            float speed = horizontalInput * playerStats.Speed;
+            float speed = horizontalInput * playerStats.FinalSpeed;
 
             // 공중에서 이동 속도 감소
             if (!isGrounded)
@@ -393,7 +393,7 @@ namespace LHE
         /// </summary>
         private void ExecuteJump()
         {
-            rb.velocity = new Vector2(rb.velocity.x, playerStats.Jump + 5);
+            rb.velocity = new Vector2(rb.velocity.x, playerStats.FinalJump + 5);
             ConsumeJumpInput();
         }
 
@@ -641,7 +641,7 @@ namespace LHE
 
             // 바라보는 방향으로 점프 
             Vector2 jumpDirection = new Vector2(facingRight ? 1f : -1f, 1f).normalized;
-            rb.velocity = jumpDirection * (playerStats.Jump + 5f) * 1.1f;
+            rb.velocity = jumpDirection * (playerStats.FinalJump + 5f) * 1.1f;
 
             ConsumeJumpInput();
         }
@@ -671,7 +671,7 @@ namespace LHE
             }
 
             // 기존 속도 초기화 후 벽점프 적용
-            Vector2 wallJumpVelocity = jumpDirection * (playerStats.Jump + 5);
+            Vector2 wallJumpVelocity = jumpDirection * (playerStats.FinalJump + 5);
             rb.velocity = wallJumpVelocity;
 
             // 벽 슬라이드 상태 해제
@@ -767,7 +767,6 @@ namespace LHE
         {
             isDashing = true;
             dashTimeLeft = dashDuration;
-            dashCooldownLeft = dashCooldown;
             dashProgress = 0f;
 
             // 대쉬 방향 결정 (바라보는 방향)
@@ -805,6 +804,7 @@ namespace LHE
         void EndDash()
         {
             isDashing = false;
+            dashCooldownLeft = dashCooldown;
             // 대쉬 종료 시 속도 조절 (급정거 방지)
             rb.velocity *= 0.3f;
         }

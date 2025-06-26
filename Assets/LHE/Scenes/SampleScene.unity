@@ -164,7 +164,7 @@ MonoBehaviour:
   dropThroughTime: 0.3
   dashForce: 40
   dashDuration: 0.2
-  dashCooldown: 2
+  dashCooldown: 1.5
   dashEndSpeedRatio: 0.2
   crouchSpeedMultiplier: 0.5
   wallSlideSpeed: 1.5
@@ -398,15 +398,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 1
-  currenExp: 30
-  reqExp: 0
-  money: 0
-  maximumHp: 0
   currentHp: 0
-  atk: 0
-  hpRegen: 0
-  Speed: 7
+  currentExp: 0
+  money: 0
+  maximumHp: 100
+  reqExp: 0
+  atk: 10
+  hpRegen: 1
+  speed: 7
   jump: 1
+  isDead: 0
 --- !u!114 &192908941
 MonoBehaviour:
   m_ObjectHideFlags: 0

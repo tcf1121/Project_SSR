@@ -21,7 +21,7 @@ namespace LHE
         /// </summary>
         /// <param name="getMoney">돈 획득량</param>
         /// <param name="getExp">경험치 획득량</param>
-        private void GetCompensation(float getMoney, float getExp)
+        public void GetCompensation(float getMoney, float getExp)
         {
             GetMoney(getMoney);
             GetExp(getExp);
@@ -31,19 +31,26 @@ namespace LHE
         /// 돈 획득
         /// </summary>
         /// <param name="getMoney">획득량</param>
-        private void GetMoney(float getMoney)
+        public void GetMoney(float getMoney)
         {
             playerStats.Money += getMoney;
+        }
+
+        /// <summary>
+        /// 돈 초기화
+        /// </summary>
+        public void ResetMoney()
+        {
+            playerStats.Money = 0;
         }
 
         /// <summary>
         /// 경험치 획득
         /// </summary>
         /// <param name="getExp">획득량</param>
-        private void GetExp(float getExp)
+        public void GetExp(float getExp)
         {
             playerStats.CurrentExp += getExp;
-            // LevelUpCheck();
         }
 
         // 아이템 획득

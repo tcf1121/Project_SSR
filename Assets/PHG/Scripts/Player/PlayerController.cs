@@ -39,7 +39,9 @@ namespace PHG
         private void Move(float dir /* 매개변수 */)
         {
             rb.velocity = new Vector2(dir * moveSpeed, rb.velocity.y);
-            if (dir != 0) transform.localScale = new Vector3(Mathf.Sign(dir), 1, 1); // 좌우 뒤집기
+            Vector3 scale = transform.localScale;
+            scale.x = Mathf.Abs(scale.x) * Mathf.Sign(dir);
+            transform.localScale = scale;
         }
 
         private void Jump()

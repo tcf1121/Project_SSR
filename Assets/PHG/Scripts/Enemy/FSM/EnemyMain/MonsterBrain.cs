@@ -1,98 +1,100 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-
+﻿using UnityEngine;
 
 namespace PHG
 {
+    /// <summary>
+    /// Core brain that owns the per‑enemy finite‑state‑machine and exposes shared data to individual states.
+    /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
     public class MonsterBrain : MonoBehaviour
     {
+        /* ───────── Inspector ───────── */
+        [Header("Sensor / Mask")]
+        public Transform sensor;                     // 하위 빈 gameObject – 바닥/벽 감지용
+        public LayerMask groundMask;                 // 발 밑과 전방 체크에 사용할 Ground 레이어 마스크
 
-        [Header("Sensor/Mask")]
-        public Transform sensor; //���� �� gameObject
-        public LayerMask groundMask; // groundLayer ����
-        public Transform targetLadder; // ��ٸ���
-        public Transform targetLadderTop;
         [SerializeField] private bool canClimbLadders = true;
         public bool CanClimbLadders => canClimbLadders;
 
         [Header("References")]
-        [SerializeField] private MonsterStats stats;
-        [SerializeField] private Collider2D hitBox; // ���� ���ݿ� ��Ʈ�ڽ�
-        public MonsterStats Stats => stats;
+        [SerializeField] private Collider2D hitBox;  // 근접 공격시 사용 – 없으면 원거리 몬스터로 간주
+        [SerializeField] private MonsterStats stats;      // 런타임 변동 스탯 (HP 등)
+        [SerializeField] private MonsterStatData statData; // 설계용 ScriptableObject (이동속도 · 공격범위 등)
 
+        /* ───────── Public helpers ───────── */
+        public MonsterStats Stats => stats;
+        public MonsterStatData StatData => statData;
+
+        /// <summary>다른 스크립트(특히 State)에서 이동속도가 필요할 때 편하게 가져오도록 Helper 프로퍼티 제공.</summary>
+        public float MoveSpeed => statData != null ? statData.moveSpeed : 0f;
+
+        /* ───────── FSM ───────── */
         private StateMachine sm;
         public StateMachine Sm => sm;
 
-        private IdleState idle;
-        private FloatChaseState floatChase;
-        private PatrolState patrol;
-        private ChaseState chase;
-        private RangeAttackState rangeAttack;
-        private DeadState dead;
-        private MeleeAttackState meleeAttack;
-
+        // 미리 생성해서 캐싱할 State 인스턴스
+        private IState idle;
+        private IState patrol;
+        private IState chase;
         private IState attack;
+        private IState dead;
 
+        /* ====================================================================== */
         private void Awake()
         {
+            // 필수 SO 누락 시 더 진행하지 않고 컴포넌트를 비활성화(NullReference 예방)
+            if (statData == null)
+            {
+#if UNITY_EDITOR
+                Debug.LogWarning($"[MonsterBrain] <color=orange>StatData not assigned</color> on {name}. FSM will not initialize.", this);
+#endif
+                enabled = false; // 기타 컴포넌트의 Update 호출 방지
+                return;
+            }
+
+            // ───── State 인스턴스 준비 ─────
             idle = new IdleState(this);
-            //�̵� ���� �б�
             patrol = new PatrolState(this);
-            chase = new ChaseState(this);
+            chase = GetComponent<FlyingTag>() != null ? new FloatChaseState(this) : new ChaseState(this);
             dead = new DeadState(this);
-            floatChase = new FloatChaseState(this);
 
-            //���� ���� �б�
-            if (HasRangedTag())
-            {
-                rangeAttack = new RangeAttackState(this);                  // �б�
-                attack = rangeAttack;
-            }
-            else
-            {
-                meleeAttack = new MeleeAttackState(this, hitBox);       // ����
-                attack = meleeAttack;
-            }
+            attack = (GetComponent<RangedTag>() != null || hitBox == null)
+                      ? new RangeAttackState(this)
+                      : new MeleeAttackState(this, hitBox);
 
+            // ───── FSM 초기화 ─────
             sm = new StateMachine();
             sm.Register(StateID.Idle, idle);
-            sm.Register(StateID.Chase, IsFlying() ? floatChase : chase);
+            sm.Register(StateID.Patrol, patrol);
+            sm.Register(StateID.Chase, chase);
             sm.Register(StateID.Attack, attack);
             sm.Register(StateID.Dead, dead);
-            sm.Register(StateID.Patrol, patrol);
-            
-            
-            
-            sm.ChangeState(StateID.Idle);
 
-            
+            sm.ChangeState(StateID.Idle);
         }
 
+        /* ───────── Unity Loop ───────── */
+        private void FixedUpdate()
+        {
+            if (sm == null) return; // Awake 단계에서 초기화 실패 시 안전
+            sm.Tick();
+        }
 
-
-        private void FixedUpdate() => sm.Tick();
+        /* ───────── External API ───────── */
+        /// <summary>
+        /// Called by States to transition. Contains guard‑logic so external callers don’t have to replicate it.
+        /// </summary>
         public void ChangeState(StateID id)
         {
-            //UsePatrol Ȯ��
-            if (id == StateID.Patrol && !Stats.UsePatrol)
+            if (sm == null) return; // StatData 누락 → FSM 미초기화 → 아무 동작 안함
+
+            // 순찰 사용 여부: SO 우선, 아니면 런타임 Stats 참고 – 기본값 true
+            bool usePatrolFlag = statData != null ? statData.usePatrol : (stats != null && stats.UsePatrol);
+
+            if (id == StateID.Patrol && !usePatrolFlag)
                 return;
+
             sm.ChangeState(id);
-            Debug.Log($"ChangeState from {sm.CurrentStateID} �� {id}");
         }
-
-        private bool IsFlying()
-        {
-            return GetComponent<FlyingTag>() != null;
-        }
-
-        private bool HasRangedTag()
-        {
-            return GetComponent<RangedTag>() != null;
-        }
-
-
     }
 }

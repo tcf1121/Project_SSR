@@ -1,123 +1,63 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 namespace PHG
 {
-
     [RequireComponent(typeof(Rigidbody2D))]
     public class JumpMove : MonoBehaviour
     {
-        [Header("Á¡ÇÁ ¼³Á¤")]
-        [SerializeField] private float jumpForce = 6f;
-        [SerializeField] private float jumpLockDuration = 1f;
-
-        [Header("¼¾¼­ ¹× ¸¶½ºÅ©")]
-        [SerializeField] private Transform platformSensor;
-        [SerializeField] private Transform wallSensor;
-        [SerializeField] private Vector2 platformBoxSize = new(1.3f, 1f);
+        [Header("Ground Cast")]
+        [SerializeField] private float castRadius = 0.12f;
+        [SerializeField] private float castDistance = 0.06f;
         [SerializeField] private LayerMask groundMask;
-        [SerializeField] private LayerMask jumpableMask;
+
+        [Header("Lock")]
+        [SerializeField] private float lockDurationDefault = 0.45f; // fallback
 
         private Rigidbody2D rb;
-        private float jumpLockTimer;
-        private bool isMidJump;
-
-        public bool IsMidJump => isMidJump;
+        private float timer;
+        public bool IsMidJump { get; private set; }
 
         private void Awake() => rb = GetComponent<Rigidbody2D>();
 
         private void Update()
         {
-            if (jumpLockTimer > 0f)
-                jumpLockTimer -= Time.deltaTime;
-            if (isMidJump && IsGrounded())
-                isMidJump = false;
+            if (timer > 0f) timer -= Time.deltaTime;
+            if (IsMidJump && IsGrounded()) IsMidJump = false;
         }
 
-        public bool TryJumpWallOrPlatform(int dir, float targetY)
+        public bool IsGrounded()
         {
-            Vector2 wallOrigin = wallSensor != null
-                ? (Vector2)wallSensor.position
-                : (Vector2)transform.position + new Vector2(dir * 0.25f, 0f);
-
-            float wallDistance = 0.15f;
-            bool wallAhead = Physics2D.Raycast(wallOrigin, Vector2.right * dir, wallDistance, groundMask);
-            Debug.DrawRay(wallOrigin, Vector2.right * dir * wallDistance, Color.magenta);
-
-            bool platformAbove = IsPlatformAbove();
-            if (!wallAhead && !platformAbove) return false;
-
-            float yDiff = targetY - transform.position.y;
-            if (yDiff < 0.3f) return false; // ¡ç À§°¡ ¾Æ´Ï¸é ¹«Á¶°Ç ¾È ¶Ù°Ô º¸Á¶ ÇÊÅÍ
-            GetAdjustedJumpValues(yDiff, out float adjustedJump, out float adjustedImpulse);
-            return DoJumpWithForce(dir, adjustedJump, adjustedImpulse);
+            Vector2 p = rb.position + Vector2.up * 0.02f;
+            return Physics2D.CapsuleCast(p, new Vector2(castRadius, castRadius * 2f), CapsuleDirection2D.Vertical,
+                                         0f, Vector2.down, castDistance, groundMask);
         }
 
-        public bool TryJumpToPlatformAbove(int dir, Vector2 targetPos)
+        public bool Ready() => timer <= 0f && IsGrounded();
+
+        /// <summary>
+        /// ìˆ˜ì§ í˜Â·ìˆ˜í‰ ì„í„ìŠ¤ ê³„ìˆ˜ë¥¼ Stats ì—ì„œ ë°›ì•„ ì í”„ ìˆ˜í–‰.
+        /// </summary>
+        public bool DoJump(int dir, float dy, float baseJumpForce, float horizontalFactor, float lockDuration)
         {
-            float yDiff = targetPos.y - transform.position.y;
-            if (yDiff < 0.5f) return false;
+            if (!Ready() || dy < 0.1f) return false;
 
-            Vector3 originalPos = platformSensor.localPosition;
-            platformSensor.localPosition = new Vector3(originalPos.x, Mathf.Clamp(yDiff, 1.1f, 3f), originalPos.z);
-            bool platformAbove = IsPlatformAbove();
-            platformSensor.localPosition = originalPos;
+            GetAdjustedVals(dy, baseJumpForce, out float yForce, out float xImpulse);
 
-            if (!platformAbove) return false;
-
-            GetAdjustedJumpValues(yDiff, out float adjustedJump, out float adjustedImpulse);
-            return DoJumpWithForce(dir, adjustedJump, adjustedImpulse);
-        }
-
-        private void GetAdjustedJumpValues(float yDiff, out float adjustedJump, out float adjustedImpulse)
-        {
-            float heightScale = Mathf.Clamp01(yDiff / 4f);
-            adjustedJump = Mathf.Lerp(jumpForce * 1f, jumpForce * 1.6f, heightScale);
-            adjustedImpulse = Mathf.Lerp(0.6f, 0.2f, heightScale);
-        }
-
-        private bool DoJumpWithForce(int dir, float yForce, float xImpulse)
-        {
-            Vector2 jumpOrigin = (Vector2)transform.position + new Vector2(dir * 0.2f, 0f);
-            rb.velocity = new Vector2(rb.velocity.x, 0);
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
             rb.AddForce(Vector2.up * yForce, ForceMode2D.Impulse);
-            jumpLockTimer = jumpLockDuration;
-            isMidJump = true;
+            rb.AddForce(Vector2.right * dir * xImpulse * horizontalFactor, ForceMode2D.Impulse);
+
+            IsMidJump = true;
+            timer = lockDuration > 0 ? lockDuration : lockDurationDefault;
             return true;
         }
 
-        public bool IsPlatformAbove()
+        private void GetAdjustedVals(float yDiff, float baseJumpForce, out float yForce, out float xImpulse)
         {
-            Collider2D platform = Physics2D.OverlapBox(platformSensor.position, platformBoxSize, 0f, jumpableMask);
-            return platform != null;
+            float t = Mathf.Clamp01(yDiff / 4f);
+            yForce = Mathf.Lerp(baseJumpForce * 0.8f, baseJumpForce * 1.25f, t);
+            xImpulse = Mathf.Lerp(0.55f, 0.15f, t); // ê¸°ë³¸ê°’ ì™„í™”
         }
 
-        public bool Ready()
-        {
-            return jumpLockTimer <= 0f && IsGrounded();
-        }
-
-        private bool IsGrounded()
-        {
-            Vector2 origin = (Vector2)transform.position + Vector2.down * 0.05f;
-            float checkDist = 0.1f;
-            LayerMask totalMask = groundMask | jumpableMask;
-            return Physics2D.Raycast(origin, Vector2.down, checkDist, totalMask);
-        }
-
-#if UNITY_EDITOR
-        private void OnDrawGizmosSelected()
-        {
-            if (platformSensor != null)
-            {
-                Gizmos.color = Color.magenta;
-                Gizmos.DrawWireCube(platformSensor.position, platformBoxSize);
-            }
-            if (wallSensor != null)
-            {
-                Gizmos.color = Color.cyan;
-                Gizmos.DrawSphere(wallSensor.position, 0.05f);
-            }
-        }
-#endif
     }
 }

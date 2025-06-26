@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 namespace SHL
 {
@@ -97,6 +97,7 @@ namespace SHL
             float xpos = Random.Range(min.x, max.x);
             float ypos = Random.Range(min.y, max.y);
             //Vector2 pos = new Vector2(xpos, ypos); 
+            Debug.Log(xpos + ", " + ypos);
 
             return new Vector2(xpos, ypos);
         }

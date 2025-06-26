@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using SHL;
 using UnityEngine;
 using Utill;
 
-namespace HCW
+namespace SCR
 {
     public class MonsterSpwaner : MonoBehaviour
     {
@@ -16,13 +15,12 @@ namespace HCW
         [Header("스폰 설정")]
         [SerializeField] private float spawnInterval = 5f; // 스폰 간격
         [SerializeField] private int maxAlive = 40;
-        public SHL.RandomCreater randomCreater;
         private Vector2 min;
         private Vector2 max;
 
         void Awake()
         {
-            _spwanPoint = new List<Vector2>(randomCreater._transformList);
+            _spwanPoint = new();
             Init();
             StartCoroutine(SpawnRoutine());
         }
@@ -39,17 +37,17 @@ namespace HCW
         {
             min = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0));
             max = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 0));
-            Debug.Log("Min: " + min + ", Max: " + max);
             _spwanPoint = new();
             for (int i = 0; i < _objectPool.PoolCount; i++)
             {
-                _spwanPoint.Add(randomCreater.PointSetting(min, max));
+                _spwanPoint.Add(RandomPosCreater.RandomPos(min, max, true));
             }
         }
 
         private void Spawn()
         {
             int aliveCount = 0;
+            Debug.Log(_objectPool.Pool);
             foreach (GameObject mob in _objectPool.Pool)
                 if (mob.activeSelf)
                     aliveCount++;

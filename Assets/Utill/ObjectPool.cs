@@ -25,22 +25,22 @@ namespace Utill
 
         private void Init()
         {
-            Pool = new Queue<GameObject>();
+            Pool = new();
 
             // 미리 오브젝트 생성 해놓기
             for (int i = 0; i < PoolCount; i++)
             {
-                Pool.Enqueue(CreatePoolObject(i));
+                CreatePoolObject(i);
             }
         }
 
         // 생성
-        private GameObject CreatePoolObject(int num)
+        private void CreatePoolObject(int num)
         {
             GameObject poolGO = Instantiate(overlappingPrefab[num % overlappingPrefab.Count]);
             poolGO.SetActive(false);
             poolGO.transform.parent = transform;
-            return poolGO;
+            Pool.Enqueue(poolGO);
         }
 
         // 사용

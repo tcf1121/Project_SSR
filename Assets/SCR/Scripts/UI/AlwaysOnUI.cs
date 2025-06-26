@@ -35,6 +35,11 @@ namespace SCR
 
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="IsCool"></param>
         public void CoolTime(int index, bool IsCool)
         {
             _coolTimeObj[index].SetActive(IsCool);

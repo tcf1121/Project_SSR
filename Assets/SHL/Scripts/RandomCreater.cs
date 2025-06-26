@@ -61,7 +61,6 @@ namespace SHL
                     //GameObject posobj = Instantiate(Posprefab);
                     //posobj.transform.position = pos;
 
-
                     int layerMask = LayerMask.GetMask("Ground");
                     RaycastHit2D hit = Physics2D.Raycast(transformList[i], Vector2.down, mapsizey, layerMask);
 
@@ -93,13 +92,34 @@ namespace SHL
         }
 
 
-        Vector2 PointSetting(Vector2 min, Vector2 max)
+        public Vector2 PointSetting(Vector2 min, Vector2 max)
         {
             float xpos = Random.Range(min.x, max.x);
             float ypos = Random.Range(min.y, max.y);
             //Vector2 pos = new Vector2(xpos, ypos); 
 
             return new Vector2(xpos, ypos);
+        }
+
+        public Vector2 GroundPos(Vector2 pos)
+        {
+            bool chacker = false;
+            while (!chacker)
+            {
+                int layerMask = LayerMask.GetMask("Ground");
+                RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.down, mapsizey, layerMask);
+
+                if (hit)
+                {
+                    hit.point = new Vector2(hit.point.x, hit.point.y + tilesize);
+                    RaycastHit2D rematch = Physics2D.Raycast(hit.point, Vector2.down, mapsizey, layerMask);
+
+                    pos = rematch.point;
+                    chacker = hit;
+                    Debug.DrawRay(rematch.point, Vector2.up * 0.1f, Color.green, 100f);
+                }
+            }
+            return pos;
         }
 
     }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace SCR
 {
@@ -52,6 +53,11 @@ namespace SCR
         private void Update()
         {
 
+        }
+
+        public void StartGame()
+        {
+            LoadingSceneManager.LoadScene(2);
         }
     }
 

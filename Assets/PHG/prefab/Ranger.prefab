@@ -249,7 +249,7 @@ MonoBehaviour:
   sensor: {fileID: 3285410922633734054}
   groundMask:
     serializedVersion: 2
-    m_Bits: 136
+    m_Bits: 128
   targetLadder: {fileID: 0}
   targetLadderTop: {fileID: 0}
   canClimbLadders: 0

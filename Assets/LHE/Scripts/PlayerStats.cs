@@ -57,13 +57,10 @@ namespace LHE
         }
         void Start()
         {
-            currentHp = BonusMaximumHp;
-            Debug.Log($"변경 전 - 최대HP: {FinalMaximumHp}, 현재HP: {currentHp}, 비율: {GetHpRatio():F2}");
-            BonusMaximumHp += 50f;
-            Debug.Log($"변경 후 - 최대HP: {FinalMaximumHp}, 현재HP: {currentHp}, 비율: {GetHpRatio():F2}");
+
         }
 
-        void FixedUpdate()
+        private void Update()
         {
             PlayerHpRegen();
         }

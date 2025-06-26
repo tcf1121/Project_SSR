@@ -22,17 +22,17 @@ namespace LHE
         [Header("대쉬 설정")]
         [SerializeField] private float dashForce = 40f;
         [SerializeField] private float dashDuration = 0.2f;
-        [SerializeField] private float dashCooldown = 2f;
+        [SerializeField] private float dashCooldown = 1.5f;
         [SerializeField] private float dashEndSpeedRatio = 0.2f;
 
         [Header("앉기 설정")]
         [SerializeField] private float crouchSpeedMultiplier = 0.5f;  // 앉기 시 속도 배율
 
         [Header("벽 붙잡기 설정")]
-        [SerializeField] private float wallSlideSpeed = 1.5f; // 벽 슬라이드 속도
+        [SerializeField] private float wallSlideSpeed = 1.2f; // 벽 슬라이드 속도
         [SerializeField] private float wallCheckDistance = 0.6f; // 벽 감지 거리
         [SerializeField] private float wallSlideDelayTime = 0.1f; // 벽잡기 활성화 지연 시간
-        [SerializeField] private float wallJumpInputBlockTime = 0.3f; // 벽점프 후 입력 차단 시간
+        [SerializeField] private float wallJumpInputBlockTime = 0.4f; // 벽점프 후 입력 차단 시간
         [SerializeField] private bool isWallJumpInputBlocked = false; // 입력 차단 상태
 
         [Header("사다리/밧줄 설정")]
@@ -120,14 +120,6 @@ namespace LHE
             groundCheck = transform.Find("GroundCheckPos");
         }
 
-        void Update()
-        {
-            CheckEnvironment();
-            HandleLadder();  // 사다리 처리
-            HandleCrouch();  // 앉기 상태 처리
-            UpdateTimers();
-        }
-
         void FixedUpdate()
         {
             if (isClimbing)
@@ -141,6 +133,14 @@ namespace LHE
                 HandleDash();
             }
             HandleJump();
+        }
+
+        void Update()
+        {
+            CheckEnvironment();
+            HandleLadder();  // 사다리 처리
+            HandleCrouch();  // 앉기 상태 처리
+            UpdateTimers();
         }
         #endregion
 
@@ -278,6 +278,8 @@ namespace LHE
         /// </summary>
         private void HandleMove()
         {
+            if (isWallJumpInputBlocked) return;
+
             float targetSpeed = CalculateTargetSpeed();
             ApplyMovement(targetSpeed);
             UpdateFacing();
@@ -289,11 +291,7 @@ namespace LHE
         /// <returns>속도 반환</returns>
         private float CalculateTargetSpeed()
         {
-            // 벽점프 입력 차단 상태일 때 이동 금지
-            if (isWallJumpInputBlocked)
-                return 0f;
-
-            float speed = horizontalInput * playerStats.Speed;
+            float speed = horizontalInput * playerStats.FinalSpeed;
 
             // 공중에서 이동 속도 감소
             if (!isGrounded)
@@ -393,7 +391,13 @@ namespace LHE
         /// </summary>
         private void ExecuteJump()
         {
-            rb.velocity = new Vector2(rb.velocity.x, playerStats.jump + 5);
+            rb.velocity = new Vector2(rb.velocity.x, playerStats.FinalJump + 5);
+            ConsumeJumpInput();
+        }
+
+        private void HalfExecuteJump()
+        {
+            rb.velocity = new Vector2(rb.velocity.x, (playerStats.FinalJump + 5) * 0.6f);
             ConsumeJumpInput();
         }
 
@@ -452,7 +456,6 @@ namespace LHE
             SetClimbingState(true);
             ResetMovementForLadder();
             PositionPlayerOnLadder();
-            DisableCollisions();
             StartLadderDelay();
         }
 
@@ -505,14 +508,6 @@ namespace LHE
                 playerPos.y = ladderTop;
 
             transform.position = playerPos;
-        }
-
-        /// <summary>
-        /// 충돌 비활성화
-        /// </summary>
-        private void DisableCollisions()
-        {
-            col.enabled = false;
         }
 
         /// <summary>
@@ -590,6 +585,7 @@ namespace LHE
                 (playerY <= ladderBottom - playerHalfHeight && isGrounded))
             {
                 ExitLadder();
+                HalfExecuteJump();
             }
         }
 
@@ -601,26 +597,10 @@ namespace LHE
             if (!isClimbing) return;
 
             SetClimbingState(false);
-            ResetMovementForExit();
-            EnableCollisions();
+            // ResetMovementForExit();
+            // EnableCollisions();
             ClearLadderState();
             StartLadderDelay();
-        }
-
-        /// <summary>
-        /// 사다리 내리기전 움직임 리셋
-        /// </summary>
-        private void ResetMovementForExit()
-        {
-            currentSpeed = 0f;
-        }
-
-        /// <summary>
-        /// 충돌 활성화
-        /// </summary>
-        private void EnableCollisions()
-        {
-            col.enabled = true;
         }
 
         /// <summary>
@@ -638,10 +618,7 @@ namespace LHE
         void LadderJump()
         {
             ExitLadder();  // 먼저 사다리에서 내리기
-
-            // 바라보는 방향으로 점프 
-            Vector2 jumpDirection = new Vector2(facingRight ? 1f : -1f, 1f).normalized;
-            rb.velocity = jumpDirection * (playerStats.jump + 5f) * 1.1f;
+            HalfExecuteJump(); // 약점프 실행
 
             ConsumeJumpInput();
         }
@@ -662,16 +639,18 @@ namespace LHE
                 // 오른쪽을 보고 있다면 왼쪽 위로 점프 (170도)
                 float angle = 150f * Mathf.Deg2Rad;
                 jumpDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                Flip();
             }
             else
             {
                 // 왼쪽을 보고 있다면 오른쪽 위로 점프 (10도)
                 float angle = 30f * Mathf.Deg2Rad;
                 jumpDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                Flip();
             }
 
             // 기존 속도 초기화 후 벽점프 적용
-            Vector2 wallJumpVelocity = jumpDirection * (playerStats.jump + 5);
+            Vector2 wallJumpVelocity = jumpDirection * (playerStats.FinalJump + 5);
             rb.velocity = wallJumpVelocity;
 
             // 벽 슬라이드 상태 해제
@@ -767,7 +746,6 @@ namespace LHE
         {
             isDashing = true;
             dashTimeLeft = dashDuration;
-            dashCooldownLeft = dashCooldown;
             dashProgress = 0f;
 
             // 대쉬 방향 결정 (바라보는 방향)
@@ -805,6 +783,7 @@ namespace LHE
         void EndDash()
         {
             isDashing = false;
+            dashCooldownLeft = dashCooldown;
             // 대쉬 종료 시 속도 조절 (급정거 방지)
             rb.velocity *= 0.3f;
         }

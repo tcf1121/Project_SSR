@@ -7,6 +7,8 @@ namespace SCR
 {
     public class AlwaysOnUI : MonoBehaviour
     {
+        private Player _player;
+
         [Header("Coin")]
         [SerializeField] private TMP_Text _coinText;
 
@@ -30,6 +32,8 @@ namespace SCR
         [SerializeField] private List<TMP_Text> _coolTimeText;
         [SerializeField] private List<Image> _fillCoolTime;
         [SerializeField] private List<GameObject> _coolTimeObj;
+
+
 
         public void CoolTime(int index, bool IsCool)
         {
@@ -77,6 +81,11 @@ namespace SCR
         public void SetDanger(int danger)
         {
             _dangerText.text = danger.ToString();
+        }
+
+        public void LinkedPlayer(Player player)
+        {
+            _player = player;
         }
     }
 

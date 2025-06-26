@@ -37,10 +37,8 @@ namespace Utill
             {
                 int randIndex = Random.Range(0, _spwanPoint.Count);
                 spwanGO.transform.position = _spwanPoint[randIndex];
-                Debug.Log(spwanGO.transform.position);
                 _spwanPoint.RemoveAt(randIndex);
             }
         }
     }
 }
-

@@ -13,7 +13,7 @@ namespace SCR
         private int _bodyMaxNum;
         public int ArmMaxNum { get { return _armMaxNum; } }
         private int _armMaxNum;
-        [SerializeField] private GameObject PosPrefab;
+
         public List<AttackItem> Head { get { return _head; } }
         [SerializeField] private List<AttackItem> _head;
 
@@ -161,7 +161,7 @@ namespace SCR
                     break;
             }
             DropObj.transform.position = player.transform.position;
-            player.EquipUI.gameObject.SetActive(false);
+            player.ConditionalUI.EquipUI.gameObject.SetActive(false);
         }
     }
 }

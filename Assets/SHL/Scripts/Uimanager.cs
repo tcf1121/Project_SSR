@@ -9,7 +9,7 @@ namespace SHL
     {
        public enum InfoType { Hp ,Exp , Coin , Time, MonsterHp ,TeleporterTimer,MaxUiBossHp,GuideMessage}
         public InfoType type;
-        float timer = 80;
+        float timer ;
         Text mytext;
         Slider myslider;
 

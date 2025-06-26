@@ -5,117 +5,153 @@ namespace LHE
 {
     public class PlayerStats : MonoBehaviour
     {
-        [Header("케릭터 기본 정보")]
+        [Header("케릭터 기본 정보")] // 후에 프라이빗으로 변경
         [SerializeField] public int level = 1;
-        [SerializeField] public float currenExp = 0;
-        [SerializeField] public float money = 0;
+        [SerializeField] private float currentHp;
+        [SerializeField] private float currentExp = 0;
+        [SerializeField] private float money = 0;
 
         [Header("기본 스탯")]
         [SerializeField] public float maximumHp = 100f;
+        [SerializeField] private float reqExp;
         [SerializeField] public float atk = 10f;
         [SerializeField] public float hpRegen = 1f;
         [SerializeField] public float speed = 7f;
         [SerializeField] public float jump = 1f;
 
         [Header("현재 상태")]
-        [SerializeField] private float currentHp;
+        [SerializeField] private bool isDead = false;
 
-        // 계산된 최종 스탯 (외부에서 읽기 전용)
-        public float MaximumHp { get; private set; }
-        public float CurrentHp => currentHp;
-        public float Atk { get; private set; }
-        public float HpRegen { get; private set; }
-        public float Speed { get; private set; }
-        public float Jump { get; private set; }
+        // 체력 재생 타이머
+        private float regenTimer = 0f;
+        private float regenInterval = 0.2f;
 
+        // 변수 읽기 쓰기 관리
         public int Level => level;
-        public float CurrenExp => currenExp;
-        public float Money => money;
+        public float CurrentExp
+        {
+            get => currentExp;
+            set
+            {
+                currentExp = value;
+                LevelUpCheck();
+            }
+        }
+        public float Money { get; set; }
+        public float MaximumHp => maximumHp;
+        public float Atk => atk;
+        public float HPRegen => hpRegen;
+        public float Speed => speed;
+        public float Jump => jump;
+        public float CurrentHp => currentHp;
 
-        // 레벨업에 필요한 경험치 계산
-        public float RequiredExp => CalculateRequiredExp(level);
 
-        // 이벤트 시스템
-        public static event Action<int> OnLevelUp;
-        public static event Action<float> OnHpChanged;
-        public static event Action<float> OnExpGained;
-
-        #region 유니티 주기
         void Awake()
         {
-            RecalculateAllStats();
-        }
 
+        }
         void Start()
         {
-            currentHp = MaximumHp;
-            OnHpChanged?.Invoke(currentHp);
-        }
-        #endregion
 
-        #region 스탯 계산
-        /// <summary>
-        /// 모든 스탯 재계산
-        /// </summary>
-        public void RecalculateAllStats()
+        }
+
+        private void FixedUpdate()
         {
-            MaximumHp = CalculateMaxHp();
-            Atk = CalculateAtk();
-            HpRegen = CalculateHpRegen();
-            Speed = CalculateSpeed();
-            Jump = CalculateJump();
-
-            // HP가 최대치를 초과하지 않도록
-            currentHp = Mathf.Min(currentHp, MaximumHp);
+            // 체력 재생 구현
         }
 
-        private float CalculateMaxHp() => maximumHp + (level - 1) * 33f;
-        private float CalculateAtk() => atk + (level - 1) * 2.5f;
-        private float CalculateHpRegen() => hpRegen + (level - 1) * 0.2f;
-        private float CalculateSpeed() => speed;
-        private float CalculateJump() => jump;
+        #region 경험치 및 레벨 관리
+        public void LevelUpCheck()
+        {
+            while (currentExp >= reqExp)
+            {
+                currentExp -= reqExp;
+                LevelUp();
+            }
+        }
 
-        private float CalculateRequiredExp(int currentLevel)
+        public void LevelUp ()
+        {
+            level++;
+            RequiredExp(); // 필요경험치 재계산
+            LevelUpRecalculateStats();
+            currentHp = maximumHp;
+            // 레벨 변경 알림 OnLevelUp?.Invoke(level);
+        }
+
+        /// <summary>
+        /// 필요 경험치 계산 소수 첫자리까지 반올림
+        /// </summary>
+        public void RequiredExp()
         {
             float requiredExp = 30f; // 1레벨 기본 경험치
 
-            for (int i = 2; i <= currentLevel; i++)
-            {
-                requiredExp *= 1.6f;
+            for (int i = 2; i <= level; i++)
+             {
+                    requiredExp *= 1.6f;
             }
 
-            return requiredExp;
+            reqExp = Mathf.Round(requiredExp * 10) * 0.1f;
         }
         #endregion
 
-        #region 경험치 및 레벨 관리
-        /// <summary>
-        /// 경험치 획득
-        /// </summary>
-        public void GainExp(float expAmount)
+        #region 레벨 기반 스탯 재계산 
+        public void LevelUpRecalculateStats ()
         {
-            currenExp += expAmount;
-            OnExpGained?.Invoke(expAmount);
-
-            CheckLevelUp();
+            LevelUpRecalculateHpStats();
+            LevelUpRecalculateAtkStats();
+            LevelUpRecalculateHPRegenStats();
         }
 
-        private void CheckLevelUp()
+        public void LevelUpRecalculateHpStats()
         {
-            while (currenExp >= RequiredExp && level < 99) // 최대 레벨 99
+            float RecalculateHP = 100f; // 1레벨 기본 체력
+
+            for (int i = 2; i <= level; i++)
             {
-                currenExp -= RequiredExp;
-                level++;
-
-                RecalculateAllStats();
-                currentHp = MaximumHp; // 레벨업 시 체력 완전 회복
-
-                OnLevelUp?.Invoke(level);
-                OnHpChanged?.Invoke(currentHp);
-
-                Debug.Log($"레벨업! 현재 레벨: {level}");
+                RecalculateHP += 33f;
             }
+
+            maximumHp = Mathf.Round(RecalculateHP * 10) * 0.1f;
         }
+
+        public void LevelUpRecalculateAtkStats()
+        {
+            float RecalculateAtk = 10f; // 1레벨 기본 공격력
+
+            for (int i = 2; i <= level; i++)
+            {
+                RecalculateAtk += 2.5f;
+            }
+
+            atk = Mathf.Round(RecalculateAtk * 10) * 0.1f;
+        }
+
+        public void LevelUpRecalculateHPRegenStats()
+        {
+            float RecalculateHPRegen = 1f; // 1레벨 기본 체력
+
+            for (int i = 2; i <= level; i++)
+            {
+                RecalculateHPRegen += 0.2f;
+            }
+
+            hpRegen = Mathf.Round(RecalculateHPRegen * 10) * 0.1f;
+        }
+        #endregion
+
+        #region 생명 관리
+        public void Die()
+        {
+            isDead = true;
+        }
+
+        public void Live()
+        {
+            isDead = false;
+        }
+
+        // 리셋
         #endregion
 
         #region HP 관리
@@ -128,7 +164,9 @@ namespace LHE
             currentHp = Mathf.Min(currentHp + healAmount, MaximumHp);
 
             if (currentHp != oldHp)
-                OnHpChanged?.Invoke(currentHp);
+            {
+                // OnHpChanged?.Invoke(currentHp); 현재 체력 변경 알림
+            }
         }
 
         /// <summary>
@@ -136,37 +174,56 @@ namespace LHE
         /// </summary>
         public void TakeDamage(float damage)
         {
+            float oldHp = currentHp;
             currentHp = Mathf.Max(currentHp - damage, 0f);
-            OnHpChanged?.Invoke(currentHp);
+
+            if (currentHp != oldHp)
+            {
+                // OnHpChanged?.Invoke(currentHp); 현재 체력 변경 알림
+            }
 
             if (currentHp <= 0)
             {
-                Debug.Log("플레이어 사망!");
+                Die();
                 // 사망 처리 로직
             }
         }
 
+        public void PlayerHpRegen()
+        {
+            regenTimer += Time.deltaTime;////////////////////
+
+        }
+
         /// <summary>
-        /// HP 비율 반환 (0~1)
+        /// 체력 최대 회복
+        /// </summary>
+        public void FullHPRecovery()
+        {
+            currentHp = maximumHp;
+        }
+
+        /// <summary>
+        /// HP 비율 반환 (0~1) _장비 아이템에 의해 체력이 증가하면 비율을 유지하며 증가하도록 함 _반대도 마찬가지
         /// </summary>
         public float GetHpRatio() => currentHp / MaximumHp;
         #endregion
 
-        #region 돈 관리
-        public void GainMoney(float amount)
-        {
-            money += amount;
-        }
+        //#region 돈 관리
+        //public void GainMoney(float amount)
+        //{
+        //    money += amount;
+        //}
 
-        public bool SpendMoney(float amount)
-        {
-            if (money >= amount)
-            {
-                money -= amount;
-                return true;
-            }
-            return false;
-        }
-        #endregion
+        //public bool SpendMoney(float amount)
+        //{
+        //    if (money >= amount)
+        //    {
+        //        money -= amount;
+        //        return true;
+        //    }
+        //    return false;
+        //}
+        //#endregion
     }
 }

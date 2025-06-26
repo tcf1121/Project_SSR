@@ -393,7 +393,7 @@ namespace LHE
         /// </summary>
         private void ExecuteJump()
         {
-            rb.velocity = new Vector2(rb.velocity.x, playerStats.jump + 5);
+            rb.velocity = new Vector2(rb.velocity.x, playerStats.Jump + 5);
             ConsumeJumpInput();
         }
 
@@ -641,7 +641,7 @@ namespace LHE
 
             // 바라보는 방향으로 점프 
             Vector2 jumpDirection = new Vector2(facingRight ? 1f : -1f, 1f).normalized;
-            rb.velocity = jumpDirection * (playerStats.jump + 5f) * 1.1f;
+            rb.velocity = jumpDirection * (playerStats.Jump + 5f) * 1.1f;
 
             ConsumeJumpInput();
         }
@@ -671,7 +671,7 @@ namespace LHE
             }
 
             // 기존 속도 초기화 후 벽점프 적용
-            Vector2 wallJumpVelocity = jumpDirection * (playerStats.jump + 5);
+            Vector2 wallJumpVelocity = jumpDirection * (playerStats.Jump + 5);
             rb.velocity = wallJumpVelocity;
 
             // 벽 슬라이드 상태 해제

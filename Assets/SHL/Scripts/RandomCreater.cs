@@ -16,8 +16,7 @@ namespace SHL
         private Vector2 min;
         private Vector2 max;
         [SerializeField] private GameObject Posprefab;
-        private Vector2 min;
-        private Vector2 max;
+
 
         private void Awake()
         {

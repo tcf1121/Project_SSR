@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;        // Handles
-#endif
+using UnityEditor; // Handles 사용을 위해 필요
 
 namespace PHG
 {
@@ -12,74 +10,83 @@ namespace PHG
         /* ───────── 레퍼런스 캐싱 ───────── */
         private MonsterBrain brain;
         private JumpMove jumper;
+        private Transform muzzle;
+        private Transform player;
 
         private void OnEnable()
         {
             brain = GetComponent<MonsterBrain>();
-            jumper = GetComponent<JumpMove>();      // 없으면 null
+            jumper = GetComponent<JumpMove>();
         }
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            if (brain == null || brain.sensor == null) return;
+            if (brain == null || brain.sensor == null || brain.StatData == null) return;
 
-            float dir = Mathf.Sign(transform.localScale.x); // 바라보는 방향 (+/-)
+            var statData = brain.StatData;
 
-            /*──────────────── 센서 레이 ────────────────*/
-            // Patrol/Chase ① 바닥 확인
+            muzzle = transform.Find("MuzzlePoint");
+            player = GameObject.FindWithTag("Player")?.transform;
+
+            float dir = Mathf.Sign(transform.localScale.x);
+
+            // 센서 레이
             Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(brain.sensor.position,
-                            brain.sensor.position + Vector3.down * 0.20f);
+            Gizmos.DrawLine(brain.sensor.position, brain.sensor.position + Vector3.down * 0.20f);
 
-            // Patrol/Chase ② 벽 확인
-            Gizmos.color = new Color(1f, 0f, 1f);  // Magenta
-            Gizmos.DrawLine(brain.sensor.position,
-                            brain.sensor.position + Vector3.right * dir * 0.10f);
+            Gizmos.color = new Color(1f, 0f, 1f);
+            Gizmos.DrawLine(brain.sensor.position, brain.sensor.position + Vector3.right * dir * 0.10f);
 
-            // Chase        ③ wallAhead
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(brain.sensor.position,
-                            brain.sensor.position + Vector3.right * dir * 0.35f);
+            Gizmos.DrawLine(brain.sensor.position, brain.sensor.position + Vector3.right * dir * 0.35f);
 
-            /*──────────────── JumpMove 레이 ─────────────*/
             if (jumper != null)
             {
-                // 위쪽 점프 가능 플랫폼 감지용 디버그 (새 추가)
                 Gizmos.color = Color.blue;
                 Gizmos.DrawLine(transform.position + Vector3.up * 0.1f,
                                 transform.position + Vector3.up * 1.5f);
             }
 
-
-            /*──────────────── 원형 감지 범위 ────────────*/
-            /*──────────────── 원형 감지 범위 ────────────*/
             Vector3 p = transform.position;
-            float patrolRange = brain.Stats.PatrolRange;
-            float chaseRange = brain.Stats.ChaseRange;
-            float attackRange = brain.Stats.AttackRange;
 
-            if (patrolRange > 0f)
+            if(statData.readyRange > 0f) //사격범위
             {
-                Handles.color = new Color(0f, 0.6f, 1f, 0.35f); // 하늘색
-                Handles.DrawWireDisc(p, Vector3.forward, patrolRange);
-            }
-            if (chaseRange > 0f)
-            {
-                Handles.color = new Color(1f, 0.85f, 0f, 0.35f); // 노랑
-                Handles.DrawWireDisc(p, Vector3.forward, chaseRange);
-            }
-            if (attackRange > 0f)
-            {
-                Handles.color = new Color(1f, 0f, 0f, 0.35f); // 빨강
-                Handles.DrawWireDisc(p, Vector3.forward, attackRange);
-            }
-            if (brain.Stats.ChargeRange > 0f)
-            {
-                Handles.color = new Color(1f, 0.2f, 1f, 0.35f); // 보라색
-                Handles.DrawWireDisc(p, Vector3.forward, brain.Stats.ChargeRange);
+                Handles.color = new Color(0f, 1f, 0f, 0.35f);
+                Handles.DrawWireDisc(p, Vector3.forward, statData.readyRange); ;
             }
 
+            if (statData.patrolRange > 0f)
+            {
+                Handles.color = new Color(0f, 0.6f, 1f, 0.35f);
+                Handles.DrawWireDisc(p, Vector3.forward, statData.patrolRange);
+            }
+            if (statData.chaseRange > 0f)
+            {
+                Handles.color = new Color(1f, 0.85f, 0f, 0.35f);
+                Handles.DrawWireDisc(p, Vector3.forward, statData.chaseRange);
+            }
+            if (statData.attackRange > 0f)
+            {
+                Handles.color = new Color(1f, 0f, 0f, 0.35f);
+                Handles.DrawWireDisc(p, Vector3.forward, statData.attackRange);
+            }
+            if (statData.chargeRange > 0f)
+            {
+                Handles.color = new Color(1f, 0.2f, 1f, 0.35f);
+                Handles.DrawWireDisc(p, Vector3.forward, statData.chargeRange);
+            }
+
+            if (GetComponent<RangedTag>() != null && muzzle != null && player != null)
+            {
+                Gizmos.color = Color.yellow;
+                Vector3 from = muzzle.position;
+                Vector3 to = player.position;
+                Vector3 dir2 = (to - from).normalized;
+
+                Gizmos.DrawLine(from, from + dir2 * statData.attackRange);
+                Gizmos.DrawWireSphere(from + dir2 * statData.attackRange, 0.1f);
+            }
         }
 #endif
     }

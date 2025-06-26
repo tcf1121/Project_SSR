@@ -3,8 +3,7 @@
 namespace PHG
 {
     /// <summary>
-    /// State – 근접 공격
-    /// 플레이어가 사정거리 안에 들어오면 정지 후 타격
+    /// 근접 공격 상태 – 플레이어가 사정거리 안에 들어오면 정지 후 타격
     /// </summary>
     public class MeleeAttackState : IState
     {
@@ -12,10 +11,11 @@ namespace PHG
         private readonly MonsterBrain brain;
         private readonly Rigidbody2D rb;
         private readonly Transform tf;
-        private readonly Collider2D hitBox;  // (멤버 변수) 피격 판정용
+        private readonly Collider2D hitBox;  // 피격 판정용
+        private readonly MonsterStatData statData;
 
         /* ───── tunables ───── */
-        private const float swingCooldown = 0.6f;          // (멤버 변수) 공격 간격
+        private const float swingCooldown = 0.6f;
 
         /* ───── runtime ───── */
         private Transform player;
@@ -25,8 +25,9 @@ namespace PHG
         {
             this.brain = brain;
             this.hitBox = hitBox;
-            rb = brain.GetComponent<Rigidbody2D>();
-            tf = brain.transform;
+            this.rb = brain.GetComponent<Rigidbody2D>();
+            this.tf = brain.transform;
+            this.statData = brain.StatData;
         }
 
         public void Enter()
@@ -44,11 +45,12 @@ namespace PHG
                 brain.ChangeState(StateID.Patrol);
                 return;
             }
+            if (statData == null) return; // 안전망
 
             float dist = Vector2.Distance(tf.position, player.position);
 
             /* 사정거리 밖 → 추격 */
-            if (dist > brain.Stats.AttackRange)
+            if (dist > statData.attackRange)
             {
                 brain.ChangeState(StateID.Chase);
                 return;
@@ -56,13 +58,15 @@ namespace PHG
 
             /* 방향 고정 */
             int dir = player.position.x > tf.position.x ? 1 : -1;
-            tf.localScale = new Vector3(dir, 1, 1);
+            Vector3 scale = tf.localScale;
+            scale.x = Mathf.Abs(scale.x) * dir;
+            tf.localScale = scale;
 
             /* 공격 */
             if (Time.time - lastSwing >= swingCooldown)
             {
                 rb.velocity = Vector2.zero;
-               // brain.Animator.SetTrigger("Swing");   // 애니메이션 트리거 (선택)
+                // brain.Animator?.SetTrigger("Swing"); // 애니메이션 트리거 (옵션)
                 lastSwing = Time.time;
             }
         }

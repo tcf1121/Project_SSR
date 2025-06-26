@@ -10,12 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82239278cee69fb43824c6c6da7da64f, type: 3}
-  m_Name: RangerMob
+  m_Name: SkullWolf_Stats
   m_EditorClassIdentifier: 
   maxHP: 100
   damage: 10
-  moveSpeed: 1
-  patrolRange: 4
-  chaseRange: 6
-  attackRange: 5
-  chargeRange: 2.5
+  moveSpeed: 2
+  patrolRange: 2
+  chaseRange: 8
+  attackRange: 0.5
+  chargeRange: 0
+  enableJump: 1
+  jumpHorizontalFactor: 0.8
+  jumpForce: 5
+  jumpCooldown: 1.5
+  usePatrol: 0
+  rangedCooldown: 2
+  projectileprefab: {fileID: 0}
+  readyRange: 0

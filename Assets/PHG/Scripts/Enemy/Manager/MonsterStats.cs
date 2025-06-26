@@ -1,28 +1,22 @@
 using UnityEngine;
 
-
 namespace PHG
 {
-
     public class MonsterStats : MonoBehaviour
     {
         [SerializeField] private MonsterStatData statData;
-        [SerializeField] private bool usePatrol = true;
-
-        [SerializeField] private float chargeRange = 2.5f;
 
         private int currentHP;
 
         public int MaxHP => statData.maxHP;
         public int CurrentHP => currentHP;
         public int Damage => statData.damage;
-        public float MoveSpeed => statData != null ? statData.moveSpeed : 0f;
+        public float MoveSpeed => statData.moveSpeed;
         public float PatrolRange => statData.patrolRange;
         public float ChaseRange => statData.chaseRange;
         public float AttackRange => statData.attackRange;
-
-        public float ChargeRange => chargeRange;
-        public bool UsePatrol => usePatrol;
+        public float ChargeRange => statData.chargeRange;
+        public bool UsePatrol => statData.usePatrol; //  SO 플래그 사용
 
         private void Awake()
         {
@@ -39,5 +33,4 @@ namespace PHG
             }
         }
     }
-
 }

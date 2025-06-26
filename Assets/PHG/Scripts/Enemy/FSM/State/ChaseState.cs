@@ -1,61 +1,59 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-
 
 namespace PHG
 {
-
-    /// <summary>
-    /// State – Chase
-    /// 점프 → 2회 실패 후 사다리 시도 → 평지 추격 → 지면에서만 Attack
-    /// </summary>
     public class ChaseState : IState
     {
-        /* ───── static ───── */
-        static Transform sPlayer;   // 모든 모델스터가 공유하는 플레이어 캐시
+        /* ───────── static ───────── */
+        private static Transform sPlayer;
 
-        /* ───── refs ───── */
-        readonly MonsterBrain brain;
-        readonly Rigidbody2D rb;
-        readonly Transform tf;
-        readonly JumpMove jumper;
-        readonly LadderClimber climber;
+        public static Transform Player => sPlayer;
 
-        /* ───── tunables ───── */
-        const float Y_JUMP_THRESHOLD = 0.9f;   // 점프 필요 높이
-        const float Y_LADDER_THRESHOLD = 1.8f;   // 사다리 고려 높이
-        const float X_LADDER_TOL = 0.25f;  // 사다리 시도 X 오차
-        const float GROUND_DEADZONE = 0.05f;  // 너무 가치면 정지
-        const int MAX_JUMP_FAILS = 2;      // 점프 실패 허용 횟수
-        const float ATTACK_HEIGHT_TOL = 0.6f;   // 공격 허용 Y 차이
-        const float GROUND_CHECK_DIST = 0.15f;  // 발림 지면 체크 거리
+        /* ───────── refs ───────── */
+        private readonly MonsterBrain brain;
+        private readonly Rigidbody2D rb;
+        private readonly Transform tf;
+        private readonly JumpMove jumper;     // null → 점프 불가
+        private readonly LadderClimber climber;    // null → 사다리 불가
+        private readonly MonsterStatData statData;
+        private readonly LayerMask groundMask;
+        private readonly bool isRanged;
+        bool isSpider => brain.GetComponent<SpiderTag>() != null;
 
-        /* ───── runtime ───── */
-        int jumpFailCounter;
-        int chaseDir; // 현재 추가 방향 (1: 우, -1: 왼)
-        bool wasGrounded;
 
+        /* ───────── const / tuning ───────── */
+        private const float WALL_CHECK_DIST = 0.15f;
+        private const float JUMP_HEIGHT_TOL = 0.45f;
+        private const float ATTACK_HEIGHT_TOL = 0.6f;
+        private const float STUCK_VEL_TOL = 0.05f; // x 속도 이하면 막힘 간주
+        private const float AIR_ACCEL = 8f;    // 공중 X 가속도
+
+        /* ───────── state vars ───────── */
+        private float jumpTimer;
+
+        /* ================================================================= */
         public ChaseState(MonsterBrain brain)
         {
             this.brain = brain;
             rb = brain.GetComponent<Rigidbody2D>();
             tf = brain.transform;
-            jumper = brain.GetComponent<JumpMove>();
+            jumper = brain.GetComponent<JumpMove>();   // 없으면 null
             climber = brain.GetComponent<LadderClimber>();
+            statData = brain.StatData;
+            isRanged = brain.GetComponent<RangedTag>() != null;
+            groundMask = brain.groundMask;
         }
 
+        /* ----------------------------------------------------------------- */
+        #region IState
         public void Enter()
         {
             if (sPlayer == null)
                 sPlayer = GameObject.FindWithTag("Player")?.transform;
 
             rb.velocity = Vector2.zero;
-            jumpFailCounter = 0;
-
-            float dx = sPlayer.position.x - tf.position.x;
-            chaseDir = dx > 0 ? 1 : -1;
-            tf.localScale = new Vector3(chaseDir, 1f, 1f);
+            jumpTimer = 0f;
         }
 
         public void Tick()
@@ -66,134 +64,110 @@ namespace PHG
                 return;
             }
 
-
-            if (climber != null && climber.IsClimbing) return;
-
-            float dx = sPlayer.position.x - tf.position.x;
-            float dy = sPlayer.position.y - tf.position.y;
-            float absDx = Mathf.Abs(dx);
-            float distToPlayer = Vector2.Distance(tf.position, sPlayer.position);
-            int dir = dx > 0 ? 1 : -1;
-
-            // 점프 중에는 방향 고정 (회전 X)
-            if (jumper == null || !jumper.IsMidJump)
-            {
-                chaseDir = dx > 0 ? 1 : -1;
-                tf.localScale = new Vector3(chaseDir, 1f, 1f);
-            }
-
-            bool grounded = Physics2D.Raycast(tf.position + Vector3.down * 0.05f,
-                                              Vector2.down, GROUND_CHECK_DIST,
-                                              brain.groundMask);
-
-            float attackDist = brain.Stats.AttackRange;
-            if (grounded && absDx <= attackDist && Mathf.Abs(dy) < ATTACK_HEIGHT_TOL)
+            /* ─── (0) 사다리 등반 중이면 Chase 로직 일시 정지 ─── */
+            if (climber != null && climber.IsClimbing)
             {
                 rb.velocity = Vector2.zero;
-                brain.ChangeState(StateID.Attack);
                 return;
             }
-            if (grounded && distToPlayer <= brain.Stats.ChaseRange)
-            {
-                dx = sPlayer.position.x - tf.position.x;
-                chaseDir = dx > 0 ? 1 : -1;
-                tf.localScale = new Vector3(chaseDir, 1f, 1f);
 
-                if (absDx > GROUND_DEADZONE)
-                    rb.velocity = new Vector2(chaseDir * brain.Stats.MoveSpeed, rb.velocity.y);
-                else
-                    rb.velocity = Vector2.zero;
+            Vector2 toPl = sPlayer.position - tf.position;
+            float absDx = Mathf.Abs(toPl.x);
+            float absDy = Mathf.Abs(toPl.y);
+            float dist = toPl.magnitude;
+            int dir = toPl.x > 0 ? 1 : -1;
 
-                return; // ✅ 여기서 마무리하면 나머지 점프/벽점프 로직 건드리지 않음
-            }
-            if (grounded && !wasGrounded)
-            {
-                float dx2 = sPlayer.position.x - tf.position.x;
-                chaseDir = dx2 > 0 ? 1 : -1;
-                tf.localScale = new Vector3(chaseDir, 1f, 1f);
-                if (Vector2.Distance(tf.position, sPlayer.position) <= brain.Stats.ChaseRange)
-                    rb.velocity = new Vector2(chaseDir * brain.Stats.MoveSpeed, rb.velocity.y);
-            }
-            wasGrounded = grounded;
+            Orient(dir);
 
-            // ✅ 플레이어가 ChaseRange 밖에 있을 경우만 Patrol 전환
-            if (Vector2.Distance(tf.position, sPlayer.position) > brain.Stats.ChaseRange)
-            {
-                brain.ChangeState(StateID.Patrol);
+            bool grounded = IsGrounded();
+
+            // ───────── ① 공격 시도 ─────────
+            if (grounded && TryAttack(absDx, absDy))
                 return;
-            }
-            if (jumper == null)
+
+            // ───────── ② 이동 / 점프 판단 ─────────
+            bool wallAhead = Physics2D.Raycast(tf.position, Vector2.right * dir,
+                                               WALL_CHECK_DIST, groundMask);
+            bool needJump = grounded && jumper != null &&
+                             (wallAhead || absDy > JUMP_HEIGHT_TOL);
+            bool stuck = grounded && Mathf.Abs(rb.velocity.x) < STUCK_VEL_TOL;
+
+            float jumpCd = Mathf.Max(statData.jumpCooldown, 0.45f);
+
+            if ((needJump || stuck) && jumpTimer <= 0f && jumper != null && jumper.Ready())
             {
-                RaycastHit2D groundHit = Physics2D.Raycast(tf.position + Vector3.down * 0.1f, Vector2.down, 1f, brain.groundMask);
-                if (groundHit.collider != null)
-                {
-                    Bounds bounds = groundHit.collider.bounds;
-                    float left = bounds.min.x;
-                    float right = bounds.max.x;
+                float yBoost = wallAhead ? statData.jumpForce * 0.2f : 0f;
+                float jumpForceY = statData.jumpForce + yBoost;
 
-                    float playerX = sPlayer.position.x;
-                    if (playerX < left || playerX > right)
-                    {
-                        rb.velocity = Vector2.zero;
-                        return;
-                    }
-                }
+                jumper.DoJump(dir, absDy, jumpForceY, statData.jumpHorizontalFactor, jumpCd);
+                jumpTimer = jumpCd;
             }
-            // ✅ 점프 시도 (플래폼 위로)
-            if (jumper != null)
-            {
-                if (Mathf.Abs(dy) > Y_JUMP_THRESHOLD)
-                {
-                    bool jumped = jumper.TryJumpToPlatformAbove(chaseDir, sPlayer.position);
-                    if (jumped)
-                    {
-                        jumpFailCounter = 0;
-                        return;
-                    }
-                    jumpFailCounter++;
-                }
-            }
-
-            // ✅ 벽 점프
-            bool wallAhead = Physics2D.Raycast(tf.position + Vector3.up * 0.1f,
-                                                Vector2.right * chaseDir, 0.25f, brain.groundMask);
-
-            if (wallAhead && jumper != null)
-            {
-                bool jumped = jumper.TryJumpWallOrPlatform(chaseDir, sPlayer.position.y);
-                if (jumped)
-                {
-                    jumpFailCounter = 0;
-                    return;
-                }
-                jumpFailCounter++;
-            }
-
-            // ✅ 사다리는 조건 마지막 시 자동 (별도 전환 없음)
-            bool ladderGap = Mathf.Abs(dy) >= Y_LADDER_THRESHOLD;
-            bool ladderCond = ladderGap &&
-                              jumpFailCounter >= MAX_JUMP_FAILS &&
-                              Mathf.Abs(dx) <= X_LADDER_TOL &&
-                              climber != null;
-
-            // ✅ 평지 추적
-            if (absDx > GROUND_DEADZONE)
-                rb.velocity = new Vector2(chaseDir * brain.Stats.MoveSpeed, rb.velocity.y);
             else
-                rb.velocity = Vector2.zero;
-
-            // ✅ 점프 중에는 이동만 유지
-            if (jumper != null && jumper.IsMidJump)
             {
-                float dx3 = sPlayer.position.x - tf.position.x;
-                int dir2 = dx3 > 0 ? 1 : -1;
-                chaseDir = dir2;
-                tf.localScale = new Vector3(chaseDir, 1f, 1f);
-                rb.velocity = new Vector2(chaseDir * brain.Stats.MoveSpeed, rb.velocity.y);
-                return;
+                // 지상 → 즉시 설정 / 공중 → 가속 보간
+                float spiderBoost = (isSpider && dist < brain.Stats.ChargeRange) ? 2.0f : 1f;
+                float targetX = dir * statData.moveSpeed * spiderBoost;
+                if (grounded)
+                    rb.velocity = new Vector2(targetX, rb.velocity.y);
+                else // airborne 가속 유지
+                    rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, targetX,
+                                                                 AIR_ACCEL * Time.deltaTime),
+                                              rb.velocity.y);
             }
+
+            // ───────── ③ 추격 포기 ─────────
+            if (dist > statData.chaseRange)
+                brain.ChangeState(StateID.Patrol);
+
+            if (jumpTimer > 0f) jumpTimer -= Time.deltaTime;
+
+            //y차가 크고 사다리가 있다면 등반시도
+            if (climber != null && Mathf.Abs(toPl.y) > climber.MinYThreshold)
+                climber.ScanAheadAndClimb(dir);
+
+        
+
         }
 
         public void Exit() => rb.velocity = Vector2.zero;
+        #endregion
+
+        /* ----------------------------------------------------------------- */
+        #region helpers
+        private bool IsGrounded()
+        {
+            if (jumper != null)
+                return jumper.IsGrounded();
+
+            // 점프 컴포넌트 없으면 단순 Raycast ↓ 로 대체
+            return Physics2D.Raycast(tf.position, Vector2.down, 0.05f, groundMask);
+        }
+
+        private void Orient(int dir)
+        {
+            Vector3 s = tf.localScale;
+            s.x = Mathf.Abs(s.x) * dir;
+            tf.localScale = s;
+        }
+
+        private bool TryAttack(float absDx, float absDy)
+        {
+            if (isRanged && absDx <= statData.readyRange)
+            {
+                brain.ChangeState(StateID.Attack);
+                return true;
+            }
+            if (!isRanged && absDx <= 1.0f && absDy < ATTACK_HEIGHT_TOL)
+            {
+                brain.ChangeState(StateID.Attack);
+                return true;
+            }
+            return false;
+        }
+
+       
+
+
+        #endregion
     }
 }

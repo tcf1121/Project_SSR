@@ -1,50 +1,71 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace PHG
 {
-    // / <summary>
-    // �ܼ� ����- ������ ������Ʈ Ǯ(DontDestroyOnLoad)
-    //</summary>
-
+    /// <summary>
+    /// 프리팹-키 기반 가변 사이즈 Projectile 풀. (싱글턴 / DontDestroyOnLoad)
+    /// </summary>
     public class ProjectilePool : MonoBehaviour
     {
-        [SerializeField] private Projectile prefab;
-        [SerializeField] private int prewarm = 32;
-        private readonly Queue<Projectile> pool = new();
-
-        //�̱���
         public static ProjectilePool Instance { get; private set; }
 
-        private void Awake()
+        /* key = prefab.GetInstanceID() */
+        private readonly Dictionary<int, Queue<Projectile>> pools = new();
+
+        void Awake()
         {
-            if (Instance != null) { Destroy(gameObject); return; }
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-            for (int i = 0; i < prewarm; i++) CreateNew();
+            DontDestroyOnLoad(gameObject);    // 씬 전환 시 유지
         }
 
-        private Projectile CreateNew()
+        /* ───────────────────────────────────
+           public API
+           ───────────────────────────────────*/
+
+        /// <param name="prefab">꺼내고 싶은 투사체 프리팹</param>
+        /// <param name="spawnPos">생성 위치</param>
+        public Projectile Get(Projectile prefab, Vector2 spawnPos)
         {
-            Projectile p = Instantiate(prefab, transform);
-            p.gameObject.SetActive(false);
-            pool.Enqueue(p);
-            return p;
+            int key = prefab.GetInstanceID();
+
+            if (!pools.TryGetValue(key, out Queue<Projectile> q))
+            {
+                q = new Queue<Projectile>();
+                pools[key] = q;
+            }
+
+            Projectile proj = q.Count > 0
+                ? q.Dequeue()
+                : Instantiate(prefab, transform);  // 부모를 풀 오브젝트로 지정
+
+            proj.PoolKey = key;
+            proj.transform.position = spawnPos;
+            proj.gameObject.SetActive(true);
+            return proj;
         }
 
-        public Projectile Get()
+        /// <summary>
+        /// Projectile 자체에서 Hit / 수명 종료 시 호출
+        /// </summary>
+        public void Release(Projectile proj)
         {
-            if (pool.Count == 0) CreateNew();
-            Projectile p = pool.Dequeue();
-            p.gameObject.SetActive(true);
-            return p;
-        }
+            int key = proj.PoolKey;
 
-        public void Return(Projectile p)
-        {
-            p.gameObject.SetActive(false);
-            pool.Enqueue(p);
+            if (!pools.TryGetValue(key, out Queue<Projectile> q))
+            {
+                Debug.LogWarning($"[ProjectilePool] Unknown PoolKey {key}. Creating fallback queue.");
+                q = new Queue<Projectile>();
+                pools[key] = q;
+            }
+
+            proj.gameObject.SetActive(false);
+            q.Enqueue(proj);   // 중복 Enqueue 방지 – 한 번만
         }
     }
 }

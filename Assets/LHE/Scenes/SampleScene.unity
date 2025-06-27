@@ -439,7 +439,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4096
   attackCollider: {fileID: 1210784243}
-  attackPoint: {fileID: 0}
   showAttackRange: 1
 --- !u!1 &395361496
 GameObject:

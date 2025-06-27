@@ -49,6 +49,7 @@ namespace LHE
         public float Speed => speed;
         public float Jump => jump;
         public float CurrentHp => currentHp;
+        public float ReqExp => reqExp;
 
 
         void Awake()
@@ -184,6 +185,8 @@ namespace LHE
             float oldHp = currentHp;
             currentHp = Mathf.Max(currentHp - damage, 0f);
 
+            // 일정 시간 무적 구현 (기획 논의중)
+            // 경직 (기획 논의중)
             if (currentHp != oldHp)
             {
                 // OnHpChanged?.Invoke(currentHp); 현재 체력 변경 알림

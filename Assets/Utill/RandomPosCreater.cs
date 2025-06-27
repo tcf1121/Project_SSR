@@ -78,8 +78,8 @@ namespace Utill
             float divideX = (max.x - min.x) / num;
             for (int i = 0; i < num; i++)
                 randomPosList.Add(RandomGroundPos(
-                    new Vector2(min.x, min.y),
-                    new Vector2(min.x + (divideX * i), max.y)
+                    new Vector2(min.x + (divideX * i), min.y),
+                    new Vector2(min.x + (divideX * i + 1), max.y)
                     ));
             return randomPosList;
         }

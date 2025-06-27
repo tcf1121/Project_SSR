@@ -4,7 +4,7 @@ using UnityEngine;
 namespace LHE
 {
     /// <summary>
-    /// 플레이어에게 보상관련 클래스 (돈, 겸험치, 아이템, 버프 등등)
+    /// 플레이어에게 보상관련 클래스 (돈, 겸험치, 아이템(후추), 버프 등등)
     /// </summary>
     public class PlayerRewards : MonoBehaviour
     {

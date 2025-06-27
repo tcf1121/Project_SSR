@@ -26,7 +26,7 @@ namespace LHE
         [SerializeField] private float bonusJump = 0f;
 
         [Header("현재 상태")]
-        [SerializeField] private bool isDead = false;
+        [SerializeField] public bool isDead = false;
 
         // 체력 재생 타이머
         private float regenTimer = 0f;
@@ -49,6 +49,7 @@ namespace LHE
         public float Speed => speed;
         public float Jump => jump;
         public float CurrentHp => currentHp;
+        public float ReqExp => reqExp;
 
 
         void Awake()
@@ -57,7 +58,7 @@ namespace LHE
         }
         void Start()
         {
-
+            FullHPRecovery();
         }
 
         private void Update()
@@ -184,6 +185,8 @@ namespace LHE
             float oldHp = currentHp;
             currentHp = Mathf.Max(currentHp - damage, 0f);
 
+            // 일정 시간 무적 구현 (기획 논의중)
+            // 경직 (기획 논의중)
             if (currentHp != oldHp)
             {
                 // OnHpChanged?.Invoke(currentHp); 현재 체력 변경 알림

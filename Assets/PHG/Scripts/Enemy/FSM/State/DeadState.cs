@@ -11,7 +11,10 @@ namespace PHG
 
         public void Enter() => Object.Destroy(brain.gameObject);
         public void Tick() { }
-        public void Exit() { }
+        public void Exit() 
+        {
+            brain.GetComponent<LootDropper>()?.Drop(); // LootDropper가 있으면 드랍 시도
+        }
 
 
     }

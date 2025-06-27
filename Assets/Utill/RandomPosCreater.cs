@@ -79,7 +79,6 @@ namespace Utill
             
             for (int i = 0; i < num; i++)
                 randomPosList.Add(RandomGroundPos(
-                    
                     new Vector2(min.x + (divideX * i), min.y),
                     new Vector2(min.x + (divideX * i + 1), max.y)
                     ));

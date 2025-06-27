@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using SHL;
+using PHG;
 using UnityEngine;
 using Utill;
 
@@ -16,13 +16,12 @@ namespace HCW
         [Header("스폰 설정")]
         [SerializeField] private float spawnInterval = 5f; // 스폰 간격
         [SerializeField] private int maxAlive = 40;
-        public SHL.RandomCreater randomCreater;
         private Vector2 min;
         private Vector2 max;
 
         void Awake()
         {
-            _spwanPoint = new List<Vector2>(randomCreater._transformList);
+            _spwanPoint = new();
             Init();
             StartCoroutine(SpawnRoutine());
         }
@@ -39,35 +38,37 @@ namespace HCW
         {
             min = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0));
             max = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 0));
-            Debug.Log("Min: " + min + ", Max: " + max);
             _spwanPoint = new();
             for (int i = 0; i < _objectPool.PoolCount; i++)
             {
-                _spwanPoint.Add(randomCreater.PointSetting(min, max));
+                _spwanPoint.Add(RandomPosCreater.RandomPos(min, max, true));
             }
         }
 
         private void Spawn()
         {
-            int aliveCount = 0;
+            int aliveCount = 0; // 현재 활성화된 몬스터 수
             foreach (GameObject mob in _objectPool.Pool)
                 if (mob.activeSelf)
                     aliveCount++;
 
-            int spawnCount = _objectPool.PoolCount - aliveCount;
-            if (spawnCount <= 0) return; // 최대치면 소환 안 함
+            int spawnCount = _objectPool.PoolCount - aliveCount; // 최대 활성화 가능한 몬스터 수
+            if (spawnCount <= 0) return;
 
             List<Vector2> spawnPoints = new List<Vector2>(_spwanPoint);
 
-            foreach (GameObject mob in _objectPool.Pool)
+            foreach (GameObject mob in _objectPool.Pool) // 몬스터 풀에서 활성화된 몬스터를 확인
             {
                 if (!mob.activeSelf && spawnCount > 0)
                 {
-                    int randIndex = Random.Range(0, spawnPoints.Count);
-                    mob.transform.position = spawnPoints[randIndex];
-                    spawnPoints.RemoveAt(randIndex);
+                    bool isFlying = mob.GetComponent<FlyingTag>() != null; // FlyingTag 컴포넌트 확인
+                    Vector2 pos = isFlying
+                        ? RandomPosCreater.RandomPos(min, max, false)
+                        : RandomPosCreater.RandomPos(min, max, true);
 
+                    mob.transform.position = pos;
                     mob.SetActive(true);
+
                     spawnCount--;
                 }
             }

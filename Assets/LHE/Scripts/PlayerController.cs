@@ -65,12 +65,12 @@ namespace LHE
 
         // ===== 상태 플래그들 =====
         private bool isGrounded;
-        private bool isTouchingWall;
-        private bool isWallSliding;
+        public bool isTouchingWall;
+        public bool isWallSliding;
         private bool isCrouching;
-        private bool isOnLadder;
-        private bool isClimbing;
-        private bool isDashing;
+        public bool isOnLadder;
+        public bool isClimbing;
+        public bool isDashing;
 
         // ===== 타이머들 =====
         private float jumpBufferCounter;
@@ -156,18 +156,15 @@ namespace LHE
             crouchInput = verticalInput < -0.1f;  // -0.1f 이하면 아래키로 인식
         }
 
-        public void OnJump(InputValue inputValue)
+        public void OnJump()
         {
-            if (inputValue.isPressed)
-            {
-                jumpInputDown = true;
-                jumpBufferCounter = jumpBufferTime;
-            }
+            jumpInputDown = true;
+            jumpBufferCounter = jumpBufferTime;
         }
 
-        public void OnDash(InputValue inputValue)
+        public void OnDash()
         {
-            if (inputValue.isPressed && dashCooldownLeft <= 0f && !isClimbing)
+            if (dashCooldownLeft <= 0f && !isClimbing)
             {
                 dashInputDown = true;
             }
@@ -395,6 +392,9 @@ namespace LHE
             ConsumeJumpInput();
         }
 
+        /// <summary>
+        /// 사다리 탈출용 대각 약점프
+        /// </summary>
         private void HalfExecuteJump()
         {
             rb.velocity = new Vector2(rb.velocity.x, (playerStats.FinalJump + 5) * 0.6f);
@@ -447,7 +447,6 @@ namespace LHE
         #endregion
 
         #region 사다리/밧줄 매달리기
-
         /// <summary>
         /// 사다리 시스템 메서드
         /// </summary>
@@ -597,8 +596,6 @@ namespace LHE
             if (!isClimbing) return;
 
             SetClimbingState(false);
-            // ResetMovementForExit();
-            // EnableCollisions();
             ClearLadderState();
             StartLadderDelay();
         }
@@ -636,26 +633,24 @@ namespace LHE
 
             if (facingRight)
             {
-                // 오른쪽을 보고 있다면 왼쪽 위로 점프 (170도)
+                // 오른쪽을 보고 있다면 왼쪽 위로 점프 (150도)
                 float angle = 150f * Mathf.Deg2Rad;
                 jumpDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 Flip();
             }
             else
             {
-                // 왼쪽을 보고 있다면 오른쪽 위로 점프 (10도)
+                // 왼쪽을 보고 있다면 오른쪽 위로 점프 (30도)
                 float angle = 30f * Mathf.Deg2Rad;
                 jumpDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 Flip();
             }
 
-            // 기존 속도 초기화 후 벽점프 적용
-            Vector2 wallJumpVelocity = jumpDirection * (playerStats.FinalJump + 5);
-            rb.velocity = wallJumpVelocity;
+            // 벽점프 적용
+            rb.velocity = jumpDirection * (playerStats.FinalJump + 5);
 
             // 벽 슬라이드 상태 해제
             isWallSliding = false;
-            isTouchingWall = false;
             wallTouchTimer = 0f;
 
             // 입력 차단 시작

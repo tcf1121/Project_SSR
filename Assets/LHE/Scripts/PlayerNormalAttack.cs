@@ -1,6 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
+
 
 namespace LHE
 {
@@ -19,23 +21,17 @@ namespace LHE
         [Header("디버그")]
         [SerializeField] private bool showAttackRange = true;
 
-        private enum Weapon
-        {
-            dagger = 1
-            // 무기들 종류와 무기에 따른 공격속도 (데모버전x)
-        }
-
         // ===== 컴포넌트 참조 =====
         private PlayerController playerController;
         private PlayerStats playerStats;
-        private Weapon weapon;
 
         // ===== 상태 변수 =====
         private bool isAttacking = false;
         private bool canAttack = true;
         private float attackCooldownTimer = 0f;
 
-        // 중복방지 때린적을 기억하고 그공격이 다시 적을 때릴수 없게 하고 공격 지속시간 다되면 증발
+        // ==== 중복 방지를 위한 헤시셋 ====
+        private HashSet<Collider2D> hitEnemies = new HashSet<Collider2D>(); 
 
         #region 유니티 주기
         void Awake()
@@ -43,7 +39,8 @@ namespace LHE
             playerController = GetComponent<PlayerController>();
             playerStats = GetComponent<PlayerStats>();
 
-            // 공격 콜라이더 설정
+            if (attackCollider != null) // 초기 비활성화
+                attackCollider.enabled = false;
         }
 
         private void Update()
@@ -53,48 +50,73 @@ namespace LHE
         #endregion
 
         #region 입력 처리
-
-        private void OnNormalAttack(InputValue inputValue)
+        public void OnNormalAttack()
         {
             if (CanPerformAttack()) // 공격 가능여부 체크
             {
-
+                StartCoroutine(AttackSequence());
             }
         }
-
         #endregion
 
         #region 공격 처리
+        /// <summary>
+        /// 공격 가능 조건 여부 판별
+        /// </summary>
+        /// <returns>여부 반환</returns>
         private bool CanPerformAttack()
         {
-            // 공격 쿨타임이 되어야함, 공격중이지 않아야함,
-            // 클라밍중x, 벽타기중x (이건 기획분들에게 확인 받기)
-            return 
+            if (canAttack && !isAttacking && !playerController.isWallSliding &&
+                !playerController.isClimbing && !playerController.isDashing && !playerStats.isDead)
+            {
+                return true;
+            }
+            return false;
         }
 
-        private void PerformAttack()
-        {
-            // 공격 코루틴 실행
-        }
-
+        /// <summary>
+        /// 일반 공격 시퀀스 코루틴
+        /// </summary>
         private IEnumerator AttackSequence()
         {
             StartAttack();  // 공격 시작
 
-            yield return new WaitForSeconds(attackDuration); // 유지 및 대기
+            yield return new WaitForSeconds(attackDuration); // 대기
 
             EndAttack(); // 공격 종료
         }
 
+        /// <summary>
+        /// 일반 공격 시작
+        /// </summary>
         private void StartAttack()
         {
+            isAttacking = true;
 
+            // 일반 공격 소모 및 쿨타임 시작
+            canAttack = false;
+            attackCooldownTimer = attackCooldown;
+
+            hitEnemies.Clear(); // 리스트 초기화
+
+            // 공격 콜라이더 활성화
+            if (attackCollider != null)
+                attackCollider.enabled = true;
+
+            // 추후 공격 에니메이션 추가
+            // animator.SetTrigger("Attack");
         }
 
+        /// <summary>
+        /// 일반 공격 종료
+        /// </summary>
         private void EndAttack()
         {
+            isAttacking = false;
 
-            canAttack = false; // 공격이 끝나면 쿨타임 시작 (아니면 시작으로 이동, 기획과 회의)
+            // 공격 콜라이더 비활성화
+            if (attackCollider != null)
+                attackCollider.enabled = false;
         }    
 
         /// <summary>
@@ -115,20 +137,56 @@ namespace LHE
         #endregion 
 
         #region 충돌 처리
+        /// <summary>
+        /// 공격 콜라이더 트리거
+        /// </summary>
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!isAttacking) return; // 공격중이 아니면 무시
 
-            // 중복 방지 기능 필요
+            if (hitEnemies.Contains(other)) return; // 중복 방지
 
             if (!IsEnemy(other)) return; // 적레이어가 아니면 무시
 
+            DealDamageToEnemy(other);
         }
 
+        /// <summary>
+        /// 적 레이어를 가지고 있는지 확인
+        /// </summary>
+        /// <param name="collider">확인할 오브젝트의 콜라이더</param>
+        /// <returns>적 레이어 여부</returns>
         private bool IsEnemy(Collider2D collider)
         {
-            // 부딪힌 콜러이터의 오브젝트 레이어 가져와서 레이어 번호를 이진법으로 비교
+            // 부딪힌 콜라이더의 오브젝트 레이어 가져와서 레이어 번호를 이진법으로 비교
             return ((1 << collider.gameObject.layer) & enemyLayerMask) != 0;
+        }
+
+        /// <summary>
+        /// 적에게 데미지 처리 (몬스터 스크립트 확인 필요
+        /// </summary>
+        /// <param name="enemy"></param>
+        private void DealDamageToEnemy(Collider2D enemy)
+        {
+            hitEnemies.Add(enemy); // 중복 방지 리스트에 추가
+
+            // 실질적인 데미지 계산 처리
+            Debug.Log("공격 데미지 처리필요!");
+            // 상대 몬스터 스크립트 파악 필요
+        }
+        #endregion
+
+        #region 디버그용 기즈모
+        void OnDrawGizmosSelected()
+        {
+            if (!showAttackRange || attackCollider == null) return;
+
+            // 공격 범위 시각화
+            Gizmos.color = isAttacking ? Color.red : Color.yellow;
+            BoxCollider2D boxCol = (BoxCollider2D)attackCollider;
+            Gizmos.DrawWireCube(
+                (Vector2)attackCollider.transform.position + boxCol.offset,
+                Vector2.Scale(boxCol.size, attackCollider.transform.lossyScale));
         }
         #endregion
 

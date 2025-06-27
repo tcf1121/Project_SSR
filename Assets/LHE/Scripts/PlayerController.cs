@@ -65,12 +65,12 @@ namespace LHE
 
         // ===== 상태 플래그들 =====
         private bool isGrounded;
-        private bool isTouchingWall;
-        private bool isWallSliding;
+        public bool isTouchingWall;
+        public bool isWallSliding;
         private bool isCrouching;
-        private bool isOnLadder;
-        private bool isClimbing;
-        private bool isDashing;
+        public bool isOnLadder;
+        public bool isClimbing;
+        public bool isDashing;
 
         // ===== 타이머들 =====
         private float jumpBufferCounter;
@@ -156,18 +156,15 @@ namespace LHE
             crouchInput = verticalInput < -0.1f;  // -0.1f 이하면 아래키로 인식
         }
 
-        public void OnJump(InputValue inputValue)
+        public void OnJump()
         {
-            if (inputValue.isPressed)
-            {
-                jumpInputDown = true;
-                jumpBufferCounter = jumpBufferTime;
-            }
+            jumpInputDown = true;
+            jumpBufferCounter = jumpBufferTime;
         }
 
-        public void OnDash(InputValue inputValue)
+        public void OnDash()
         {
-            if (inputValue.isPressed && dashCooldownLeft <= 0f && !isClimbing)
+            if (dashCooldownLeft <= 0f && !isClimbing)
             {
                 dashInputDown = true;
             }
@@ -599,8 +596,6 @@ namespace LHE
             if (!isClimbing) return;
 
             SetClimbingState(false);
-            // ResetMovementForExit();
-            // EnableCollisions();
             ClearLadderState();
             StartLadderDelay();
         }
@@ -656,7 +651,6 @@ namespace LHE
 
             // 벽 슬라이드 상태 해제
             isWallSliding = false;
-            isTouchingWall = false;
             wallTouchTimer = 0f;
 
             // 입력 차단 시작

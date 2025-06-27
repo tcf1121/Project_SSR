@@ -26,7 +26,7 @@ namespace LHE
         [SerializeField] private float bonusJump = 0f;
 
         [Header("현재 상태")]
-        [SerializeField] private bool isDead = false;
+        [SerializeField] public bool isDead = false;
 
         // 체력 재생 타이머
         private float regenTimer = 0f;

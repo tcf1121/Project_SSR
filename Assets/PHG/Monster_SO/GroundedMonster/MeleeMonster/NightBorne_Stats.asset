@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82239278cee69fb43824c6c6da7da64f, type: 3}
+  m_Name: NightBorne_Stats
+  m_EditorClassIdentifier: 
+  maxHP: 100
+  damage: 10
+  moveSpeed: 1.5
+  rushMultiplier: 7
+  patrolRange: 5
+  chaseRange: 6
+  attackRange: 0.5
+  chargeRange: 3
+  enableJump: 1
+  jumpHorizontalFactor: 0.8
+  jumpForce: 5
+  jumpCooldown: 1
+  usePatrol: 1
+  idleMode: 0
+  rangedCooldown: 2
+  projectileprefab: {fileID: 0}
+  readyRange: 0
+  projectileSpeed: 10
+  projectileLife: 3
+  firePattern: 0
+  pelletCount: 1
+  spreadAngle: 344
+  meleeCooldown: 0.6
+  meleeRadius: 1

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 namespace PHG
 {
@@ -64,8 +65,23 @@ namespace PHG
 
             // ───── FSM 초기화 ─────
             sm = new StateMachine();
+            
+            //----------Idle 루트-----------
+            if(statData.idleMode == MonsterStatData.IdleMode.GreedInteract)
+            {
+                // Interactable컴포넌트 보장
+                var interact = GetComponent<Interactable>()?? gameObject.AddComponent<Interactable>();
+                idle = new GreedIdleState(this, interact);
+            }
+            else
+            {
+                idle = new IdleState(this);
+            }
             sm.Register(StateID.Idle, idle);
-            sm.Register(StateID.Patrol, patrol);
+                //--------------------------------
+
+
+                sm.Register(StateID.Patrol, patrol);
             sm.Register(StateID.Chase, chase);
             sm.Register(StateID.Attack, attack);
             sm.Register(StateID.Dead, dead);

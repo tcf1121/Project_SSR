@@ -110,7 +110,7 @@ MonoBehaviour:
   sensor: {fileID: 5301052598688163225}
   groundMask:
     serializedVersion: 2
-    m_Bits: 136
+    m_Bits: 128
   canClimbLadders: 1
   hitBox: {fileID: 5709347393703756196}
   stats: {fileID: 1630876321000049875}

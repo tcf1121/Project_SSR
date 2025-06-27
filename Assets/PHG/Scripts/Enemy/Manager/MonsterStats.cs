@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 namespace PHG
 {
@@ -16,7 +16,7 @@ namespace PHG
         public float ChaseRange => statData.chaseRange;
         public float AttackRange => statData.attackRange;
         public float ChargeRange => statData.chargeRange;
-        public bool UsePatrol => statData.usePatrol; //  SO ÇÃ·¡±× »ç¿ë
+        public bool UsePatrol => statData.usePatrol; //  SO í”Œëž˜ê·¸ ì‚¬ìš©
 
         private void Awake()
         {
@@ -29,8 +29,13 @@ namespace PHG
             if (currentHP <= 0)
             {
                 currentHP = 0;
-                // TODO: FSM »ç¸Á »óÅÂ ÀüÈ¯ µî
+                // TODO: FSM ì‚¬ë§ ìƒíƒœ ì „í™˜ ë“±
             }
+        }
+        public void SetStatData(MonsterStatData newData)
+        {
+            statData = newData;
+            currentHP = statData.maxHP;
         }
     }
 }

@@ -57,7 +57,7 @@ namespace LHE
         }
         void Start()
         {
-
+            FullHPRecovery();
         }
 
         private void Update()

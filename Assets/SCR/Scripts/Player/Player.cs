@@ -33,7 +33,7 @@ namespace SCR
         private Rigidbody2D _rigid;
         public Collider2D Collider { get { return _collider; } }
         private Collider2D _collider;
-        Coroutine pickCor;
+
 
 
 
@@ -82,22 +82,6 @@ namespace SCR
             _playerPhysical.SetGroundCheck(transform.Find("GroundCheckPos"));
         }
 
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                if (pickCor == null)
-                {
-                    pickCor = StartCoroutine(pickup());
-                }
-            }
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                _conditionalUI.EquipUI.OnOffEquipUI();
-            }
-        }
-
-
         public void Equip(GameObject item)
         {
             if (_equipped.CheckItem(item))
@@ -126,14 +110,7 @@ namespace SCR
             }
         }
 
-        IEnumerator pickup()
-        {
-            _playerPhysical.PickTrigger.SetActive(true);
-            yield return new WaitForSeconds(1.0f);
-            _playerPhysical.PickTrigger.SetActive(false);
-            StopCoroutine(pickCor);
-            pickCor = null;
-        }
+
     }
 }
 

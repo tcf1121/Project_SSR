@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "EquippedUI",
+                    "type": "Button",
+                    "id": "d51391f1-6a2a-4c1b-8236-b46323700950",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -95,7 +104,7 @@
                 {
                     "name": "",
                     "id": "3d7ab2dd-f512-4458-986b-42b9473ec033",
-                    "path": "",
+                    "path": "<Keyboard>/x",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -106,7 +115,7 @@
                 {
                     "name": "",
                     "id": "987c9e3e-9ac4-43b4-92d3-fedb3befa797",
-                    "path": "",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -117,7 +126,7 @@
                 {
                     "name": "",
                     "id": "51c0cee9-e052-483d-b6e2-f49c8d49bdd2",
-                    "path": "",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -179,6 +188,28 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "627137ab-30d9-42be-9ef6-937526010cdc",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interaction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1eee40dc-8e41-419d-abf5-2a0fa08679b7",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EquippedUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

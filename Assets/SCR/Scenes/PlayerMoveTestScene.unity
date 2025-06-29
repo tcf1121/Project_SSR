@@ -1488,7 +1488,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7885678428571661780, guid: ee5b6e63ba681ab43b2e21655fb73b9b, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 72.81
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7885678428571661780, guid: ee5b6e63ba681ab43b2e21655fb73b9b, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1933,22 +1933,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8973a6a4ae7cb98469be626b66774ef7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 1
-  currentHp: 0
-  currentExp: 0
-  money: 0
-  maximumHp: 100
-  reqExp: 0
-  atk: 10
-  hpRegen: 1
-  speed: 7
-  jump: 1
-  bonusMaximumHp: 0
-  bonusAtk: 0
-  bonusHpRegen: 0
-  bonusSpeed: 0
-  bonusJump: 0
-  isDead: 0
+  _level: 1
+  _currentHp: 0
+  _currentExp: 0
+  _reqExp: 0
+  _money: 0
+  _baseStats:
+    MaxHp: 0
+    Atk: 0
+    HpRegen: 0
+    Speed: 0
+    Jump: 0
+  _bonusStats:
+    MaxHp: 0
+    Atk: 0
+    HpRegen: 0
+    Speed: 0
+    Jump: 0
+  _finalStats:
+    MaxHp: 0
+    Atk: 0
+    HpRegen: 0
+    Speed: 0
+    Jump: 0
 --- !u!1 &395361496
 GameObject:
   m_ObjectHideFlags: 0

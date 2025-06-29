@@ -1,86 +1,155 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace SCR
 {
+    [System.Serializable]
+    public struct Stats
+    {
+        public float MaxHp;
+        public float Atk;
+        public float HpRegen;
+        public float Speed;
+        public float Jump;
+
+        public void BaseStats()
+        {
+            MaxHp = 100f;
+            Atk = 10f;
+            HpRegen = 0.2f;
+            Speed = 7f;
+            Jump = 1f;
+        }
+
+        public void ResetStats()
+        {
+            MaxHp = 0;
+            Atk = 0;
+            HpRegen = 0;
+            Speed = 0;
+            Jump = 0;
+        }
+
+        public void AddStats(Stats stats)
+        {
+            MaxHp += stats.MaxHp;
+            Atk += stats.Atk;
+            HpRegen += stats.HpRegen;
+            Speed += stats.Speed;
+            Jump += stats.Jump;
+        }
+
+        public void SubStats(Stats stats)
+        {
+            MaxHp -= stats.MaxHp;
+            Atk -= stats.Atk;
+            HpRegen -= stats.HpRegen;
+            Speed -= stats.Speed;
+            Jump -= stats.Jump;
+        }
+
+        public void LevelUp()
+        {
+            MaxHp += 33f;
+            Atk += 2f;
+            HpRegen += 0.2f;
+        }
+
+        public void FinalStats(Stats baseStats, Stats bonusStats)
+        {
+            MaxHp = baseStats.MaxHp + bonusStats.MaxHp;
+            Atk = baseStats.Atk + bonusStats.Atk;
+            HpRegen = baseStats.HpRegen + bonusStats.HpRegen;
+            Speed = baseStats.Speed + bonusStats.Speed;
+            Jump = baseStats.Jump + bonusStats.Jump;
+        }
+    }
+
     public class PlayerStats : MonoBehaviour
     {
+        private Player player;
+
         [Header("케릭터 기본 정보")] // 후에 프라이빗으로 변경
-        [SerializeField] private int level = 1;
-        [SerializeField] private float currentHp;
-        [SerializeField] private float currentExp = 0;
-        [SerializeField] private float money = 0;
+        [SerializeField] private int _level = 1;
+        [SerializeField] private float _currentHp;
+        [SerializeField] private int _currentExp;
+        [SerializeField] private int _reqExp;
+        [SerializeField] private int _money = 0;
 
         [Header("기본 스탯")]
-        [SerializeField] public float maximumHp = 100f;
-        [SerializeField] private float reqExp;
-        [SerializeField] public float atk = 10f;
-        [SerializeField] public float hpRegen = 1f;
-        [SerializeField] public float speed = 7f;
-        [SerializeField] public float jump = 1f;
+        [SerializeField] private Stats _baseStats;
 
         [Header("보너스 스탯 (장비/버프)")]
-        [SerializeField] private float bonusMaximumHp = 0f;
-        [SerializeField] private float bonusAtk = 0f;
-        [SerializeField] private float bonusHpRegen = 0f;
-        [SerializeField] private float bonusSpeed = 0f;
-        [SerializeField] private float bonusJump = 0f;
+        [SerializeField] private Stats _bonusStats;
 
         [Header("현재 상태")]
-        [SerializeField] private bool isDead = false;
+        [SerializeField] private Stats _finalStats;
 
         // 체력 재생 타이머
         private float regenTimer = 0f;
 
         // 변수 읽기 쓰기 관리
-        public int Level => level;
-        public float CurrentExp
-        {
-            get => currentExp;
-            set
-            {
-                currentExp = value;
-                LevelUpCheck();
-            }
-        }
-        public float Money { get; set; }
-        public float MaximumHp => maximumHp;
-        public float Atk => atk;
-        public float HPRegen => hpRegen;
-        public float Speed => speed;
-        public float Jump => jump;
-        public float CurrentHp => currentHp;
+        public int Level { get { return _level; } }
+        public float CurrentHp { get { return _currentHp; } set { _currentHp = value; _changeHp?.Invoke(); } }
+        public int CurrentExp { get => _currentExp; set { _currentExp = value; _changeExp?.Invoke(); } }
+        public int Money { get => _money; set { _money = value; _changeMoney?.Invoke(); } }
+        public Stats FinalStats { get => _finalStats; }
+        public float ReqExp { get { return _reqExp; } }
+        private UnityAction _changeHp;
+        private UnityAction _changeExp;
+        private UnityAction _changeMoney;
+        private UnityAction _changeStats;
+        private UnityAction _changeLevel;
+        private UnityAction _isDead;
 
+        private Coroutine _hpRegenCor;
 
         void Awake()
         {
-
+            player = GetComponent<Player>();
+            _baseStats.BaseStats();
+            _bonusStats.ResetStats();
+            _changeStats += SetFinalStats;
+            _changeStats?.Invoke();
+            _changeHp += SetHp;
+            _changeExp += LevelUpCheck;
+            _changeExp += SetExp;
+            _changeMoney += SetMoney;
+            _changeLevel += SetLevel;
+            _isDead += Die;
+            Money = 0;
         }
+
         void Start()
         {
-
+            FullHPRecovery();
+            _hpRegenCor = StartCoroutine(HpRegen());
         }
 
         private void Update()
         {
-            PlayerHpRegen();
+
         }
 
         #region 경험치 및 레벨 관리
         public void LevelUpCheck()
         {
-            while (currentExp >= reqExp)
+            while (CurrentExp >= _reqExp)
             {
-                currentExp -= reqExp;
+                CurrentExp -= _reqExp;
                 LevelUp();
             }
         }
 
         public void LevelUp()
         {
-            level++;
+            _level++;
             RequiredExp(); // 필요경험치 재계산
-            LevelUpRecalculateStats();
-            currentHp = FinalMaximumHp;
+            _baseStats.LevelUp();
+            CurrentHp = _finalStats.MaxHp;
+            _changeLevel?.Invoke();
+            _changeStats?.Invoke();
             // 레벨 변경 알림 OnLevelUp?.Invoke(level);
         }
 
@@ -91,72 +160,22 @@ namespace SCR
         {
             float requiredExp = 30f; // 1레벨 기본 경험치
 
-            for (int i = 2; i <= level; i++)
+            for (int i = 2; i <= _level; i++)
             {
                 requiredExp *= 1.6f;
             }
 
-            reqExp = Mathf.Round(requiredExp * 10) * 0.1f;
-        }
-        #endregion
-
-        #region 레벨 기반 스탯 재계산 
-        public void LevelUpRecalculateStats()
-        {
-            LevelUpRecalculateHpStats();
-            LevelUpRecalculateAtkStats();
-            LevelUpRecalculateHPRegenStats();
-        }
-
-        public void LevelUpRecalculateHpStats()
-        {
-            float RecalculateHP = 100f; // 1레벨 기본 체력
-
-            for (int i = 2; i <= level; i++)
-            {
-                RecalculateHP += 33f;
-            }
-
-            maximumHp = Mathf.Round(RecalculateHP * 10) * 0.1f;
-        }
-
-        public void LevelUpRecalculateAtkStats()
-        {
-            float RecalculateAtk = 10f; // 1레벨 기본 공격력
-
-            for (int i = 2; i <= level; i++)
-            {
-                RecalculateAtk += 2.5f;
-            }
-
-            atk = Mathf.Round(RecalculateAtk * 10) * 0.1f;
-        }
-
-        public void LevelUpRecalculateHPRegenStats()
-        {
-            float RecalculateHPRegen = 1f; // 1레벨 기본 체력
-
-            for (int i = 2; i <= level; i++)
-            {
-                RecalculateHPRegen += 0.2f;
-            }
-
-            hpRegen = Mathf.Round(RecalculateHPRegen * 10) * 0.1f;
+            _reqExp = (int)Mathf.Round(requiredExp);
         }
         #endregion
 
         #region 생명 관리
         public void Die()
         {
-            isDead = true;
-            // OnDie?.Invoke(isDead); 현재 죽음 상태 알림 (컨트롤 멈추기)
+            StopCoroutine(_hpRegenCor);
+            Time.timeScale = 0f;
         }
 
-        public void Live()
-        {
-            isDead = false;
-            // OnDie?.Invoke(isDead); 현재 죽음 상태 알림 (컨트롤 복구)
-        }
 
         // 리셋
         #endregion
@@ -167,10 +186,10 @@ namespace SCR
         /// </summary>
         public void Heal(float healAmount)
         {
-            float oldHp = currentHp;
-            currentHp = Mathf.Min(currentHp + healAmount, FinalMaximumHp);
+            float oldHp = CurrentHp;
+            CurrentHp = Mathf.Min(CurrentHp + healAmount, _finalStats.MaxHp);
 
-            if (currentHp != oldHp)
+            if (CurrentHp != oldHp)
             {
                 // OnHpChanged?.Invoke(currentHp); 현재 체력 변경 알림
             }
@@ -181,17 +200,19 @@ namespace SCR
         /// </summary>
         public void TakeDamage(float damage)
         {
-            float oldHp = currentHp;
-            currentHp = Mathf.Max(currentHp - damage, 0f);
+            float oldHp = CurrentHp;
+            CurrentHp = Mathf.Max(CurrentHp - damage, 0f);
 
-            if (currentHp != oldHp)
+            // 일정 시간 무적 구현 (기획 논의중)
+            // 경직 (기획 논의중)
+            if (CurrentHp != oldHp)
             {
                 // OnHpChanged?.Invoke(currentHp); 현재 체력 변경 알림
             }
 
-            if (currentHp <= 0)
+            if (CurrentHp <= 0)
             {
-                Die();
+                _isDead.Invoke();
                 // 사망 처리 로직
             }
         }
@@ -199,17 +220,17 @@ namespace SCR
         /// <summary>
         /// 체력 재생
         /// </summary>
-        public void PlayerHpRegen()
+        private IEnumerator HpRegen()
         {
-            if (isDead == true) { return; }
-            if (currentHp == FinalMaximumHp) { return; }
-
-            regenTimer += Time.deltaTime;
-
-            if (regenTimer > 0.2)
+            while (true)
             {
-                regenTimer -= 0.2f;
-                Heal(FinalHpRegen * 0.2f);
+                float RegenTime = 5f;
+                Heal(_finalStats.HpRegen);
+                while (RegenTime > 0.0f)
+                {
+                    RegenTime -= Time.deltaTime;
+                    yield return new WaitForFixedUpdate();
+                }
             }
         }
 
@@ -218,69 +239,55 @@ namespace SCR
         /// </summary>
         public void FullHPRecovery()
         {
-            currentHp = FinalMaximumHp;
+            CurrentHp = _finalStats.MaxHp;
         }
 
+        // 없는게 맞을거 같음
         /// <summary>
         /// HP 비율 반환 (0~1) _장비 아이템에 의해 체력이 증가하면 비율을 유지하며 증가하도록 함 _반대도 마찬가지
         /// </summary>
         public float GetHpRatio()
         {
-            if (FinalMaximumHp <= 0)
+            if (_finalStats.MaxHp <= 0)
                 return 0f;
-            return currentHp / FinalMaximumHp;
+            return _currentHp / _finalStats.MaxHp;
         }
         #endregion
 
         #region 장비 또는 버프 외부 요소에 의한 스탯 증감
         // 보너스 스탯가져가서 수정 (영구적인게 아니라면 원래대로 해줘야함)
-        public float BonusMaximumHp
+        /// <summary>
+        /// 장비 장착/해제, 버프 등 외부 요소에 의한 스탯 증감
+        /// </summary>
+        /// <param name="addstats">전달할 스탯 정보</param>
+        /// <param name="equip">증가 = true, 감소 = false</param>
+        public void EquipItem(Stats addstats, bool equip = true)
         {
-            get => bonusMaximumHp;
-            set
-            {
-                if (bonusMaximumHp != value) // 값이 실제로 변경될 때만
-                {
-                    float hpRatio = GetHpRatio();
-                    bonusMaximumHp = value;
-                    currentHp = FinalMaximumHp * hpRatio;
-
-                    // OnHpChanged?.Invoke(currentHp); HP 변경 알림
-                }
-            }
-        }
-        public float BonusAtk
-        {
-            get => bonusAtk;
-            set => bonusAtk = value;
+            if (equip) _bonusStats.AddStats(addstats);
+            else _bonusStats.SubStats(addstats);
+            _changeStats?.Invoke();
         }
 
-        public float BonusHpRegen
+        private void SetFinalStats()
         {
-            get => bonusHpRegen;
-            set => bonusHpRegen = value;
+            _finalStats.FinalStats(_baseStats, _bonusStats);
         }
 
-        public float BonusSpeed
-        {
-            get => bonusSpeed;
-            set => bonusSpeed = value;
-        }
-
-        public float BonusJump
-        {
-            get => bonusJump;
-            set => bonusJump = value;
-        }
         #endregion
 
-        #region 최종 실제 적용 스탯
-        public float FinalMaximumHp { get => Mathf.Max(1, maximumHp + BonusMaximumHp); }
-        public float FinalAtk { get => atk + BonusAtk; }
-        public float FinalHpRegen { get => hpRegen + BonusHpRegen; }
-        public float FinalSpeed { get => speed + BonusSpeed; }
-        public float FinalJump { get => jump + BonusJump; }
+        #region 경험치 얻기
+        /// <summary>
+        /// 경험치 얻기
+        /// </summary>
+        public void GetExp(int exp)
+        {
+            _currentExp += exp;
+            LevelUpCheck();
+        }
+
         #endregion
+
+
 
         #region 돈 관리
         /// <summary>
@@ -288,14 +295,35 @@ namespace SCR
         /// </summary>
         /// <param name="amount">비용</param>
         /// <returns>결제 성공 여부</returns>
-        public bool SpendMoney(float amount)
+        public bool SpendMoney(int amount)
         {
-            if (money >= amount)
+            if (Money >= amount)
             {
-                money -= amount;
+                Money -= amount;
                 return true;
             }
             return false;
+        }
+        #endregion
+
+        #region UI연동
+        private void SetLevel()
+        {
+            player.AlwaysOnUI.SetLevel(_level);
+        }
+        private void SetHp()
+        {
+            player.AlwaysOnUI.SetHp((int)_currentHp, (int)FinalStats.MaxHp);
+        }
+
+        private void SetExp()
+        {
+            player.AlwaysOnUI.SetExp(_currentExp, _reqExp);
+        }
+
+        private void SetMoney()
+        {
+            player.AlwaysOnUI.SetCoin(_money);
         }
         #endregion
     }

@@ -28,18 +28,26 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1630876321000049875, guid: 6b960a7a30123f5449c7651c4e19657f, type: 3}
+      propertyPath: statData
+      value: 
+      objectReference: {fileID: 11400000, guid: b15a1c28a1ffb5043aa039355273884c, type: 2}
     - target: {fileID: 5811173979555560127, guid: 6b960a7a30123f5449c7651c4e19657f, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 5811173979555560127, guid: 6b960a7a30123f5449c7651c4e19657f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 5811173979555560127, guid: 6b960a7a30123f5449c7651c4e19657f, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.093
       objectReference: {fileID: 0}
+    - target: {fileID: 5981162236118291633, guid: 6b960a7a30123f5449c7651c4e19657f, type: 3}
+      propertyPath: statData
+      value: 
+      objectReference: {fileID: 11400000, guid: b15a1c28a1ffb5043aa039355273884c, type: 2}
     - target: {fileID: 5981162236118291633, guid: 6b960a7a30123f5449c7651c4e19657f, type: 3}
       propertyPath: groundMask.m_Bits
       value: 1536

@@ -165,7 +165,7 @@ namespace PHG
             if (showThreshold) DrawThesholdGizmo();
 
         }
-        
+
         private void DrawThesholdGizmo()
         {
             Gizmos.color = new Color(1f, 0.5f, 0f, 0.8f); //주황색
@@ -188,7 +188,7 @@ namespace PHG
         /* ----------------------------------------------------------------- */
         private void Log(string msg)
         {
-            if (verboseLog) Debug.Log($"[LadderClimber] {msg}", this);
+            //if (verboseLog) Debug.Log($"[LadderClimber] {msg}", this);
         }
     }
 }

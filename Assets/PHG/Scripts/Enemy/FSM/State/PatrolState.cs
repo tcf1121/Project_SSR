@@ -41,7 +41,10 @@ namespace PHG
             rb.velocity = new Vector2(dir * statData.moveSpeed, rb.velocity.y);
 
             /* 2) 낭떠러지·벽 감지 → 방향 반전 */
-            bool noFloor = !Physics2D.Raycast(sensor.position, Vector2.down, floorCheckDist, groundMask);
+            Vector2 groundCheckPos = sensor.position + Vector3.right * dir * 0.3f + Vector3.down * 0.1f;
+            float groundCheckRadius = 0.1f;
+
+            bool noFloor = !Physics2D.OverlapCircle(groundCheckPos, groundCheckRadius, groundMask);
             bool hitWall = Physics2D.Raycast(sensor.position, Vector2.right * dir, wallCheckDist, groundMask);
 
             if (noFloor || hitWall)

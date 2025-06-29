@@ -32,8 +32,9 @@ namespace PHG
             float dir = Mathf.Sign(transform.localScale.x);
 
             // 센서 레이
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(brain.sensor.position, brain.sensor.position + Vector3.down * 0.20f);
+            Gizmos.color = Color.cyan;
+            Vector3 groundCheckPos = brain.sensor.position + Vector3.right * Mathf.Sign(transform.localScale.x) * 0.3f + Vector3.down * 0.1f;
+            Gizmos.DrawWireSphere(groundCheckPos, 0.1f);
 
             Gizmos.color = new Color(1f, 0f, 1f);
             Gizmos.DrawLine(brain.sensor.position, brain.sensor.position + Vector3.right * dir * 0.10f);

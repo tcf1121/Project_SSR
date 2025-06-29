@@ -2,6 +2,8 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.Interactions;
 
 namespace SCR
 {
@@ -27,9 +29,11 @@ namespace SCR
 
         // ===== 이동 상태 =====
         private float currentSpeed;
+        public bool FacingRight { get => facingRight; }
         private bool facingRight = true;
 
         // ===== 상태 플래그들 =====
+        private bool pressNormalAttack;
         private bool isGrounded;
         private bool isTouchingWall;
         private bool isWallSliding;
@@ -59,6 +63,7 @@ namespace SCR
             playerState = PlayerState.Idle;
             canClimb = true;
             canJump = true;
+            pressNormalAttack = false;
         }
 
         void FixedUpdate()
@@ -125,6 +130,34 @@ namespace SCR
             player.ConditionalUI.EquipUI.OnOffEquipUI();
         }
 
+        private void OnNormalAttack()
+        {
+            pressNormalAttack = !pressNormalAttack;
+            if (pressNormalAttack)
+                player.AlwaysOnUI.SetAttack(true);
+            else
+                player.AlwaysOnUI.SetAttack(false);
+        }
+
+        private void OnSkill()
+        {
+            if (!IsCool[3])
+            {
+                player.PlayerWeapon.UseSkill();
+                StartCoroutine(CoolTime(3));
+            }
+
+        }
+
+        private void OnUltimate()
+        {
+            if (!IsCool[4])
+            {
+                player.PlayerWeapon.UseUltimateSkill();
+                StartCoroutine(CoolTime(4));
+            }
+
+        }
         // 장비창 켜기
 
 
@@ -316,7 +349,7 @@ namespace SCR
         {
             Vector3 scale = transform.localScale;
             facingRight = !facingRight;
-            scale.x = facingRight == true ? -1 : 1;
+            scale.x = facingRight == true ? 1 : -1;
             transform.localScale = scale;
         }
         #endregion

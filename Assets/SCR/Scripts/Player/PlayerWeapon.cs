@@ -16,6 +16,8 @@ namespace SCR
         [SerializeField] private List<Weapon> _headWeapons;
         [SerializeField] private List<Weapon> _bodyWeapons;
         [SerializeField] private List<Weapon> _armWeapons;
+        [SerializeField] private List<Coroutine> _armCor;
+        private Coroutine _attackCor;
 
         void Awake() => Init();
 
@@ -25,6 +27,7 @@ namespace SCR
             _headWeapons = new();
             _bodyWeapons = new();
             _armWeapons = new();
+            _armCor = new();
         }
 
         public void AddWeapon(String weaponId)
@@ -45,6 +48,7 @@ namespace SCR
             {
                 weaponObj.transform.parent = _armObj.transform;
                 _armWeapons.Add(weapon);
+                _armCor.Add(null);
             }
         }
 
@@ -70,11 +74,12 @@ namespace SCR
         /// <summary>
         /// 기본 공격 실행
         /// </summary>
-        public void UseNomalAttack()
+        public void UseNomalAttack(bool IsAttack)
         {
             if (_armWeapons.Count == 0) return;
-            foreach (Weapon weapon in _armWeapons)
-                weapon.Attack();
+
+            if (IsAttack) _attackCor = StartCoroutine(AttackCor());
+            else StopCoroutine(_attackCor);
         }
 
         /// <summary>
@@ -95,6 +100,32 @@ namespace SCR
             if (_headWeapons.Count == 0) return;
             foreach (Weapon weapon in _headWeapons)
                 weapon.Attack();
+        }
+
+        private IEnumerator AttackCor()
+        {
+            while (true)
+            {
+                Debug.Log("공격");
+                for (int i = 0; i < _armWeapons.Count; i++)
+                    if (_armCor[i] == null)
+                        _armCor[i] = StartCoroutine(NormalAttack(i));
+                yield return new WaitForFixedUpdate();
+            }
+        }
+
+        private IEnumerator NormalAttack(int index)
+        {
+            float attackCycle = _armWeapons[index].AttackCycle;
+            while (attackCycle > 0.0f)
+            {
+                attackCycle -= Time.deltaTime;
+                yield return new WaitForFixedUpdate();
+            }
+            _armWeapons[index].Attack();
+            StopCoroutine(_armCor[index]);
+            _armCor[index] = null;
+
         }
     }
 

@@ -8,6 +8,10 @@ namespace SCR
     public class Weapon : MonoBehaviour
     {
         public ItemPart ItemPart { get => itemPart; }
+        public float AttackCycle { get => attackCycle; }
+        [SerializeField] private float attackCycle;
+        public float DamageRatio { get => damageRatio; }
+        [SerializeField] private float damageRatio;
         [SerializeField] private ItemPart itemPart;
         [SerializeField] private List<BoxCollider2D> _AttackCollider;
         [SerializeField] Animator _animator;

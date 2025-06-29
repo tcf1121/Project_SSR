@@ -133,10 +133,8 @@ namespace SCR
         private void OnNormalAttack()
         {
             pressNormalAttack = !pressNormalAttack;
-            if (pressNormalAttack)
-                player.AlwaysOnUI.SetAttack(true);
-            else
-                player.AlwaysOnUI.SetAttack(false);
+            player.AlwaysOnUI.SetAttack(pressNormalAttack);
+            player.PlayerWeapon.UseNomalAttack(pressNormalAttack);
         }
 
         private void OnSkill()

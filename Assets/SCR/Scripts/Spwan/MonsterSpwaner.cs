@@ -7,75 +7,110 @@ namespace SCR
 {
     public class MonsterSpwaner : MonoBehaviour
     {
-        public List<Vector2> SpwanPoint { get { return _spwanPoint; } set { _spwanPoint = value; } }
-        [SerializeField] private List<Vector2> _spwanPoint;
+
         public ObjectPool ObjectPool { get { return _objectPool; } set { _objectPool = value; } }
         [SerializeField] private ObjectPool _objectPool;
 
         [Header("스폰 설정")]
         [SerializeField] private float spawnInterval = 5f; // 스폰 간격
-        [SerializeField] private int maxAlive = 40;
+        [SerializeField] private int maxAlive = 10;
+        [SerializeField] private int Alive = 0;
+        [SerializeField] private int _creadit = 3;
         private Vector2 min;
         private Vector2 max;
 
-        void Awake()
-        {
-            _spwanPoint = new();
-            Init();
-            StartCoroutine(SpawnRoutine());
-        }
+        [SerializeField] private List<Monster> monsters;
+        private List<Vector2> _spwanPoint;
+        private List<Monster> _respwanMonsters;
+
+        void Awake() => Init();
+
         private void Init()
         {
-            if (_spwanPoint.Count == 0)
+            _objectPool = GetComponent<ObjectPool>();
+            _respwanMonsters = new();
+            _spwanPoint = new();
+        }
+
+        void Start()
+        {
+            StartCoroutine(SpawnRoutine());
+        }
+
+
+
+
+
+        private void SetMonster()
+        {
+            while (true)
             {
-                SetPos();
+                List<Monster> FulfillConMon = monsters.FindAll(n => n.Credit <= _creadit);
+                if (FulfillConMon.Count > 0)
+                {
+                    Monster setMonster = FulfillConMon[Random.Range(0, FulfillConMon.Count)];
+                    _creadit -= setMonster.Credit;
+                    _respwanMonsters.Add(setMonster);
+                }
+                else
+                    break;
             }
-            Spawn();
         }
 
         private void SetPos()
         {
             min = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, 0));
             max = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 0));
-            _spwanPoint = new();
-            for (int i = 0; i < _objectPool.PoolCount; i++)
+            for (int i = 0; i < _respwanMonsters.Count; i++)
             {
-                _spwanPoint.Add(RandomPosCreater.RandomPos(min, max, true));
+                _spwanPoint.Add(RandomPosCreater.RandomPos(min, max, _respwanMonsters[i].IsGround));
             }
+
+        }
+
+        private bool CanSpwan()
+        {
+            return maxAlive - Alive > 0 ? true : false;
         }
 
         private void Spawn()
         {
-            int aliveCount = 0;
-            Debug.Log(_objectPool.Pool);
-            foreach (GameObject mob in _objectPool.Pool)
-                if (mob.activeSelf)
-                    aliveCount++;
-
-            int spawnCount = _objectPool.PoolCount - aliveCount;
-            if (spawnCount <= 0) return; // 최대치면 소환 안 함
-
-            List<Vector2> spawnPoints = new List<Vector2>(_spwanPoint);
-
-            foreach (GameObject mob in _objectPool.Pool)
+            SetMonster();
+            if (_respwanMonsters.Count > 0)
             {
-                if (!mob.activeSelf && spawnCount > 0)
+                SetPos();
+                foreach (GameObject mob in _objectPool.Pool)
                 {
-                    int randIndex = Random.Range(0, spawnPoints.Count);
-                    mob.transform.position = spawnPoints[randIndex];
-                    spawnPoints.RemoveAt(randIndex);
-
-                    mob.SetActive(true);
-                    spawnCount--;
+                    if (!mob.activeSelf)
+                    {
+                        if (_respwanMonsters.Count == 0)
+                            break;
+                        mob.GetComponent<Monster>().SetMonster(_respwanMonsters[0]);
+                        mob.transform.position = _spwanPoint[0];
+                        _objectPool.TakeFromPool(mob);
+                        _respwanMonsters.RemoveAt(0);
+                        _spwanPoint.RemoveAt(0);
+                    }
                 }
             }
+            _respwanMonsters.Clear();
+            _spwanPoint.Clear();
         }
+
+
         private IEnumerator SpawnRoutine()
         {
+            float currentSpawnInterval;
             while (true)
             {
-                Spawn();
-                yield return new WaitForSeconds(spawnInterval);
+                currentSpawnInterval = spawnInterval;
+                if (CanSpwan())
+                    Spawn();
+                while (currentSpawnInterval > 0.0f)
+                {
+                    currentSpawnInterval -= Time.deltaTime;
+                    yield return new WaitForFixedUpdate();
+                }
             }
         }
     }

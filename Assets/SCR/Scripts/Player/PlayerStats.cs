@@ -124,6 +124,8 @@ namespace SCR
         void Start()
         {
             FullHPRecovery();
+            RequiredExp();
+            CurrentExp = 0;
             _hpRegenCor = StartCoroutine(HpRegen());
         }
 
@@ -281,7 +283,7 @@ namespace SCR
         /// </summary>
         public void GetExp(int exp)
         {
-            _currentExp += exp;
+            CurrentExp += exp;
             LevelUpCheck();
         }
 

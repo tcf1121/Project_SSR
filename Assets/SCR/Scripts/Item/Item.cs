@@ -15,6 +15,10 @@ namespace SCR
         public ItemPart ItemPart { get { return _itemPart; } }
         [SerializeField] protected ItemPart _itemPart;
 
+        // 아이템 코드
+        public string Code { get { return _code; } }
+        [SerializeField] protected string _code;
+
         // 아이템 이름
         public string Name { get { return _name; } }
         [SerializeField] protected string _name;

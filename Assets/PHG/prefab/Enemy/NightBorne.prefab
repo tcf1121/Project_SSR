@@ -36,6 +36,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NightBorne
       objectReference: {fileID: 0}
+    - target: {fileID: 775090731613083339, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 998962513671491323, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: castRadius
       value: 0.46
@@ -43,6 +47,10 @@ PrefabInstance:
     - target: {fileID: 998962513671491323, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: groundMask.m_Bits
       value: 1536
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223188924958462905, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3157297502085373163, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.x
@@ -144,6 +152,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: NightBorneBody
       objectReference: {fileID: 0}
+    - target: {fileID: 8131492693515080886, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437515474585188945, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526585353447464909, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 8688207590121595949, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.307
@@ -151,6 +171,10 @@ PrefabInstance:
     - target: {fileID: 8688207590121595949, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.106
+      objectReference: {fileID: 0}
+    - target: {fileID: 9147056804071723287, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1456269029054800347, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}

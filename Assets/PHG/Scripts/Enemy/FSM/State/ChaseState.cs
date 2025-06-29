@@ -84,11 +84,12 @@ namespace PHG
             /* -------- 이동 / 점프 / 추적 포기 계산 (사격 전에 위치) -------- */
             bool grounded = (jumper != null) ? jumper.IsGrounded() : Physics2D.Raycast(tf.position, Vector2.down, 0.05f, groundMask);
             bool wallAhead = Physics2D.Raycast(tf.position, Vector2.right * dir, WALL_CHECK_DIST, groundMask);
-            bool needJump = grounded && jumper != null && (wallAhead || Mathf.Abs(toPl.y) > JUMP_HEIGHT_TOL);
+            bool targetAbove = toPl.y > 0f;
+            bool needJump = grounded && jumper != null && targetAbove && (wallAhead || Mathf.Abs(toPl.y) > JUMP_HEIGHT_TOL);
             bool stuck = grounded && Mathf.Abs(rb.velocity.x) < STUCK_VEL_TOL;
             float jumpCd = Mathf.Max(statData.jumpCooldown, 0.45f);
 
-            if ((needJump || stuck) && jumpTimer <= 0f && jumper?.Ready() == true)
+            if ((needJump || stuck) && jumpTimer <= 0f && grounded && jumper?.Ready() == true)
             {
                 float boostY = wallAhead ? statData.jumpForce * 0.2f : 0f;
                 jumper.DoJump(dir, Mathf.Abs(toPl.y), statData.jumpForce + boostY, statData.jumpHorizontalFactor, jumpCd);

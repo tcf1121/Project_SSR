@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5352187553758812129}
   - component: {fileID: 7464195173402394374}
   - component: {fileID: 3301224070400611996}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: Snake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3094477334674985198}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: MuzzlePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,7 +208,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5329349562107394875}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: WallSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -239,7 +239,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8840461992977248074}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,7 +271,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6594596968806223609}
   - component: {fileID: 9220814075365830982}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: SnakeBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,7 +357,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7916561495332842143}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: PlatformSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}

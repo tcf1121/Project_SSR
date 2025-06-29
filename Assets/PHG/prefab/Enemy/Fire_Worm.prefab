@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 236468761951918242}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: WallSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3795531049910106240}
   - component: {fileID: 8255431569294792866}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: Fire_Worm_Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3285410922633734054}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2541246916275890549}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: PlatformSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 3046016009178654395}
   - component: {fileID: 4222639896767254476}
   - component: {fileID: 354465445103033095}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: Fire_Worm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -344,7 +344,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9193310578497194025}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: MuzzlePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

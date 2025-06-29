@@ -9,13 +9,15 @@ namespace SCR
     {
         // ===== Link =====
         private Equipped _equipped;
-        public Equipped Equipped { get { return _equipped; } }
+        public Equipped Equipped { get => _equipped; }
         private PlayerController _playerController;
-        public PlayerController PlayerController { get { return _playerController; } }
+        public PlayerController PlayerController { get => _playerController; }
         private PlayerPhysical _playerPhysical;
-        public PlayerPhysical PlayerPhysical { get { return _playerPhysical; } }
+        public PlayerPhysical PlayerPhysical { get => _playerPhysical; }
         private PlayerStats _playerStats;
-        public PlayerStats PlayerStats { get { return _playerStats; } }
+        public PlayerStats PlayerStats { get => _playerStats; }
+        private PlayerWeapon _playerWeapon;
+        public PlayerWeapon PlayerWeapon { get => _playerWeapon; }
 
         // ===== UI =====
         [Header("UI")]
@@ -53,6 +55,7 @@ namespace SCR
             _playerController = GetComponent<PlayerController>();
             _playerPhysical = GetComponent<PlayerPhysical>();
             _playerStats = GetComponent<PlayerStats>();
+            _playerWeapon = GetComponent<PlayerWeapon>();
             _alwaysOnUI.LinkedPlayer(this);
             _conditionalUI.LinkedPlayer(this);
             _originalGravityScale = _rigid.gravityScale;

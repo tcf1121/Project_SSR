@@ -3,39 +3,43 @@ using System.Collections.Generic;
 using SCR;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+namespace SCR
 {
-    public ItemPart ItemPart { get => itemPart; }
-    [SerializeField] private ItemPart itemPart;
-    [SerializeField] private List<BoxCollider2D> _AttackCollider;
-    [SerializeField] Animator _animator;
-
-
-    public void Attack()
+    public class Weapon : MonoBehaviour
     {
-        _animator.SetTrigger("Attack");
-    }
-
-    public void AttackOnAll()
-    {
-        for (int i = 0; i < _AttackCollider.Count; i++)
-            AttackOn(i);
-    }
-
-    public void AttackOffAll()
-    {
-        for (int i = 0; i < _AttackCollider.Count; i++)
-            AttackOff(i);
-    }
+        public ItemPart ItemPart { get => itemPart; }
+        [SerializeField] private ItemPart itemPart;
+        [SerializeField] private List<BoxCollider2D> _AttackCollider;
+        [SerializeField] Animator _animator;
 
 
-    public void AttackOn(int index)
-    {
-        _AttackCollider[index].enabled = true;
-    }
+        public void Attack()
+        {
+            _animator.SetTrigger("Attack");
+        }
 
-    public void AttackOff(int index)
-    {
-        _AttackCollider[index].enabled = false;
+        public void AttackOnAll()
+        {
+            for (int i = 0; i < _AttackCollider.Count; i++)
+                AttackOn(i);
+        }
+
+        public void AttackOffAll()
+        {
+            for (int i = 0; i < _AttackCollider.Count; i++)
+                AttackOff(i);
+        }
+
+
+        public void AttackOn(int index)
+        {
+            _AttackCollider[index].enabled = true;
+        }
+
+        public void AttackOff(int index)
+        {
+            _AttackCollider[index].enabled = false;
+        }
     }
 }
+

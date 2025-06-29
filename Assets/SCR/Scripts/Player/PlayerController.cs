@@ -527,9 +527,8 @@ namespace SCR
             float ladderTop = currentLadder.bounds.max.y;
             float ladderBottom = currentLadder.bounds.min.y;
             float ladderMid = ladderBottom + (ladderTop - ladderBottom / 2);
-
-            if ((InputDirection.y == 1 && playerBottom >= ladderTop) ||
-                (InputDirection.y == -1 &&
+            if ((InputDirection.y > 0 && playerBottom >= ladderTop) ||
+                (InputDirection.y < 0 &&
                     (playerTop <= ladderBottom || (playerTop <= ladderMid && isGrounded))))
             {
                 Check = true;

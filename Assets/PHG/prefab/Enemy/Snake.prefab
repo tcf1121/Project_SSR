@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sensor: {fileID: 8840461992977248074}
+  wallSensor: {fileID: 5329349562107394875}
   groundMask:
     serializedVersion: 2
     m_Bits: 1536
@@ -224,7 +225,7 @@ Transform:
   m_GameObject: {fileID: 1221638710627887827}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.08, y: -0.136, z: 0}
+  m_LocalPosition: {x: 0.293, y: 0.178, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -373,7 +374,7 @@ Transform:
   m_GameObject: {fileID: 8935634398837324933}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.77, y: 1.52, z: 0}
+  m_LocalPosition: {x: 0.087, y: 0.446, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

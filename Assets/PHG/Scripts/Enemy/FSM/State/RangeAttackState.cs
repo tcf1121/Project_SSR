@@ -41,7 +41,7 @@ namespace PHG
         public void Enter()
         {
             player = GameObject.FindWithTag("Player")?.transform;
-            rb.velocity = Vector2.zero;
+            rb.velocity = new Vector2(0, rb.velocity.y);
             lastShot = Time.time - Cooldown; // 첫 프레임 즉시 사격 허용
             FacePlayer();
         }
@@ -67,30 +67,52 @@ namespace PHG
             FacePlayer();
 
             bool grounded = isFlying
-                           ? false
-                           : Physics2D.Raycast(tf.position, Vector2.down, 0.05f, brain.groundMask);
+                                ? false
+                                : Physics2D.Raycast(tf.position, Vector2.down, 0.05f, brain.groundMask); // 바닥 감지
             int dir = (player.position.x >= tf.position.x) ? 1 : -1;
 
-            if (dist > AttackR)   /* ─── 추격 구간 ─── */
+            // --- 플랫폼 가장자리 감지 (지상형일 때만, 점프/사다리 타기 없는 몬스터만) ---
+            bool edgeAhead = false;
+            // 몬스터가 지상형이고, JumpMove나 LadderClimber 컴포넌트가 없는 경우에만 가장자리를 감지하여 정지
+            bool canStopAtEdge = !isFlying && brain.GetComponent<JumpMove>() == null && brain.GetComponent<LadderClimber>() == null;
+
+            if (grounded && canStopAtEdge) // 지상에 있고, 가장자리에서 멈춰야 하는 몬스터일 때만 가장자리 감지
+            {
+                float checkOffset = brain.GetComponent<Collider2D>().bounds.extents.x + 0.05f;
+                Vector2 checkOrigin = (Vector2)tf.position + Vector2.right * dir * checkOffset;
+                edgeAhead = !Physics2D.Raycast(checkOrigin, Vector2.down, 0.1f, brain.groundMask);
+            }
+            // ------------------------------------
+
+            if (dist > AttackR)    /* ─── 추격 구간 ─── */
             {
                 float speed = MoveSpd;
 
-                if (isFlying)     // 비행형: XY 모두 추적
+                if (isFlying)
                     rb.velocity = (player.position - tf.position).normalized * speed;
-                else             // 지상형: 기존 로직
+                else // 지상형 몬스터 이동 로직
                 {
                     float targetX = dir * speed;
                     if (grounded)
-                        rb.velocity = new Vector2(targetX, rb.velocity.y);
-                    else
+                    {
+                        // 가장자리가 아니고, 가장자리에서 멈춰야 하는 몬스터일 때만 이동
+                        // 또는 가장자리에서 멈출 필요 없는 몬스터 (점프/사다리 타기 가능 몬스터)는 항상 이동
+                        if (!edgeAhead || !canStopAtEdge)
+                            rb.velocity = new Vector2(targetX, rb.velocity.y);
+                        else // 가장자리에 도달했고, 가장자리에서 멈춰야 하는 몬스터일 때 정지
+                            rb.velocity = new Vector2(0, rb.velocity.y);
+                    }
+                    else // 공중에 있을 때
+                    {
                         rb.velocity = new Vector2(
                             Mathf.MoveTowards(rb.velocity.x, targetX, AirAccel * Time.deltaTime),
                             rb.velocity.y);
+                    }
                 }
             }
             else                 /* ─── 사격 구간 ─── */
             {
-                rb.velocity = Vector2.zero;
+                rb.velocity = new Vector2(0, rb.velocity.y);
                 if (Time.time - lastShot >= Cooldown)
                 {
                     Shoot();

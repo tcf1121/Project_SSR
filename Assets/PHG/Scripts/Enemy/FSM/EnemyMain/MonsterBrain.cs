@@ -11,7 +11,8 @@ namespace PHG
     {
         /* ───────── Inspector ───────── */
         [Header("Sensor / Mask")]
-        public Transform sensor;                     // 하위 빈 gameObject – 바닥/벽 감지용
+        public Transform sensor;                     // 하위 빈 gameObject – 바닥 감지용 (ground checker)
+        public Transform wallSensor;                 // 하위 빈 gameObject – 벽 감지 전용 (wall sensor)
         public LayerMask groundMask;                 // 발 밑과 전방 체크에 사용할 Ground 레이어 마스크
 
         [SerializeField] private bool canClimbLadders = true;
@@ -60,17 +61,17 @@ namespace PHG
             dead = new DeadState(this);
 
             attack = (GetComponent<RangedTag>() != null || hitBox == null)
-                      ? new RangeAttackState(this)
-                      : new MeleeAttackState(this, hitBox);
+                             ? new RangeAttackState(this)
+                             : new MeleeAttackState(this, hitBox);
 
             // ───── FSM 초기화 ─────
             sm = new StateMachine();
-            
+
             //----------Idle 루트-----------
-            if(statData.idleMode == MonsterStatData.IdleMode.GreedInteract)
+            if (statData.idleMode == MonsterStatData.IdleMode.GreedInteract)
             {
                 // Interactable컴포넌트 보장
-                var interact = GetComponent<Interactable>()?? gameObject.AddComponent<Interactable>();
+                var interact = GetComponent<Interactable>() ?? gameObject.AddComponent<Interactable>();
                 idle = new GreedIdleState(this, interact);
             }
             else
@@ -78,10 +79,10 @@ namespace PHG
                 idle = new IdleState(this);
             }
             sm.Register(StateID.Idle, idle);
-                //--------------------------------
+            //--------------------------------
 
 
-                sm.Register(StateID.Patrol, patrol);
+            sm.Register(StateID.Patrol, patrol);
             sm.Register(StateID.Chase, chase);
             sm.Register(StateID.Attack, attack);
             sm.Register(StateID.Dead, dead);

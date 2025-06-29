@@ -19,7 +19,9 @@ namespace PHG
         public float moveSpeed = 2f;
         [Tooltip("돌진 가속도")]
         public float rushMultiplier = 1.5f;
-        
+        [Tooltip("몬스터 점프판단 높이")]
+        public float maxClimbableHeight = 2.0f;
+
 
         [Header("AI 인식 범위")]
         [Tooltip("감지 범위 (순찰 감지)")]

@@ -22,7 +22,8 @@ namespace PHG
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            if (brain == null || brain.sensor == null || brain.StatData == null) return;
+            // brain, brain.sensor (ground checker), brain.wallSensor, statData 모두 할당되었는지 확인
+            if (brain == null || brain.sensor == null || brain.wallSensor == null || brain.StatData == null) return;
 
             var statData = brain.StatData;
 
@@ -31,16 +32,24 @@ namespace PHG
 
             float dir = Mathf.Sign(transform.localScale.x);
 
-            // 센서 레이
+            // groundSensor (기존 brain.sensor) 위치의 바닥 감지 영역 시각화
             Gizmos.color = Color.cyan;
-            Vector3 groundCheckPos = brain.sensor.position + Vector3.right * Mathf.Sign(transform.localScale.x) * 0.3f + Vector3.down * 0.1f;
+            Vector3 groundCheckPos = brain.sensor.position + Vector3.right * dir * 0.3f + Vector3.down * 0.1f;
             Gizmos.DrawWireSphere(groundCheckPos, 0.1f);
 
-            Gizmos.color = new Color(1f, 0f, 1f);
+            // 기존 groundSensor 관련 라인 (색깔 변경으로 구분)
+            Gizmos.color = new Color(0f, 0.5f, 0.5f); // 어두운 시안색
             Gizmos.DrawLine(brain.sensor.position, brain.sensor.position + Vector3.right * dir * 0.10f);
-
-            Gizmos.color = Color.red;
             Gizmos.DrawLine(brain.sensor.position, brain.sensor.position + Vector3.right * dir * 0.35f);
+
+            // wallSensor (새로 추가된 벽 감지 센서) 위치 및 레이 시각화
+            Gizmos.color = Color.magenta; // 벽 감지용은 마젠타 색상으로 구분
+            Gizmos.DrawWireSphere(brain.wallSensor.position, 0.05f); // wallSensor의 원점 표시
+
+            // PatrolState와 ChaseState에서 사용하는 벽 감지 거리 중 일반적인 값을 사용
+            float commonWallCheckDist = 0.2f;
+            Gizmos.DrawLine(brain.wallSensor.position, brain.wallSensor.position + Vector3.right * dir * commonWallCheckDist);
+
 
             if (jumper != null)
             {
@@ -51,7 +60,7 @@ namespace PHG
 
             Vector3 p = transform.position;
 
-            if(statData.readyRange > 0f) //사격범위
+            if (statData.readyRange > 0f) //사격범위
             {
                 Handles.color = new Color(0f, 1f, 0f, 0.35f);
                 Handles.DrawWireDisc(p, Vector3.forward, statData.readyRange); ;

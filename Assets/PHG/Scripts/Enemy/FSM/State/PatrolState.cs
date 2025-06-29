@@ -11,12 +11,14 @@ namespace PHG
         private readonly MonsterBrain brain;
         private readonly Rigidbody2D rb;
         private readonly Transform tf;
-        private readonly Transform sensor;
+        // 이제 sensor는 groundSensor로 명확히 분리
+        private readonly Transform groundSensor;
+        private readonly Transform wallSensor; // 새로운 벽 감지 전용 센서
         private readonly LayerMask groundMask;
         private readonly MonsterStatData statData;
 
         /* ───── patrol vars ───── */
-        private int dir = 1;                       // 1=→, -1=←
+        private int dir = 1;                        // 1=→, -1=←
         private const float floorCheckDist = 0.4f; // 발아래 확인
         private const float wallCheckDist = 0.2f; // 벽 확인 거리
 
@@ -25,7 +27,9 @@ namespace PHG
             this.brain = brain;
             this.rb = brain.GetComponent<Rigidbody2D>();
             this.tf = brain.transform;
-            this.sensor = brain.sensor;
+            // groundSensor와 wallSensor를 각각 MonsterBrain에서 할당
+            this.groundSensor = brain.sensor;
+            this.wallSensor = brain.wallSensor;
             this.groundMask = brain.groundMask;
             this.statData = brain.StatData;        // ScriptableObject 수치 사용
         }
@@ -41,11 +45,13 @@ namespace PHG
             rb.velocity = new Vector2(dir * statData.moveSpeed, rb.velocity.y);
 
             /* 2) 낭떠러지·벽 감지 → 방향 반전 */
-            Vector2 groundCheckPos = sensor.position + Vector3.right * dir * 0.3f + Vector3.down * 0.1f;
+            // groundSensor를 사용하여 낭떠러지 감지
+            Vector2 groundCheckPos = groundSensor.position + Vector3.right * dir * 0.3f + Vector3.down * 0.1f;
             float groundCheckRadius = 0.1f;
 
             bool noFloor = !Physics2D.OverlapCircle(groundCheckPos, groundCheckRadius, groundMask);
-            bool hitWall = Physics2D.Raycast(sensor.position, Vector2.right * dir, wallCheckDist, groundMask);
+            // wallSensor (새로운 벽 감지 전용 오브젝트)를 사용하여 벽 감지
+            bool hitWall = Physics2D.Raycast(wallSensor.position, Vector2.right * dir, wallCheckDist, groundMask);
 
             if (noFloor || hitWall)
             {
@@ -68,16 +74,16 @@ namespace PHG
                 return;
             }
 
-            if (PlayerInRange(statData.readyRange))   // 조준 대기 구간
+            if (PlayerInRange(statData.readyRange))    // 조준 대기 구간
             {
-                FacePlayer();                         // 방향만 맞추고
-                rb.velocity = Vector2.zero;           // 이동 정지
-                brain.ChangeState(StateID.Attack);    // → RangeAttackState
+                FacePlayer();                          // 방향만 맞추고
+                rb.velocity = Vector2.zero;            // 이동 정지
+                brain.ChangeState(StateID.Attack);     // → RangeAttackState
                 return;
             }
 
         }
-    
+
 
         public void Exit() => rb.velocity = Vector2.zero;
 

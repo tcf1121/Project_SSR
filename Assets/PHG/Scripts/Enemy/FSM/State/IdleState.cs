@@ -9,13 +9,13 @@ namespace PHG
     {
         private readonly Rigidbody2D rb;
         private readonly MonsterBrain brain;
-        private readonly MonsterStatData statData;
+        private readonly MonsterStatEntry statData;
         private static Transform sPlayer;
 
         public IdleState(MonsterBrain brain)
         {
             this.brain = brain;
-            this.statData = brain.StatData;
+            this.statData = brain.statData;
             this.rb = brain.GetComponent<Rigidbody2D>();
         }
 
@@ -29,7 +29,7 @@ namespace PHG
            
             if (statData == null) return; // ✅ null 방어
 
-            if (brain.Stats != null && brain.Stats.UsePatrol)
+            if (brain.statData != null && brain.statData.usePatrol)
             {
                 brain.ChangeState(StateID.Patrol);
                 return;

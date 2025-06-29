@@ -121,8 +121,8 @@ GameObject:
   - component: {fileID: 6041105704375229642}
   - component: {fileID: 1972706624924176348}
   - component: {fileID: 6453739840987346053}
-  - component: {fileID: 1133545975535523169}
   - component: {fileID: 8879609475013827189}
+  - component: {fileID: -8480110139499212012}
   m_Layer: 12
   m_Name: Bat
   m_TagString: Untagged
@@ -228,8 +228,9 @@ MonoBehaviour:
     m_Bits: 1536
   canClimbLadders: 1
   hitBox: {fileID: 6179750502833708692}
-  stats: {fileID: 8879609475013827189}
-  statData: {fileID: 11400000, guid: f1cb1b5453ebe224bad5e11ed9f24838, type: 2}
+  _runtimeStats: {fileID: 8879609475013827189}
+  allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
+  thisMonsterType: 6
 --- !u!114 &6453739840987346053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,18 +241,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfde0eec9b549944ca31d25dbb80b9e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1133545975535523169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3028759376588362661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b2584caa33b1bc4ea56ec653e799871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &8879609475013827189
@@ -266,7 +255,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afebd25277e31ad4dba41e4f7888a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statData: {fileID: 11400000, guid: f1cb1b5453ebe224bad5e11ed9f24838, type: 2}
+  statData:
+    monsterType: 8
+    maxHP: 100
+    damage: 10
+    moveSpeed: 2
+    rushMultiplier: 1.5
+    maxClimbableHeight: 2
+    patrolRange: 2.41
+    chaseRange: 6
+    attackRange: 1
+    chargeRange: 2.5
+    enableJump: 0
+    jumpHorizontalFactor: 0.6
+    jumpForce: 4
+    jumpCooldown: 0.45
+    usePatrol: 1
+    idleMode: 0
+    rangedCooldown: 2
+    projectileprefab: {fileID: 0}
+    readyRange: 10
+    projectileSpeed: 10
+    projectileLife: 3
+    firePattern: 0
+    pelletCount: 5
+    spreadAngle: 60
+    meleeCooldown: 0.6
+    meleeRadius: 1
+--- !u!114 &-8480110139499212012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3028759376588362661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2584caa33b1bc4ea56ec653e799871, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showGizmos: 1
 --- !u!1 &6663964249537964713
 GameObject:
   m_ObjectHideFlags: 0

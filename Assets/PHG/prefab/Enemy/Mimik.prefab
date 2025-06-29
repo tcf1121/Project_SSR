@@ -44,6 +44,10 @@ PrefabInstance:
       propertyPath: statData
       value: 
       objectReference: {fileID: 11400000, guid: b15a1c28a1ffb5043aa039355273884c, type: 2}
+    - target: {fileID: 1630876321000049875, guid: 6b960a7a30123f5449c7651c4e19657f, type: 3}
+      propertyPath: statData.monsterType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3747931784108139099, guid: 6b960a7a30123f5449c7651c4e19657f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.042
@@ -88,6 +92,10 @@ PrefabInstance:
       propertyPath: statData
       value: 
       objectReference: {fileID: 11400000, guid: b15a1c28a1ffb5043aa039355273884c, type: 2}
+    - target: {fileID: 5981162236118291633, guid: 6b960a7a30123f5449c7651c4e19657f, type: 3}
+      propertyPath: thisMonsterType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5981162236118291633, guid: 6b960a7a30123f5449c7651c4e19657f, type: 3}
       propertyPath: groundMask.m_Bits
       value: 1536

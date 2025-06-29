@@ -58,8 +58,9 @@ MonoBehaviour:
     m_Bits: 1536
   canClimbLadders: 0
   hitBox: {fileID: 0}
-  stats: {fileID: 7464195173402394374}
-  statData: {fileID: 11400000, guid: 0b35916d7bbcbe74ea669b8fb387d62b, type: 2}
+  _runtimeStats: {fileID: 7464195173402394374}
+  allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
+  thisMonsterType: 4
 --- !u!114 &9222745281788690142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,6 +73,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2584caa33b1bc4ea56ec653e799871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showGizmos: 1
 --- !u!50 &8705694338803635892
 Rigidbody2D:
   serializedVersion: 4
@@ -156,7 +158,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afebd25277e31ad4dba41e4f7888a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statData: {fileID: 11400000, guid: 0b35916d7bbcbe74ea669b8fb387d62b, type: 2}
+  statData:
+    monsterType: 4
+    maxHP: 100
+    damage: 10
+    moveSpeed: 2
+    rushMultiplier: 1.5
+    maxClimbableHeight: 2
+    patrolRange: 3
+    chaseRange: 6
+    attackRange: 1
+    chargeRange: 2.5
+    enableJump: 0
+    jumpHorizontalFactor: 0.6
+    jumpForce: 4
+    jumpCooldown: 0.45
+    usePatrol: 1
+    idleMode: 0
+    rangedCooldown: 2
+    projectileprefab: {fileID: 0}
+    readyRange: 10
+    projectileSpeed: 10
+    projectileLife: 3
+    firePattern: 0
+    pelletCount: 5
+    spreadAngle: 60
+    meleeCooldown: 0.6
+    meleeRadius: 1
 --- !u!114 &3301224070400611996
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ namespace PHG
 {
     public class MonsterStats : MonoBehaviour
     {
-        [SerializeField] private MonsterStatData statData;
+        [SerializeField] private MonsterStatEntry statData;
 
         private int currentHP;
 

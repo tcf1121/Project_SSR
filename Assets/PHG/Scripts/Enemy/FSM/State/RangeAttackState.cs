@@ -11,7 +11,7 @@ namespace PHG
         readonly MonsterBrain brain;
         readonly Rigidbody2D rb;
         readonly Transform tf;
-        readonly MonsterStatData statData;
+        readonly MonsterStatEntry statData; // MonsterStatData -> MonsterStatEntry로 변경
         readonly bool isFlying;
 
         Transform player;
@@ -19,20 +19,21 @@ namespace PHG
         float lastShot;
 
         /* ───────── cached values ───────── */
-        float AttackR => brain.Stats.AttackRange;
+        // brain.Stats -> statData 직접 참조로 변경
+        float AttackR => statData.attackRange;
         float ReadyR => statData.readyRange;
-        float ChaseR => brain.Stats.ChaseRange;
+        float ChaseR => statData.chaseRange;
         float Cooldown => statData.rangedCooldown;
         float MoveSpd => statData.moveSpeed;
-        float AirAccel => 8f;
+        float AirAccel => 8f; // 이 값은 statData에 없으므로 그대로 둡니다.
 
         /* -------------------------------------------------- */
         public RangeAttackState(MonsterBrain brain)
         {
             this.brain = brain;
-            rb = brain.GetComponent<Rigidbody2D>();
-            tf = brain.transform;
-            statData = brain.StatData;
+            rb = brain.rb; // brain.GetComponent<Rigidbody2D>() -> brain.rb로 변경
+            tf = brain.tf; // brain.transform -> brain.tf로 변경
+            statData = brain.statData; // brain.StatData -> brain.statData로 변경 (프로퍼티 이름 변경)
             muzzle = tf.Find("MuzzlePoint");
             isFlying = brain.GetComponent<FlyingTag>() != null;
         }
@@ -41,105 +42,105 @@ namespace PHG
         public void Enter()
         {
             player = GameObject.FindWithTag("Player")?.transform;
-            rb.velocity = new Vector2(0, rb.velocity.y);
-            lastShot = Time.time - Cooldown; // 첫 프레임 즉시 사격 허용
-            FacePlayer();
+            rb.velocity = Vector2.zero;
+            lastShot = Time.time;
         }
 
         public void Tick()
         {
-            if (player == null) { brain.ChangeState(StateID.Patrol); return; }
-
-            float dist = Vector2.Distance(tf.position, player.position);
-
-            /* 1) 추격 포기 */
-
-            if (dist > ChaseR)
-            { if(isFlying) brain.ChangeState(StateID.Idle);
-                else
-               brain.ChangeState(StateID.Patrol); return; 
+            if (player == null)
+            {
+                player = GameObject.FindWithTag("Player")?.transform;
+                if (player == null) return; // 플레이어를 찾지 못하면 아무것도 하지 않음
             }
 
-            /* 2) Ready 범위 밖이면 ChaseState */
-            if (dist > ReadyR) { brain.ChangeState(StateID.Chase); return; }
+            // ★★★ 수정: Vector3를 Vector2로 명시적 형변환 ★★★
+            Vector2 toPl = (Vector2)player.position - (Vector2)tf.position;
+            float dist = toPl.magnitude;
 
-            /* 3) Ready 안 – Aim & 이동/사격 */
             FacePlayer();
 
-            bool grounded = isFlying
-                                ? false
-                                : Physics2D.Raycast(tf.position, Vector2.down, 0.05f, brain.groundMask); // 바닥 감지
-            int dir = (player.position.x >= tf.position.x) ? 1 : -1;
-
-            // --- 플랫폼 가장자리 감지 (지상형일 때만, 점프/사다리 타기 없는 몬스터만) ---
-            bool edgeAhead = false;
-            // 몬스터가 지상형이고, JumpMove나 LadderClimber 컴포넌트가 없는 경우에만 가장자리를 감지하여 정지
-            bool canStopAtEdge = !isFlying && brain.GetComponent<JumpMove>() == null && brain.GetComponent<LadderClimber>() == null;
-
-            if (grounded && canStopAtEdge) // 지상에 있고, 가장자리에서 멈춰야 하는 몬스터일 때만 가장자리 감지
+            // 추격 범위 내에 없으면 추격 상태로 전환
+            if (dist > statData.chaseRange)
             {
-                float checkOffset = brain.GetComponent<Collider2D>().bounds.extents.x + 0.05f;
-                Vector2 checkOrigin = (Vector2)tf.position + Vector2.right * dir * checkOffset;
-                edgeAhead = !Physics2D.Raycast(checkOrigin, Vector2.down, 0.1f, brain.groundMask);
+                brain.ChangeState(StateID.Chase);
+                return;
             }
-            // ------------------------------------
 
-            if (dist > AttackR)    /* ─── 추격 구간 ─── */
+            // 공격 범위 내에 있으면 공격
+            if (dist <= statData.attackRange)
             {
-                float speed = MoveSpd;
-
-                if (isFlying)
-                    rb.velocity = (player.position - tf.position).normalized * speed;
-                else // 지상형 몬스터 이동 로직
-                {
-                    float targetX = dir * speed;
-                    if (grounded)
-                    {
-                        // 가장자리가 아니고, 가장자리에서 멈춰야 하는 몬스터일 때만 이동
-                        // 또는 가장자리에서 멈출 필요 없는 몬스터 (점프/사다리 타기 가능 몬스터)는 항상 이동
-                        if (!edgeAhead || !canStopAtEdge)
-                            rb.velocity = new Vector2(targetX, rb.velocity.y);
-                        else // 가장자리에 도달했고, 가장자리에서 멈춰야 하는 몬스터일 때 정지
-                            rb.velocity = new Vector2(0, rb.velocity.y);
-                    }
-                    else // 공중에 있을 때
-                    {
-                        rb.velocity = new Vector2(
-                            Mathf.MoveTowards(rb.velocity.x, targetX, AirAccel * Time.deltaTime),
-                            rb.velocity.y);
-                    }
-                }
-            }
-            else                 /* ─── 사격 구간 ─── */
-            {
-                rb.velocity = new Vector2(0, rb.velocity.y);
-                if (Time.time - lastShot >= Cooldown)
+                rb.velocity = Vector2.zero; // 공격 중에는 정지
+                if (Time.time - lastShot >= statData.rangedCooldown)
                 {
                     Shoot();
                     lastShot = Time.time;
                 }
+                return; // 공격 로직 처리 후 이동 로직은 스킵
+            }
+
+            // 사격 대기 범위 내에서 플레이어와 거리를 유지하며 이동
+            if (dist <= statData.readyRange)
+            {
+                // 플레이어와 가까워지면 뒤로, 멀어지면 앞으로 이동 (원거리 몬스터 특유의 거리 유지)
+                Vector2 targetVel = -toPl.normalized * MoveSpd; // 거리를 좁히거나 벌릴 때 사용
+
+                if (isFlying) // 비행 몬스터
+                {
+                    rb.velocity = Vector2.Lerp(rb.velocity, targetVel, Time.deltaTime * AirAccel);
+                }
+                else // 일반 몬스터 (지상)
+                {
+                    // 벽 감지 (벽에 막히면 움직임을 멈춤)
+                    RaycastHit2D wallCheck = Physics2D.Raycast(tf.position, tf.right * Mathf.Sign(tf.localScale.x), statData.attackRange, brain.groundMask);
+                    if (wallCheck.collider != null)
+                    {
+                        rb.velocity = Vector2.zero; // 벽에 막히면 정지
+                    }
+                    else
+                    {
+                        rb.velocity = new Vector2(targetVel.x, rb.velocity.y);
+                    }
+                }
+            }
+            else // 사격 대기 범위를 벗어나면 추격 (필요시)
+            {
+                // 현재 RangeAttackState에 진입했다는 것은 이미 추격 범위 내라는 가정.
+                // readyRange를 벗어나면 다시 chaseRange까지 추격하거나, 단순 이동 로직을 추가할 수 있습니다.
+                Vector2 targetVel = toPl.normalized * MoveSpd;
+                if (isFlying)
+                {
+                    rb.velocity = Vector2.Lerp(rb.velocity, targetVel, Time.deltaTime * AirAccel);
+                }
+                else
+                {
+                    rb.velocity = new Vector2(targetVel.x, rb.velocity.y);
+                }
             }
         }
 
-        public void Exit() => rb.velocity = Vector2.zero;
+        public void Exit()
+        {
+            rb.velocity = Vector2.zero;
+        }
 
-        /* ---------------- helpers ------------------------- */
+        /* -------------------------------------------------- */
         void Shoot()
         {
-            if (muzzle == null || player == null) return;
-            var pool = ProjectilePool.Instance;
-            if (pool == null) { Debug.Log("[RangeAttackState] Pool is null"); return; }
+            // ProjectilePool 인스턴스가 있는지 확인
+            ProjectilePool pool = ProjectilePool.Instance;
+            if (pool == null) { Debug.LogError("ProjectilePool is null"); return; }
 
             Vector2 baseDir = (player.position - muzzle.position).normalized;
             Projectile prefab = statData.projectileprefab;
 
-            if (statData.firePattern == MonsterStatData.FirePattern.Single)
+            if (statData.firePattern == MonsterStatEntry.FirePattern.Single)
             {
                 Projectile p = pool.Get(prefab, muzzle.position);
                 p.transform.rotation = Quaternion.FromToRotation(Vector2.right, baseDir);
-                p.Launch(baseDir, statData.projectileSpeed); // projectileSpeed 추가
+                p.Launch(baseDir, statData.projectileSpeed);
             }
-            else
+            else // Spread 패턴
             {
                 int pellets = Mathf.Max(1, statData.pelletCount);
                 float spread = statData.spreadAngle;
@@ -152,7 +153,7 @@ namespace PHG
 
                     Projectile p = pool.Get(prefab, muzzle.position);
                     p.transform.rotation = Quaternion.FromToRotation(Vector2.right, dir);
-                    p.Launch(dir, statData.projectileSpeed); // projectileSpeed 추가
+                    p.Launch(dir, statData.projectileSpeed);
                 }
             }
         }

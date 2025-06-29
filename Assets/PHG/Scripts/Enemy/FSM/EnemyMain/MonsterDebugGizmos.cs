@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEditor; // Handles 사용을 위해 필요
+using UnityEditor;
 
 namespace PHG
 {
@@ -7,65 +7,97 @@ namespace PHG
     [RequireComponent(typeof(MonsterBrain))]
     public class MonsterDebugGizmos : MonoBehaviour
     {
-        /* ───────── 레퍼런스 캐싱 ───────── */
-        private MonsterBrain brain;
-        private JumpMove jumper;
-        private Transform muzzle;
-        private Transform player;
+        public bool showGizmos = true;
+
+        private MonsterBrain _brain;
+        private JumpMove _jumper;
+        private Transform _muzzle;
+        private Transform _player;
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            SceneView.RepaintAll();
+        }
+#endif
 
         private void OnEnable()
         {
-            brain = GetComponent<MonsterBrain>();
-            jumper = GetComponent<JumpMove>();
+            _brain = GetComponent<MonsterBrain>();
+            _jumper = GetComponent<JumpMove>();
+            _muzzle = transform.Find("MuzzlePoint");
+            _player = GameObject.FindWithTag("Player")?.transform;
         }
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            // brain, brain.sensor (ground checker), brain.wallSensor, statData 모두 할당되었는지 확인
-            if (brain == null || brain.sensor == null || brain.wallSensor == null || brain.StatData == null) return;
+            if (!showGizmos) return;
 
-            var statData = brain.StatData;
+            if (_brain == null) _brain = GetComponent<MonsterBrain>();
+            if (_jumper == null) _jumper = GetComponent<JumpMove>();
+            if (_muzzle == null) _muzzle = transform.Find("MuzzlePoint");
+            if (_player == null) _player = GameObject.FindWithTag("Player")?.transform;
 
-            muzzle = transform.Find("MuzzlePoint");
-            player = GameObject.FindWithTag("Player")?.transform;
-
-            float dir = Mathf.Sign(transform.localScale.x);
-
-            // groundSensor (기존 brain.sensor) 위치의 바닥 감지 영역 시각화
-            Gizmos.color = Color.cyan;
-            Vector3 groundCheckPos = brain.sensor.position + Vector3.right * dir * 0.3f + Vector3.down * 0.1f;
-            Gizmos.DrawWireSphere(groundCheckPos, 0.1f);
-
-            // 기존 groundSensor 관련 라인 (색깔 변경으로 구분)
-            Gizmos.color = new Color(0f, 0.5f, 0.5f); // 어두운 시안색
-            Gizmos.DrawLine(brain.sensor.position, brain.sensor.position + Vector3.right * dir * 0.10f);
-            Gizmos.DrawLine(brain.sensor.position, brain.sensor.position + Vector3.right * dir * 0.35f);
-
-            // wallSensor (새로 추가된 벽 감지 센서) 위치 및 레이 시각화
-            Gizmos.color = Color.magenta; // 벽 감지용은 마젠타 색상으로 구분
-            Gizmos.DrawWireSphere(brain.wallSensor.position, 0.05f); // wallSensor의 원점 표시
-
-            // PatrolState와 ChaseState에서 사용하는 벽 감지 거리 중 일반적인 값을 사용
-            float commonWallCheckDist = 0.2f;
-            Gizmos.DrawLine(brain.wallSensor.position, brain.wallSensor.position + Vector3.right * dir * commonWallCheckDist);
-
-
-            if (jumper != null)
+            // ✔ MonsterStatEntry 유실 시 자동 복구 시도
+            if (_brain != null && _brain.statData == null)
             {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(transform.position + Vector3.up * 0.1f,
-                                transform.position + Vector3.up * 1.5f);
+                Debug.LogWarning($"[DebugGizmos] {name}의 statData가 NULL입니다. 복구 시도 중...");
+
+                if (_brain.AllStatData != null)
+                {
+                    var recovered = _brain.AllStatData.GetStatEntry(_brain.MonsterType);
+                    if (recovered != null)
+                    {
+                        // MonsterBrain 내부에서 Set 없이 접근 가능하도록 public set 허용 필요 (아래 참고)
+                        var prop = typeof(MonsterBrain).GetProperty("statData");
+                        prop?.SetValue(_brain, recovered);
+                        Debug.Log($"[DebugGizmos] {name}의 statData가 성공적으로 복구되었습니다.");
+                    }
+                    else
+                    {
+                        Debug.LogError($"[DebugGizmos] {name}의 statData 복구 실패: AllMonsterStatData에 {_brain.MonsterType} 없음.");
+                        return;
+                    }
+                }
+                else
+                {
+                    Debug.LogError($"[DebugGizmos] {name}의 statData 복구 실패: AllStatData 연결이 없음.");
+                    return;
+                }
             }
 
+            if (_brain == null || _brain.statData == null || _brain.sensor == null || _brain.wallSensor == null)
+                return;
+
+            var statData = _brain.statData;
+            float dir = Mathf.Sign(transform.localScale.x);
             Vector3 p = transform.position;
 
-            if (statData.readyRange > 0f) //사격범위
+            Gizmos.color = Color.cyan;
+            Vector3 groundCheckPos = _brain.sensor.position + Vector3.right * dir * 0.3f + Vector3.down * 0.1f;
+            Gizmos.DrawWireSphere(groundCheckPos, 0.1f);
+
+            Gizmos.color = new Color(0f, 0.5f, 0.5f);
+            Gizmos.DrawLine(_brain.sensor.position, _brain.sensor.position + Vector3.right * dir * 0.10f);
+            Gizmos.DrawLine(_brain.sensor.position, _brain.sensor.position + Vector3.right * dir * 0.35f);
+
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(_brain.wallSensor.position, 0.05f);
+            float commonWallCheckDist = 0.2f;
+            Gizmos.DrawLine(_brain.wallSensor.position, _brain.wallSensor.position + Vector3.right * dir * commonWallCheckDist);
+
+            if (_jumper != null)
             {
-                Handles.color = new Color(0f, 1f, 0f, 0.35f);
-                Handles.DrawWireDisc(p, Vector3.forward, statData.readyRange); ;
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(transform.position + Vector3.up * 0.1f, transform.position + Vector3.up * 1.5f);
             }
 
+            if (statData.readyRange > 0f)
+            {
+                Handles.color = new Color(0f, 1f, 0f, 0.35f);
+                Handles.DrawWireDisc(p, Vector3.forward, statData.readyRange);
+            }
             if (statData.patrolRange > 0f)
             {
                 Handles.color = new Color(0f, 0.6f, 1f, 0.35f);
@@ -87,11 +119,11 @@ namespace PHG
                 Handles.DrawWireDisc(p, Vector3.forward, statData.chargeRange);
             }
 
-            if (GetComponent<RangedTag>() != null && muzzle != null && player != null)
+            if (GetComponent<RangedTag>() != null && _muzzle != null && _player != null)
             {
                 Gizmos.color = Color.yellow;
-                Vector3 from = muzzle.position;
-                Vector3 to = player.position;
+                Vector3 from = _muzzle.position;
+                Vector3 to = _player.position;
                 Vector3 dir2 = (to - from).normalized;
 
                 Gizmos.DrawLine(from, from + dir2 * statData.attackRange);

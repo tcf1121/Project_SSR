@@ -15,7 +15,7 @@ namespace PHG
         private readonly Transform groundSensor;
         private readonly Transform wallSensor; // 새로운 벽 감지 전용 센서
         private readonly LayerMask groundMask;
-        private readonly MonsterStatData statData;
+        private readonly MonsterStatEntry statData;
 
         /* ───── patrol vars ───── */
         private int dir = 1;                        // 1=→, -1=←
@@ -31,7 +31,7 @@ namespace PHG
             this.groundSensor = brain.sensor;
             this.wallSensor = brain.wallSensor;
             this.groundMask = brain.groundMask;
-            this.statData = brain.StatData;        // ScriptableObject 수치 사용
+            this.statData = brain.statData;        // ScriptableObject 수치 사용
         }
 
         /*──────── IState 구현 ────────*/

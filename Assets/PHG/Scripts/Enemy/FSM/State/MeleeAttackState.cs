@@ -12,7 +12,7 @@ namespace PHG
         private readonly Rigidbody2D rb;
         private readonly Transform tf;
         private readonly Collider2D hitBox;  // 피격 판정용
-        private readonly MonsterStatData statData;
+        private readonly MonsterStatEntry statData;
 
         /* ───── tunables ───── */
         private const float swingCooldown = 0.6f;
@@ -27,7 +27,7 @@ namespace PHG
             this.hitBox = hitBox;
             this.rb = brain.GetComponent<Rigidbody2D>();
             this.tf = brain.transform;
-            this.statData = brain.StatData;
+            this.statData = brain.statData;
         }
 
         public void Enter()

@@ -11,7 +11,7 @@ namespace PHG
         readonly MonsterBrain brain;
         readonly Rigidbody2D rb;
         readonly Transform tf;
-        readonly MonsterStatData stat;
+        readonly MonsterStatEntry stat;
         Transform player;
 
         const float READY_RANGE = 10f;   // 요구사항: 10타일
@@ -22,10 +22,10 @@ namespace PHG
             this.brain = brain;
             rb = brain.GetComponent<Rigidbody2D>();
             tf = brain.transform;
-            stat = brain.StatData;
+            stat = brain.statData;
 
             sqReady = READY_RANGE * READY_RANGE;
-            sqAttack = brain.Stats.AttackRange * brain.Stats.AttackRange;
+            sqAttack = brain.statData.attackRange * brain.statData.attackRange;
         }
 
         public void Enter()

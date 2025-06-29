@@ -1,5 +1,5 @@
-﻿using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
+// using Unity.VisualScripting; // 사용되지 않는 것 같으니 제거 고려
 
 namespace PHG
 {
@@ -15,17 +15,17 @@ namespace PHG
         readonly Transform tf;
         readonly JumpMove jumper;
         readonly LadderClimber climber;
-        readonly MonsterStatData statData;
+        readonly MonsterStatEntry statData;
         readonly LayerMask groundMask;
         readonly bool isRanged;
         bool IsSpider => brain.GetComponent<SpiderTag>() != null;
 
-        // 새로 추가된 벽 감지 센서
         private readonly Transform wallSensor;
 
         /* ★ 사격용 */
         Transform muzzle;
-        float lastShot;
+        float lastShot; // 이 변수는 Range Monster의 경우 AttackState로 이동하거나,
+                        // ChaseState에서도 사격을 허용할 경우 사용됩니다.
 
         /* ───── tuning ───── */
         const float WALL_CHECK_DIST = 0.15f;
@@ -41,15 +41,12 @@ namespace PHG
         public ChaseState(MonsterBrain brain)
         {
             this.brain = brain;
-            rb = brain.GetComponent<Rigidbody2D>();
-            tf = brain.transform;
-            jumper = brain.GetComponent<JumpMove>(); // JumpMove 컴포넌트가 없을 수 있으므로 null일 가능성 있음
-            climber = brain.GetComponent<LadderClimber>(); // LadderClimber 컴포넌트가 없을 수 있으므로 null일 가능성 있음
-            statData = brain.StatData;
-            isRanged = brain.GetComponent<RangedTag>() != null;
+            rb = brain.rb;
+            tf = brain.tf;
+            jumper = brain.GetComponent<JumpMove>();
+            climber = brain.GetComponent<LadderClimber>();
+            statData = brain.statData;
             groundMask = brain.groundMask;
-
-            // 새로 추가된 wallSensor 할당
             this.wallSensor = brain.wallSensor;
 
             if (jumper != null && statData != null)
@@ -77,70 +74,91 @@ namespace PHG
             /* 등반 중이면 정지 (이 로직은 모든 다른 이동 로직보다 우선) */
             if (climber != null && climber.IsClimbing) { rb.velocity = Vector2.zero; return; }
 
-            Vector2 toPl = sPlayer.position - tf.position;
-            float dist = toPl.magnitude; // XY 거리
-            int dir = toPl.x > 0 ? 1 : -1;
+            Vector2 toPl = (Vector2)sPlayer.position - (Vector2)tf.position;
+            float dist = toPl.magnitude;
+            int dir = (toPl.x > 0) ? 1 : -1;
 
-            Orient(dir);
-
-            /* readyRange 안에 들어오면 Aim 상태로 전환 */
-            if (isRanged && dist <= statData.readyRange)
+            // 점프 중이 아닐 때만 방향 전환을 허용합니다.
+            if (jumper == null || !jumper.IsMidJump)
             {
-                brain.ChangeState(StateID.Attack); // RangeAttackState
+                Orient(dir);
+            }
+
+            /* readyRange 안에 들어오면 Attack 상태로 전환 */
+            // Range Attack Monster는 이 조건에서 AttackState로 전환되어 거기서 공격해야 합니다.
+            if (isRanged && dist <= statData.attackRange)
+            {
+                brain.ChangeState(StateID.Attack);
+                return;
+            }
+            // 근거리 몬스터는 attackRange 안에 들어오면 AttackState로 전환됩니다.
+            else if (!isRanged && dist <= statData.attackRange)
+            {
+                brain.ChangeState(StateID.Attack);
                 return;
             }
 
+
             /* -------- 이동 / 점프 / 추적 포기 계산 (사격 전에 위치) -------- */
-            // JumpMove 컴포넌트가 없을 경우를 대비한 기존 로직 유지 (안정성)
-            // 지면 감지용 Raycast 대체 로직을 brain.sensor (ground checker)를 활용하도록 수정
             bool grounded = (jumper != null) ? jumper.IsGrounded() : Physics2D.Raycast(brain.sensor.position, Vector2.down, 0.05f, groundMask);
 
-            // wallSensor (전용 벽 감지 오브젝트)를 사용하여 벽 감지
-            bool wallAhead = Physics2D.Raycast(wallSensor.position, Vector2.right * dir, WALL_CHECK_DIST, groundMask);
+            RaycastHit2D wallCheck = Physics2D.Raycast(wallSensor.position, tf.right * Mathf.Sign(tf.localScale.x), WALL_CHECK_DIST, groundMask);
+            bool wallAhead = wallCheck.collider != null;
+
             bool targetAbove = toPl.y > 0f;
 
-            // AI가 점프해야 한다고 판단하는 조건 (기존 needJump 로직)
+            // AI가 점프해야 한다고 판단하는 조건:
+            // 플레이어가 몬스터보다 위에 있고 (targetAbove),
+            // (벽이 앞에 있고 && 플레이어 Y가 JUMP_HEIGHT_TOL보다 높을 때)
             bool needJump = grounded && jumper != null && targetAbove && (wallAhead && Mathf.Abs(toPl.y) > JUMP_HEIGHT_TOL);
 
-            bool stuck = grounded && Mathf.Abs(rb.velocity.x) < STUCK_VEL_TOL;
+            // stuck 정의: 땅에 있고, 벽이 앞에 있으며, 수평 속도가 STUCK_VEL_TOL 미만일 때
+            bool stuck = grounded && wallAhead && Mathf.Abs(rb.velocity.x) < STUCK_VEL_TOL;
             float jumpCd = Mathf.Max(statData.jumpCooldown, 0.45f);
 
-            // --- 플랫폼 가장자리 감지 로직 (이동 로직 직전에 계산) ---
+            // --- 플랫폼 가장자리 감지 로직 ---
             bool edgeAhead = false;
-            // 점프 또는 사다리 타기 컴포넌트가 없는 몬스터에게만 가장자리 정지 로직을 적용할지 결정
             bool appliesEdgeStop = (jumper == null && climber == null);
 
             if (grounded && appliesEdgeStop)
             {
                 float checkOffset = brain.GetComponent<Collider2D>().bounds.extents.x + 0.05f;
-                // 가장자리 감지에도 ground checker (brain.sensor) 위치를 활용
                 Vector2 checkOrigin = (Vector2)brain.sensor.position + Vector2.right * dir * checkOffset;
                 edgeAhead = !Physics2D.Raycast(checkOrigin, Vector2.down, 0.1f, groundMask);
             }
             // ------------------------------------
 
-            // 메인 이동 및 점프 로직 (기존 블록)
-            // AI가 점프 필요하다고 판단했거나 갇혔고, JumpMove가 존재하며 물리적으로 점프할 준비가 되어있을 때
-            if (jumper != null && (needJump || (stuck && targetAbove)) && jumper.ReadyToPerformJump()) // jumper.ReadyToPerformJump()와 jumper null 체크 추가
+            // 메인 이동 및 점프 로직
+            // AI가 점프 필요하다고 판단했거나 (needJump),
+            // 또는 갇힌 상태일 때 (stuck) - 플레이어 Y 위치와 관계없이 벽을 넘기 위한 점프
+            // 그리고 JumpMove가 존재하며 물리적으로 점프할 준비가 되어있을 때
+            if (jumper != null && (needJump || stuck) && jumper.ReadyToPerformJump())
             {
                 float boostY = wallAhead ? statData.jumpForce * 0.2f : 0f;
-                jumper.DoJump(dir, Mathf.Abs(toPl.y), statData.jumpForce + boostY, statData.jumpHorizontalFactor, jumpCd);
+                // toPl.y의 절대값을 사용하여 점프 높이 조절
+                if (jumper.DoJump(dir, Mathf.Abs(toPl.y), statData.jumpForce + boostY, statData.jumpHorizontalFactor, jumpCd))
+                {
+                    Debug.Log($"[ChaseState] 점프 시도됨! 조건: (벽 앞: {wallAhead}, 갇힘: {stuck}), 목표 Y: {toPl.y}");
+                }
                 jumpTimer = jumpCd;
             }
-            else // 점프하지 않는 일반적인 수평 이동 상황
+            // 점프하지 않는 일반적인 수평 이동 상황
+            else if (jumper == null || !jumper.IsMidJump)
             {
-                // **수정된 라인**: brain.Stats.ChargeRange로 변경
-                float spiderBoost = (IsSpider && dist < brain.Stats.ChargeRange) ? 2f : 1f;
+                float spiderBoost = (IsSpider && dist < statData.chargeRange) ? 2f : 1f;
                 float targetX = dir * statData.moveSpeed * spiderBoost;
 
                 if (grounded)
                 {
-                    // 가장자리에 도달했고, 가장자리에서 멈춰야 하는 몬스터일 경우 정지
                     if (edgeAhead && appliesEdgeStop)
                     {
-                        rb.velocity = new Vector2(0, rb.velocity.y); // 가장자리에서 멈춤
+                        rb.velocity = new Vector2(0, rb.velocity.y);
                     }
-                    else // 가장자리가 아니거나, 가장자리에서 멈출 필요 없는 몬스터 (점프/사다리 타기 가능 몬스터)는 계속 이동
+                    else if (wallAhead && grounded) // 벽에 막혔을 때 속도 강제 0
+                    {
+                        rb.velocity = new Vector2(0f, rb.velocity.y);
+                    }
+                    else // 일반 이동
                     {
                         rb.velocity = new Vector2(targetX, rb.velocity.y);
                     }
@@ -156,19 +174,23 @@ namespace PHG
             if (jumpTimer > 0f) jumpTimer -= Time.deltaTime;
 
             /* -------- Ladder Scan -------- */
-            // 사다리 스캔 로직은 자체적으로 rb.velocity를 제어하므로, 기존 위치에 유지 (중복 아님)
             if (climber != null && Mathf.Abs(toPl.y) > climber.MinYThreshold)
                 climber.ScanAheadAndClimb(dir);
 
-            /* -------- 이동 중 사격 (velocity 유지) -------- */
+            /* -------- 이동 중 사격 (Range Attack Monster는 여기서 사격하지 않습니다. AttackState에서 처리) -------- */
+            // 이 로직은 Range Attack Monster가 AttackState로 진입 후,
+            // attackRange를 벗어났지만 chaseRange 안에 있을 때 다시 사격해야 하는 경우가 아니라면 제거해야 합니다.
+            // 현재 요청사항에 맞춰, 이 부분은 주석 처리하거나 삭제하는 것이 좋습니다.
+            /*
             if (isRanged && dist > statData.attackRange && dist <= statData.chaseRange && Time.time - lastShot >= statData.rangedCooldown)
             {
-                Shoot(); // 이 메서드는 클래스 내부에 잘 정의되어 있습니다.
+                Shoot(); 
                 lastShot = Time.time;
             }
+            */
         }
 
-        public void Exit() => rb.velocity = Vector2.zero; //
+        public void Exit() => rb.velocity = Vector2.zero;
         #endregion
 
         /* -------------------------------------------------------------- */
@@ -180,13 +202,41 @@ namespace PHG
             tf.localScale = s;
         }
 
+        // Shoot() 메서드는 이제 AttackState에서 호출되도록 의도되거나,
+        // MonsterBrain 내에 공통적으로 존재하도록 하는 것이 좋습니다.
+        // ChaseState에서 더 이상 직접 호출하지 않습니다.
         void Shoot()
         {
             if (muzzle == null) return;
-            Vector2 dir = (sPlayer.position - muzzle.position).normalized;
+            Vector2 playerToMuzzleDir = (sPlayer.position - muzzle.position).normalized;
 
-            Projectile proj = ProjectilePool.Instance.Get(statData.projectileprefab, muzzle.position);
-            proj.Launch(dir, statData.projectileSpeed);
+            ProjectilePool pool = ProjectilePool.Instance;
+            if (pool == null) { Debug.LogError("ProjectilePool is null"); return; }
+
+            Projectile prefab = statData.projectileprefab;
+
+            if (statData.firePattern == MonsterStatEntry.FirePattern.Single)
+            {
+                Projectile p = pool.Get(prefab, muzzle.position);
+                p.transform.rotation = Quaternion.FromToRotation(Vector2.right, playerToMuzzleDir);
+                p.Launch(playerToMuzzleDir, statData.projectileSpeed);
+            }
+            else
+            {
+                int pellets = Mathf.Max(1, statData.pelletCount);
+                float spread = statData.spreadAngle;
+                float step = pellets > 1 ? spread / (pellets - 1) : 0f;
+
+                for (int i = 0; i < pellets; ++i)
+                {
+                    float angle = -spread * 0.5f + step * i;
+                    Vector2 fireDir = Quaternion.AngleAxis(angle, Vector3.forward) * playerToMuzzleDir;
+
+                    Projectile p = pool.Get(prefab, muzzle.position);
+                    p.transform.rotation = Quaternion.FromToRotation(Vector2.right, fireDir);
+                    p.Launch(fireDir, statData.projectileSpeed);
+                }
+            }
         }
         #endregion
     }

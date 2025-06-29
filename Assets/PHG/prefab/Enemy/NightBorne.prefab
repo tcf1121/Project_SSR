@@ -42,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 998962513671491323, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: groundMask.m_Bits
-      value: 128
+      value: 1536
       objectReference: {fileID: 0}
     - target: {fileID: 3157297502085373163, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.x
@@ -106,7 +106,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5535757496672610817, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: groundMask.m_Bits
-      value: 128
+      value: 1536
       objectReference: {fileID: 0}
     - target: {fileID: 5725978047069897743, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.y
@@ -199,7 +199,7 @@ MonoBehaviour:
   climbYThreshold: 3
   ladderMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 2048
   detectRadius: 0.35
   forwardOffset: {x: 0.15, y: 0}
   debugDraw: 1

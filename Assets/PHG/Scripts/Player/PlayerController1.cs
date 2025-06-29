@@ -7,7 +7,7 @@ namespace PHG
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Collider2D))]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController1 : MonoBehaviour
     {
         [Header("이동 설정")]
         [SerializeField] public float acceleration = 50f;

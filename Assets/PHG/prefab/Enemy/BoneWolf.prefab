@@ -54,7 +54,7 @@ MonoBehaviour:
   sensor: {fileID: 6215726151685872425}
   groundMask:
     serializedVersion: 2
-    m_Bits: 136
+    m_Bits: 1536
   canClimbLadders: 1
   hitBox: {fileID: 5829910218819796756}
   stats: {fileID: -8542866561908444573}
@@ -193,7 +193,7 @@ MonoBehaviour:
   castDistance: 0.1
   groundMask:
     serializedVersion: 2
-    m_Bits: 136
+    m_Bits: 128
   lockDurationDefault: 0.45
 --- !u!1 &1223188924958462905
 GameObject:

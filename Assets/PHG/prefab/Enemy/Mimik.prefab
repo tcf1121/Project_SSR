@@ -42,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5981162236118291633, guid: 6b960a7a30123f5449c7651c4e19657f, type: 3}
       propertyPath: groundMask.m_Bits
-      value: 128
+      value: 1536
       objectReference: {fileID: 0}
     - target: {fileID: 6182902077073218114, guid: 6b960a7a30123f5449c7651c4e19657f, type: 3}
       propertyPath: m_LocalPosition.x

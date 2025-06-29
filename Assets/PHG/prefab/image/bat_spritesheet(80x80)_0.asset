@@ -22,12 +22,12 @@ Sprite:
   m_AtlasName: 
   m_PackingTag: 
   m_RenderDataKey:
-    267ccd385bc6f704b81f5c5a4df5eff3: 1826711699
+    63612ee2766320c4cb9b56f289b6096a: 1826711699
   m_AtlasTags: []
   m_SpriteAtlas: {fileID: 0}
   m_RD:
     serializedVersion: 3
-    texture: {fileID: 2800000, guid: 267ccd385bc6f704b81f5c5a4df5eff3, type: 3}
+    texture: {fileID: 2800000, guid: 63612ee2766320c4cb9b56f289b6096a, type: 3}
     alphaTexture: {fileID: 0}
     secondaryTextures: []
     m_SubMeshes:
@@ -103,7 +103,7 @@ Sprite:
         format: 0
         dimension: 0
       m_DataSize: 80
-      _typelessdata: ec5138be713d8a3e00000000ec51383e713d8a3e00000000ec5138be0000000000000000ec51383e0000000000000000cdcc4c3dabaa6a3f0000003eabaa6a3fcdcc4c3ddedd4d3f0000003ededd4d3f
+      _typelessdata: ec5138be713d8a3e00000000ec51383e713d8a3e00000000ec5138be0000000000000000ec51383e00000000000000000000000000000000000000000000000000000000000000000000000000000000
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
@@ -118,7 +118,7 @@ Sprite:
     downscaleMultiplier: 1
   m_AtlasRD:
     serializedVersion: 3
-    texture: {fileID: 2800000, guid: 267ccd385bc6f704b81f5c5a4df5eff3, type: 3}
+    texture: {fileID: 2800000, guid: 63612ee2766320c4cb9b56f289b6096a, type: 3}
     alphaTexture: {fileID: 0}
     secondaryTextures: []
     m_SubMeshes:
@@ -194,7 +194,7 @@ Sprite:
         format: 0
         dimension: 0
       m_DataSize: 80
-      _typelessdata: ec5138be713d8a3e00000000ec51383e713d8a3e00000000ec5138be0000000000000000ec51383e0000000000000000cdcc4c3dabaa6a3f0000003eabaa6a3fcdcc4c3ddedd4d3f0000003ededd4d3f
+      _typelessdata: ec5138be713d8a3e00000000ec51383e713d8a3e00000000ec5138be0000000000000000ec51383e00000000000000000000000000000000000000000000000000000000000000000000000000000000
     m_Bindpose: []
     textureRect:
       serializedVersion: 2

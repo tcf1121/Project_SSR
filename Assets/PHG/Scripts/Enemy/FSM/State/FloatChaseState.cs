@@ -131,7 +131,7 @@ namespace PHG
             if (muzzle == null) return;
             Vector2 dir = (sPlayer.position - muzzle.position).normalized;
             Projectile proj = ProjectilePool.Instance.Get(statData.projectileprefab, muzzle.position);
-            proj.Launch(dir);
+            proj.Launch(dir, statData.projectileSpeed);
         }
       
     }

@@ -137,7 +137,7 @@ namespace PHG
             {
                 Projectile p = pool.Get(prefab, muzzle.position);
                 p.transform.rotation = Quaternion.FromToRotation(Vector2.right, baseDir);
-                p.Launch(baseDir);
+                p.Launch(baseDir, statData.projectileSpeed); // projectileSpeed 추가
             }
             else
             {
@@ -152,7 +152,7 @@ namespace PHG
 
                     Projectile p = pool.Get(prefab, muzzle.position);
                     p.transform.rotation = Quaternion.FromToRotation(Vector2.right, dir);
-                    p.Launch(dir);
+                    p.Launch(dir, statData.projectileSpeed); // projectileSpeed 추가
                 }
             }
         }

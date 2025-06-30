@@ -14,8 +14,7 @@ GameObject:
   - component: {fileID: 8705694338803635892}
   - component: {fileID: 5352187553758812129}
   - component: {fileID: 7464195173402394374}
-  - component: {fileID: 3301224070400611996}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: Snake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52,13 +51,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sensor: {fileID: 8840461992977248074}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 136
-  canClimbLadders: 0
+  wallSensor: {fileID: 5329349562107394875}
   hitBox: {fileID: 0}
-  stats: {fileID: 7464195173402394374}
-  statData: {fileID: 11400000, guid: 0b35916d7bbcbe74ea669b8fb387d62b, type: 2}
+  _runtimeStats: {fileID: 7464195173402394374}
+  allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
+  thisMonsterType: 4
 --- !u!114 &9222745281788690142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,6 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2584caa33b1bc4ea56ec653e799871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showGizmos: 1
 --- !u!50 &8705694338803635892
 Rigidbody2D:
   serializedVersion: 4
@@ -155,19 +153,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afebd25277e31ad4dba41e4f7888a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statData: {fileID: 11400000, guid: 0b35916d7bbcbe74ea669b8fb387d62b, type: 2}
---- !u!114 &3301224070400611996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 494904055392974845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9847738fc4c0ab746a138e465f6599d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  statData:
+    monsterType: 4
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 0
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 0
+    maxHP: 100
+    damage: 10
+    moveSpeed: 2
+    rushMultiplier: 1.5
+    maxClimbableHeight: 2
+    patrolRange: 3
+    chaseRange: 6
+    attackRange: 1
+    chargeRange: 2.5
+    enableJump: 0
+    jumpHorizontalFactor: 0.6
+    jumpForce: 4
+    jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
+    usePatrol: 1
+    idleMode: 0
+    rangedCooldown: 2
+    projectileprefab: {fileID: 0}
+    readyRange: 10
+    projectileSpeed: 10
+    projectileLife: 3
+    firePattern: 0
+    pelletCount: 5
+    spreadAngle: 60
+    meleeCooldown: 0.6
+    meleeRadius: 1
+    isFlying: 0
+    isRanged: 0
+    isCharging: 0
+    enableLadderClimb: 0
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3
 --- !u!1 &696796940601295108
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +205,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3094477334674985198}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: MuzzlePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,7 +236,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5329349562107394875}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: WallSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,7 +252,7 @@ Transform:
   m_GameObject: {fileID: 1221638710627887827}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.08, y: -0.136, z: 0}
+  m_LocalPosition: {x: 0.293, y: 0.178, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -239,7 +267,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8840461992977248074}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,7 +299,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6594596968806223609}
   - component: {fileID: 9220814075365830982}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: SnakeBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,7 +385,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7916561495332842143}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: PlatformSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -373,7 +401,7 @@ Transform:
   m_GameObject: {fileID: 8935634398837324933}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.77, y: 1.52, z: 0}
+  m_LocalPosition: {x: 0.087, y: 0.446, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

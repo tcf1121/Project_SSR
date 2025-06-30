@@ -1,111 +1,152 @@
-﻿using Unity.VisualScripting;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace PHG
 {
-    /// <summary>
-    /// Core brain that owns the per‑enemy finite‑state‑machine and exposes shared data to individual states.
-    /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
-    public class MonsterBrain : MonoBehaviour
+    public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
     {
-        /* ───────── Inspector ───────── */
         [Header("Sensor / Mask")]
-        public Transform sensor;                     // 하위 빈 gameObject – 바닥/벽 감지용
-        public LayerMask groundMask;                 // 발 밑과 전방 체크에 사용할 Ground 레이어 마스크
-
-        [SerializeField] private bool canClimbLadders = true;
-        public bool CanClimbLadders => canClimbLadders;
+        public Transform sensor;
+        public Transform wallSensor;
 
         [Header("References")]
-        [SerializeField] private Collider2D hitBox;  // 근접 공격시 사용 – 없으면 원거리 몬스터로 간주
-        [SerializeField] private MonsterStats stats;      // 런타임 변동 스탯 (HP 등)
-        [SerializeField] private MonsterStatData statData; // 설계용 ScriptableObject (이동속도 · 공격범위 등)
+        [SerializeField] private Collider2D hitBox;
+        [SerializeField] private MonsterStats _runtimeStats;
+        [SerializeField] private AllMonsterStatData allMonsterStatData;
+        [SerializeField] private MonsterType thisMonsterType;
 
-        /* ───────── Public helpers ───────── */
-        public MonsterStats Stats => stats;
-        public MonsterStatData StatData => statData;
+        public MonsterStats RuntimeStats => _runtimeStats;
+        public Vector2 LastGroundCheckPos => jumper.LastGroundCheckPos;
+        public float GroundCheckRadius => jumper.GroundCheckRadius;
+        public MonsterStatEntry statData { get; private set; }
 
-        /// <summary>다른 스크립트(특히 State)에서 이동속도가 필요할 때 편하게 가져오도록 Helper 프로퍼티 제공.</summary>
-        public float MoveSpeed => statData != null ? statData.moveSpeed : 0f;
+        public bool IsFlying { get; private set; }
+        public bool IsRanged { get; private set; }
+        public bool IsCharging { get; private set; }
+        public bool CanJump { get; private set; }
+        public bool CanClimbLadders { get; private set; }
 
-        /* ───────── FSM ───────── */
+        public Rigidbody2D rb { get; private set; }
+        public Transform tf { get; private set; }
+
+        private LayerMask groundMask;
+        private LayerMask ladderMask;
+
         private StateMachine sm;
         public StateMachine Sm => sm;
 
-        // 미리 생성해서 캐싱할 State 인스턴스
-        private IState idle;
-        private IState patrol;
-        private IState chase;
-        private IState attack;
-        private IState dead;
+        private IState idle, patrol, chase, attack, dead;
 
-        /* ====================================================================== */
+        // 점프 시스템
+        private JumpMove jumper;
+        public bool IsGrounded() => jumper.IsGrounded();
+        public bool IsMidJump => jumper.IsMidJump;
+        public bool ReadyToJump() => jumper.ReadyToJump();
+        public bool PerformJump(int dir, float dy, float jumpForce, float horizontalFactor, float lockDuration) =>
+            jumper.PerformJump(dir, dy, jumpForce, horizontalFactor, lockDuration);
+        public void UpdateTimer(float deltaTime) => jumper.UpdateTimer(deltaTime);
+
+        // 사다리 시스템 (인터페이스 기반)
+        private IMonsterClimber climber;
+        public IMonsterClimber Climber => climber;
+
+        public AllMonsterStatData AllStatData => allMonsterStatData;
+        public MonsterType MonsterType => thisMonsterType;
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (allMonsterStatData != null)
+                statData = allMonsterStatData.GetStatEntry(thisMonsterType);
+        }
+#endif
+
         private void Awake()
         {
-            // 필수 SO 누락 시 더 진행하지 않고 컴포넌트를 비활성화(NullReference 예방)
-            if (statData == null)
+            rb = GetComponent<Rigidbody2D>();
+            tf = transform;
+
+            if (allMonsterStatData == null)
             {
 #if UNITY_EDITOR
-                Debug.LogWarning($"[MonsterBrain] <color=orange>StatData not assigned</color> on {name}. FSM will not initialize.", this);
+                Debug.LogWarning($"[MonsterBrain] AllMonsterStatData가 할당되지 않음 – 비활성화", this);
 #endif
-                enabled = false; // 기타 컴포넌트의 Update 호출 방지
+                enabled = false;
                 return;
             }
 
-            // ───── State 인스턴스 준비 ─────
+            statData = allMonsterStatData.GetStatEntry(thisMonsterType);
+            if (statData == null)
+            {
+#if UNITY_EDITOR
+                Debug.LogError($"[MonsterBrain] '{thisMonsterType}' 스탯 데이터가 없음 – Default 대체 시도", this);
+#endif
+                statData = allMonsterStatData.GetStatEntry(MonsterType.Default);
+                if (statData == null)
+                {
+                    enabled = false;
+                    return;
+                }
+            }
+
+            IsFlying = statData.isFlying;
+            IsRanged = statData.isRanged;
+            IsCharging = statData.isCharging;
+            CanJump = statData.enableJump;
+            CanClimbLadders = statData.enableLadderClimb;
+
+            groundMask = statData.groundMask;
+            ladderMask = statData.ladderMask;
+
+            // 점프 시스템 초기화
+            jumper = new JumpMove();
+            jumper.Init(rb, tf, statData, groundMask);
+
+            // 사다리 시스템 인터페이스 연결
+            if (statData.enableLadderClimb)
+            {
+                climber = new LadderClimber();
+                climber.Init(this);
+            }
+
+            // 상태 등록
             idle = new IdleState(this);
             patrol = new PatrolState(this);
-            chase = GetComponent<FlyingTag>() != null ? new FloatChaseState(this) : new ChaseState(this);
+            chase = IsFlying ? new FloatChaseState(this) : new ChaseState(this);
             dead = new DeadState(this);
+            attack = (IsRanged || hitBox == null)
+                        ? new RangeAttackState(this)
+                        : new MeleeAttackState(this, hitBox);
 
-            attack = (GetComponent<RangedTag>() != null || hitBox == null)
-                      ? new RangeAttackState(this)
-                      : new MeleeAttackState(this, hitBox);
-
-            // ───── FSM 초기화 ─────
-            sm = new StateMachine();
-            
-            //----------Idle 루트-----------
-            if(statData.idleMode == MonsterStatData.IdleMode.GreedInteract)
+            if (statData.idleMode == MonsterStatEntry.IdleMode.GreedInteract)
             {
-                // Interactable컴포넌트 보장
-                var interact = GetComponent<Interactable>()?? gameObject.AddComponent<Interactable>();
+                var interact = GetComponent<Interactable>() ?? gameObject.AddComponent<Interactable>();
                 idle = new GreedIdleState(this, interact);
             }
-            else
-            {
-                idle = new IdleState(this);
-            }
+
+            sm = new StateMachine();
             sm.Register(StateID.Idle, idle);
-                //--------------------------------
-
-
-                sm.Register(StateID.Patrol, patrol);
+            sm.Register(StateID.Patrol, patrol);
             sm.Register(StateID.Chase, chase);
             sm.Register(StateID.Attack, attack);
             sm.Register(StateID.Dead, dead);
-
             sm.ChangeState(StateID.Idle);
         }
 
-        /* ───────── Unity Loop ───────── */
+
         private void FixedUpdate()
         {
-            if (sm == null) return; // Awake 단계에서 초기화 실패 시 안전
-            sm.Tick();
+            jumper?.UpdateTimer(Time.fixedDeltaTime);
+            sm?.Tick();
+            climber?.UpdateClimbTimer(Time.fixedDeltaTime);
         }
 
-        /* ───────── External API ───────── */
-        /// <summary>
-        /// Called by States to transition. Contains guard‑logic so external callers don’t have to replicate it.
-        /// </summary>
         public void ChangeState(StateID id)
         {
-            if (sm == null) return; // StatData 누락 → FSM 미초기화 → 아무 동작 안함
+            if (sm == null) return;
 
-            // 순찰 사용 여부: SO 우선, 아니면 런타임 Stats 참고 – 기본값 true
-            bool usePatrolFlag = statData != null ? statData.usePatrol : (stats != null && stats.UsePatrol);
+            bool usePatrolFlag = statData != null ? statData.usePatrol
+                                                 : (RuntimeStats != null && RuntimeStats.UsePatrol);
 
             if (id == StateID.Patrol && !usePatrolFlag)
                 return;

@@ -17,7 +17,6 @@ namespace PHG
             if (Input.GetKeyDown(KeyCode.F) && PlayerIsClose())
             {
                 OnInteract?.Invoke();
-                Debug.Log("상호작용, 미믹");
             }
         }
         bool PlayerIsClose()

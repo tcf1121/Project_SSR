@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: statData
       value: 
       objectReference: {fileID: 11400000, guid: 3ef6117db7f53a845b252a4a3e74d21a, type: 2}
+    - target: {fileID: -8542866561908444573, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: statData.monsterType
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 669772552764040237, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_FlipX
       value: 0
@@ -36,9 +40,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: NightBorne
       objectReference: {fileID: 0}
+    - target: {fileID: 775090731613083339, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 998962513671491323, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: castRadius
       value: 0.46
+      objectReference: {fileID: 0}
+    - target: {fileID: 998962513671491323, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 1536
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223188924958462905, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3157297502085373163, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.x
@@ -49,8 +65,32 @@ PrefabInstance:
       value: 0.236
       objectReference: {fileID: 0}
     - target: {fileID: 4702735813726073667, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Size.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4702735813726073667, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Size.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4702735813726073667, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 4702735813726073667, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4702735813726073667, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_EdgeRadius
       value: 0.013
+      objectReference: {fileID: 0}
+    - target: {fileID: 5340629166944871666, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5340629166944871666, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5340629166944871666, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.x
@@ -97,8 +137,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 3ef6117db7f53a845b252a4a3e74d21a, type: 2}
     - target: {fileID: 5535757496672610817, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: _runtimeStats
+      value: 
+      objectReference: {fileID: 1376528467636695723}
+    - target: {fileID: 5535757496672610817, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: canClimbLadders
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5535757496672610817, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: thisMonsterType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5535757496672610817, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 1536
+      objectReference: {fileID: 0}
+    - target: {fileID: 5725978047069897743, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.072
       objectReference: {fileID: 0}
     - target: {fileID: 5725978047069897743, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.y
@@ -118,11 +174,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6215726151685872425, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.233
+      value: 0.081
       objectReference: {fileID: 0}
     - target: {fileID: 6215726151685872425, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.014
+      value: 0.023
       objectReference: {fileID: 0}
     - target: {fileID: 6385822007832630778, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.x
@@ -136,64 +192,45 @@ PrefabInstance:
       propertyPath: m_Name
       value: NightBorneBody
       objectReference: {fileID: 0}
+    - target: {fileID: 8131492693515080886, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437515474585188945, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526585353447464909, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 8688207590121595949, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.307
+      value: 0.212
       objectReference: {fileID: 0}
     - target: {fileID: 8688207590121595949, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.106
+      value: 0.052
+      objectReference: {fileID: 0}
+    - target: {fileID: 9147056804071723287, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1456269029054800347, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+    - {fileID: 998962513671491323, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 775090731613083339, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2317537992393688148}
-    - targetCorrespondingSourceObject: {fileID: 775090731613083339, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 307687920829342221}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
---- !u!1 &1200879656827229699 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 775090731613083339, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+--- !u!114 &1376528467636695723 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -8542866561908444573, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
   m_PrefabInstance: {fileID: 1903840970664886472}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2317537992393688148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1200879656827229699}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d5006bdad378b241b138bee3317e2cd, type: 3}
+  m_Script: {fileID: 11500000, guid: afebd25277e31ad4dba41e4f7888a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &307687920829342221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1200879656827229699}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dfb09c908eed5143ba5ac539ab345c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  climbSpeed: 3
-  alignSpeed: 4
-  jumpAwayForce: 3
-  climbYThreshold: 3
-  ladderMask:
-    serializedVersion: 2
-    m_Bits: 256
-  detectRadius: 0.35
-  forwardOffset: {x: 0.15, y: 0}
-  debugDraw: 1
-  verboseLog: 1
-  showThreshold: 1

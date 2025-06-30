@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 236468761951918242}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: WallSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 372235677457313176}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.08, y: -0.136, z: 0}
+  m_LocalPosition: {x: 0.416, y: 0.159, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3795531049910106240}
   - component: {fileID: 8255431569294792866}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: Fire_Worm_Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3285410922633734054}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2541246916275890549}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: PlatformSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,7 +174,7 @@ Transform:
   m_GameObject: {fileID: 7720029630169968438}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.77, y: 1.52, z: 0}
+  m_LocalPosition: {x: 0.308, y: 0.439, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 3046016009178654395}
   - component: {fileID: 4222639896767254476}
   - component: {fileID: 354465445103033095}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: Fire_Worm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -231,13 +231,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sensor: {fileID: 3285410922633734054}
+  wallSensor: {fileID: 236468761951918242}
   groundMask:
     serializedVersion: 2
-    m_Bits: 136
+    m_Bits: 1536
   canClimbLadders: 0
   hitBox: {fileID: 0}
-  stats: {fileID: 354465445103033095}
-  statData: {fileID: 11400000, guid: 5b65f8bb59f56564d91322336b4b9088, type: 2}
+  _runtimeStats: {fileID: 354465445103033095}
+  allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
+  thisMonsterType: 5
 --- !u!114 &3857387062784977901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,6 +252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2584caa33b1bc4ea56ec653e799871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showGizmos: 1
 --- !u!50 &3046016009178654395
 Rigidbody2D:
   serializedVersion: 4
@@ -334,7 +337,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afebd25277e31ad4dba41e4f7888a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statData: {fileID: 11400000, guid: 5b65f8bb59f56564d91322336b4b9088, type: 2}
+  statData:
+    monsterType: 5
+    maxHP: 100
+    damage: 10
+    moveSpeed: 2
+    rushMultiplier: 1.5
+    maxClimbableHeight: 2
+    patrolRange: 3
+    chaseRange: 6
+    attackRange: 1
+    chargeRange: 2.5
+    enableJump: 0
+    jumpHorizontalFactor: 0.6
+    jumpForce: 4
+    jumpCooldown: 0.45
+    usePatrol: 1
+    idleMode: 0
+    rangedCooldown: 2
+    projectileprefab: {fileID: 0}
+    readyRange: 10
+    projectileSpeed: 10
+    projectileLife: 3
+    firePattern: 0
+    pelletCount: 5
+    spreadAngle: 60
+    meleeCooldown: 0.6
+    meleeRadius: 1
 --- !u!1 &8378316520634907077
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +373,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9193310578497194025}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: MuzzlePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -2,6 +2,8 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.Interactions;
 
 namespace SCR
 {
@@ -19,7 +21,7 @@ namespace SCR
     public class PlayerController : MonoBehaviour
     {
         // ===== 링크 스크립트 =====
-        private Player _player;
+        private Player player;
 
         // ===== 입력 상태 =====
         public Vector2 InputDirection { get { return _inputDirection; } }
@@ -27,9 +29,11 @@ namespace SCR
 
         // ===== 이동 상태 =====
         private float currentSpeed;
+        public bool FacingRight { get => facingRight; }
         private bool facingRight = true;
 
         // ===== 상태 플래그들 =====
+        private bool pressNormalAttack;
         private bool isGrounded;
         private bool isTouchingWall;
         private bool isWallSliding;
@@ -46,6 +50,7 @@ namespace SCR
         // ===== 기타 상태 변수 =====
         private Vector2 dashDirection;
         private Collider2D currentLadder;
+        private Coroutine pickCor;
 
         // ===== 쿨타임 =====
         private bool[] IsCool = { false, false, false, false, false };
@@ -54,10 +59,11 @@ namespace SCR
         #region 유니티 주기
         void Awake()
         {
-            _player = GetComponent<Player>();
+            player = GetComponent<Player>();
             playerState = PlayerState.Idle;
             canClimb = true;
             canJump = true;
+            pressNormalAttack = false;
         }
 
         void FixedUpdate()
@@ -111,6 +117,45 @@ namespace SCR
             }
         }
 
+        private void OnInteraction()
+        {
+            if (pickCor == null)
+            {
+                pickCor = StartCoroutine(pickup());
+            }
+        }
+
+        private void OnEquippedUI()
+        {
+            player.ConditionalUI.EquipUI.OnOffEquipUI();
+        }
+
+        private void OnNormalAttack()
+        {
+            pressNormalAttack = !pressNormalAttack;
+            player.AlwaysOnUI.SetAttack(pressNormalAttack);
+            player.PlayerWeapon.UseNomalAttack(pressNormalAttack);
+        }
+
+        private void OnSkill()
+        {
+            if (!IsCool[3])
+            {
+                player.PlayerWeapon.UseSkill();
+                StartCoroutine(CoolTime(3));
+            }
+
+        }
+
+        private void OnUltimate()
+        {
+            if (!IsCool[4])
+            {
+                player.PlayerWeapon.UseUltimateSkill();
+                StartCoroutine(CoolTime(4));
+            }
+
+        }
         // 장비창 켜기
 
 
@@ -138,7 +183,7 @@ namespace SCR
         /// </summary>
         void CheckGrounded()
         {
-            isGrounded = Physics2D.OverlapBox(_player.PlayerPhysical.GroundCheck.position, _player.PlayerPhysical.GroundCheckBoxSize, 0f, _player.PlayerPhysical.AllGroundLayers);
+            isGrounded = Physics2D.OverlapBox(player.PlayerPhysical.GroundCheck.position, player.PlayerPhysical.GroundCheckBoxSize, 0f, player.PlayerPhysical.AllGroundLayers);
         }
 
         /// <summary>
@@ -148,7 +193,7 @@ namespace SCR
         {
             // 현재 바라보는 방향으로 레이캐스트
             Vector2 wallCheckDirection = facingRight ? Vector2.right : Vector2.left;
-            RaycastHit2D wallHit = Physics2D.Raycast(transform.position, wallCheckDirection, _player.PlayerPhysical.WallCheckDistance, _player.PlayerPhysical.AllGroundLayers);
+            RaycastHit2D wallHit = Physics2D.Raycast(transform.position, wallCheckDirection, player.PlayerPhysical.WallCheckDistance, player.PlayerPhysical.AllGroundLayers);
 
             bool currentlyTouchingWall = wallHit.collider != null;
 
@@ -171,7 +216,7 @@ namespace SCR
         {
             if (playerState != PlayerState.Climb && canClimb)
             {
-                Collider2D ladder = Physics2D.OverlapBox(_player.Collider.bounds.center, _player.Collider.bounds.size, 0f, _player.PlayerPhysical.LadderLayer);
+                Collider2D ladder = Physics2D.OverlapBox(player.Collider.bounds.center, player.Collider.bounds.size, 0f, player.PlayerPhysical.LadderLayer);
                 currentLadder = ladder;
             }
         }
@@ -207,6 +252,15 @@ namespace SCR
             else SetScale(1f);
 
         }
+
+        private IEnumerator pickup()
+        {
+            player.PlayerPhysical.PickTrigger.SetActive(true);
+            yield return new WaitForSeconds(1.0f);
+            player.PlayerPhysical.PickTrigger.SetActive(false);
+            StopCoroutine(pickCor);
+            pickCor = null;
+        }
         #endregion
 
         #region 이동
@@ -215,7 +269,7 @@ namespace SCR
         /// </summary>
         private void HandleMove()
         {
-            if (_player.PlayerPhysical.IsWallJumpInputBlocked) return;
+            if (player.PlayerPhysical.IsWallJumpInputBlocked) return;
 
             float targetSpeed = CalculateTargetSpeed();
             ApplyMovement(targetSpeed);
@@ -228,15 +282,15 @@ namespace SCR
         /// <returns>속도 반환</returns>
         private float CalculateTargetSpeed()
         {
-            float speed = InputDirection.x * _player.PlayerPhysical.FinalSpeed; ;//
+            float speed = InputDirection.x * player.PlayerPhysical.FinalSpeed; ;//
 
             // 공중에서 이동 속도 감소
             if (!isGrounded)
-                speed *= _player.PlayerPhysical.AirMoveSpeedMultiplier;
+                speed *= player.PlayerPhysical.AirMoveSpeedMultiplier;
 
             // 바닥에서만 앉기 상태일 때 속도 감소
             if (playerState == PlayerState.Sit && isGrounded)
-                speed *= _player.PlayerPhysical.CrouchSpeedMultiplier;
+                speed *= player.PlayerPhysical.CrouchSpeedMultiplier;
 
             // 벽 충돌 시 이동 제한
             if (isTouchingWall && IsTryingToMoveIntoWall())
@@ -260,18 +314,18 @@ namespace SCR
         /// <param name="targetSpeed">최종 이동</param>
         private void ApplyMovement(float targetSpeed)
         {
-            float accelRate = Mathf.Abs(targetSpeed) > 0.01f ? _player.PlayerPhysical.Acceleration : _player.PlayerPhysical.Deceleration;
+            float accelRate = Mathf.Abs(targetSpeed) > 0.01f ? player.PlayerPhysical.Acceleration : player.PlayerPhysical.Deceleration;
             currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, accelRate * Time.fixedDeltaTime);
 
             // 벽점프 중일 때는 수평 속도를 건드리지 않음
-            if (_player.PlayerPhysical.IsWallJumpInputBlocked)
+            if (player.PlayerPhysical.IsWallJumpInputBlocked)
             {
                 // Y축 속도만 유지하고 X축은 그대로 둠
-                _player.Rigid.velocity = new Vector2(_player.Rigid.velocity.x, _player.Rigid.velocity.y);
+                player.Rigid.velocity = new Vector2(player.Rigid.velocity.x, player.Rigid.velocity.y);
             }
             else
             {
-                _player.Rigid.velocity = new Vector2(currentSpeed, _player.Rigid.velocity.y);
+                player.Rigid.velocity = new Vector2(currentSpeed, player.Rigid.velocity.y);
             }
         }
 
@@ -293,7 +347,7 @@ namespace SCR
         {
             Vector3 scale = transform.localScale;
             facingRight = !facingRight;
-            scale.x = facingRight == true ? -1 : 1;
+            scale.x = facingRight == true ? 1 : -1;
             transform.localScale = scale;
         }
         #endregion
@@ -332,12 +386,12 @@ namespace SCR
         /// </summary>
         private void ExecuteJump()
         {
-            _player.Rigid.velocity = new Vector2(_player.Rigid.velocity.x, _player.PlayerPhysical.FinalJump);
+            player.Rigid.velocity = new Vector2(player.Rigid.velocity.x, player.PlayerPhysical.FinalJump);
         }
 
         private void HalfExecuteJump()
         {
-            _player.Rigid.velocity = new Vector2(_player.Rigid.velocity.x, _player.PlayerPhysical.FinalJump * 0.6f);
+            player.Rigid.velocity = new Vector2(player.Rigid.velocity.x, player.PlayerPhysical.FinalJump * 0.6f);
         }
 
         /// <summary>
@@ -346,7 +400,7 @@ namespace SCR
         void TryDropThroughPlatform()
         {
             // 발 밑에 관통 가능한 플랫폼이 있는지 확인
-            Collider2D platform = Physics2D.OverlapBox(_player.PlayerPhysical.GroundCheck.position, _player.PlayerPhysical.GroundCheckBoxSize, 0f, _player.PlayerPhysical.PlatformLayer);
+            Collider2D platform = Physics2D.OverlapBox(player.PlayerPhysical.GroundCheck.position, player.PlayerPhysical.GroundCheckBoxSize, 0f, player.PlayerPhysical.PlatformLayer);
 
             if (platform != null)
             {
@@ -364,13 +418,13 @@ namespace SCR
         IEnumerator DropThroughPlatform(Collider2D platform)
         {
             // 플레이어와 플랫폼 간의 충돌 무시
-            Physics2D.IgnoreCollision(_player.Collider, platform, true);
+            Physics2D.IgnoreCollision(player.Collider, platform, true);
 
             // 관통 시간 대기
-            yield return new WaitForSeconds(_player.PlayerPhysical.DropThroughTime);
+            yield return new WaitForSeconds(player.PlayerPhysical.DropThroughTime);
 
             // 충돌 복구
-            Physics2D.IgnoreCollision(_player.Collider, platform, false);
+            Physics2D.IgnoreCollision(player.Collider, platform, false);
         }
 
         #endregion
@@ -395,7 +449,7 @@ namespace SCR
         private void SetClimbingState(bool climbing)
         {
             playerState = climbing ? PlayerState.Climb : PlayerState.Idle;
-            _player.Rigid.gravityScale = climbing ? 0f : _player.OriginalGravityScale;
+            player.Rigid.gravityScale = climbing ? 0f : player.OriginalGravityScale;
         }
 
 
@@ -406,7 +460,7 @@ namespace SCR
         {
             if (InputDirection.y == -1)
             {
-                Collider2D platform = Physics2D.OverlapBox(_player.PlayerPhysical.GroundCheck.position, _player.PlayerPhysical.GroundCheckBoxSize, 0f, _player.PlayerPhysical.PlatformLayer);
+                Collider2D platform = Physics2D.OverlapBox(player.PlayerPhysical.GroundCheck.position, player.PlayerPhysical.GroundCheckBoxSize, 0f, player.PlayerPhysical.PlatformLayer);
 
                 if (platform != null)
                 {
@@ -433,7 +487,7 @@ namespace SCR
         /// </summary>
         private void StartLadderDelay()
         {
-            ladderActionTimer = _player.PlayerPhysical.LadderActionDelay;
+            ladderActionTimer = player.PlayerPhysical.LadderActionDelay;
         }
 
         /// <summary>
@@ -444,7 +498,7 @@ namespace SCR
             if (playerState != PlayerState.Climb) return;
 
             float climbDirection = CalculateClimbDirection();
-            _player.Rigid.velocity = new Vector2(0f, climbDirection * _player.PlayerPhysical.ClimbSpeed);
+            player.Rigid.velocity = new Vector2(0f, climbDirection * player.PlayerPhysical.ClimbSpeed);
         }
 
 
@@ -468,18 +522,16 @@ namespace SCR
         private bool CheckLadderBounds()
         {
             bool Check = false;
-            float playerTop = _player.Collider.bounds.max.y;
-            float playerBottom = _player.Collider.bounds.min.y;
+            float playerTop = player.Collider.bounds.max.y;
+            float playerBottom = player.Collider.bounds.min.y;
             float ladderTop = currentLadder.bounds.max.y;
             float ladderBottom = currentLadder.bounds.min.y;
             float ladderMid = ladderBottom + (ladderTop - ladderBottom / 2);
-
-            if ((InputDirection.y == 1 && playerBottom >= ladderTop) ||
-                (InputDirection.y == -1 &&
+            if ((InputDirection.y > 0 && playerBottom >= ladderTop) ||
+                (InputDirection.y < 0 &&
                     (playerTop <= ladderBottom || (playerTop <= ladderMid && isGrounded))))
             {
                 Check = true;
-                Debug.Log("사다리 끝");
                 ExitLadder();
             }
             return Check;
@@ -544,8 +596,8 @@ namespace SCR
             }
 
             // 기존 속도 초기화 후 벽점프 적용
-            Vector2 wallJumpVelocity = jumpDirection * _player.PlayerPhysical.FinalJump;
-            _player.Rigid.velocity = wallJumpVelocity;
+            Vector2 wallJumpVelocity = jumpDirection * player.PlayerPhysical.FinalJump;
+            player.Rigid.velocity = wallJumpVelocity;
 
             // 벽 슬라이드 상태 해제
             isWallSliding = false;
@@ -553,8 +605,8 @@ namespace SCR
             wallTouchTimer = 0f;
 
             // 입력 차단 시작
-            _player.PlayerPhysical.IsWallJumpInputBlocked = true;
-            wallJumpInputBlockTimer = _player.PlayerPhysical.WallJumpInputBlockTime;
+            player.PlayerPhysical.IsWallJumpInputBlocked = true;
+            wallJumpInputBlockTimer = player.PlayerPhysical.WallJumpInputBlockTime;
         }
         #endregion
 
@@ -579,15 +631,15 @@ namespace SCR
         void HandleWallSlide()
         {
             // 벽에 닿아있고, 공중에 있고, 떨어지고 있을 때, 충분히 접촉
-            bool shouldWallSlide = isTouchingWall && !isGrounded && _player.Rigid.velocity.y < 0 && wallTouchTimer >= _player.PlayerPhysical.WallSlideDelayTime;
+            bool shouldWallSlide = isTouchingWall && !isGrounded && player.Rigid.velocity.y < 0 && wallTouchTimer >= player.PlayerPhysical.WallSlideDelayTime;
 
             isWallSliding = shouldWallSlide;
 
             if (shouldWallSlide)
             {
-                Vector2 velocity = _player.Rigid.velocity;
-                velocity.y = Mathf.Max(velocity.y, -_player.PlayerPhysical.WallSlideSpeed);
-                _player.Rigid.velocity = velocity;
+                Vector2 velocity = player.Rigid.velocity;
+                velocity.y = Mathf.Max(velocity.y, -player.PlayerPhysical.WallSlideSpeed);
+                player.Rigid.velocity = velocity;
             }
         }
         #endregion
@@ -611,7 +663,7 @@ namespace SCR
         {
             playerState = PlayerState.Dash;
             dashDirection = new Vector2(facingRight ? 1 : -1, 0);
-            _player.Rigid.AddForce(dashDirection * 5f, ForceMode2D.Impulse);
+            player.Rigid.AddForce(dashDirection * 5f, ForceMode2D.Impulse);
             while (delay > 0.0f)
             {
                 delay -= Time.deltaTime;
@@ -648,13 +700,13 @@ namespace SCR
         /// </summary>
         private void UpdateWallJumpInputBlock()
         {
-            if (_player.PlayerPhysical.IsWallJumpInputBlocked)
+            if (player.PlayerPhysical.IsWallJumpInputBlocked)
             {
                 wallJumpInputBlockTimer -= Time.deltaTime;
 
                 if (wallJumpInputBlockTimer <= 0f)
                 {
-                    _player.PlayerPhysical.IsWallJumpInputBlocked = false;
+                    player.PlayerPhysical.IsWallJumpInputBlocked = false;
                     wallJumpInputBlockTimer = 0f;
                 }
             }
@@ -666,14 +718,14 @@ namespace SCR
         {
             IsCool[index] = true;
             float currentCoolTime = CoolTimes[index];
-            _player.AlwaysOnUI.CoolTime(index, true);
+            player.AlwaysOnUI.CoolTime(index, true);
             while (currentCoolTime > 0.0f)
             {
                 currentCoolTime -= Time.deltaTime;
-                _player.AlwaysOnUI.SetCool(index, CoolTimes[index], currentCoolTime);
+                player.AlwaysOnUI.SetCool(index, CoolTimes[index], currentCoolTime);
                 yield return new WaitForFixedUpdate();
             }
-            _player.AlwaysOnUI.CoolTime(index, false);
+            player.AlwaysOnUI.CoolTime(index, false);
             IsCool[index] = false;
         }
         #endregion

@@ -2,13 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using LHE;
+using System.Data.SqlTypes;
+using Unity.VisualScripting;
+using UnityEngine.Rendering;
+using UnityEngine.Events;
 
 namespace SHL
 {
     public class Uimanager : MonoBehaviour
     {
-       public enum InfoType { Hp ,Exp , Coin , Time, MonsterHp ,TeleporterTimer,MaxUiBossHp,GuideMessage}
+        private LHE.PlayerStats _playerStats; // 플레이어 스탯을 참조하기 위한 변수
+        public enum InfoType { Hp ,Exp , Coin , Time, MonsterHp ,TeleporterTimer,MaxUiBossHp,GuideMessage,StartMessage}
         public InfoType type;
+        bool messageCorutine = true; // 가이드 메시지 코루틴
+        bool isStartMessage = true; // 시작 메시지 코루틴
         float timer ;
         Text mytext;
         Slider myslider;
@@ -17,32 +25,35 @@ namespace SHL
         {
             mytext = GetComponent<Text>();
             myslider = GetComponent<Slider>();
-
+            _playerStats =GetComponent<LHE.PlayerStats>();
         }
 
         private void LateUpdate()
         {
             switch(type)
             {
-                case InfoType.Hp:
-                    /*mytext.text = "HP : " + PlayerManager.instance.playerHp;
-                     플레이어의 Hp 연결*/
-                    //float maxHp =
-                    //float curHp = 
-                    //myslider.value = curhp/ maxHp;
-                    break;
-                case InfoType.Exp:
-                    /*mytext.text = "Exp : " + PlayerManager.instance.playerExp;
-                     플레이어의 Exp 연결*/
-                    //float curExp =
-                    //float maxExp = 
-                    //myslider.value = curExp / maxExp;
-                    break;
-                case InfoType.Coin:
-                    /*mytext.text = "Coin : " + PlayerManager.instance.playerCoin;
-                     플레이어의 Coin 소유량*/
-                    //mytext.text = string.Format("{0:F0}",플레이어 코인 연결);
-                    break;
+                //case InfoType.Hp:
+                //    /*mytext.text = "HP : " + PlayerManager.instance.playerHp;
+                //     플레이어의 Hp 연결*/
+
+                //    float maxHp = _playerStats.FinalMaximumHp;
+                //    float curHp = _playerStats.CurrentHp;
+                //    myslider.value = curHp/ maxHp;
+                //    break;
+                //case InfoType.Exp:
+                //    /*mytext.text = "Exp : " + PlayerManager.instance.playerExp;
+                //     플레이어의 Exp 연결*/
+
+                //    float curExp =_playerStats.CurrentExp;
+                //    //float maxExp = _playerStats.ReqExp;
+                //    //myslider.value = curExp / maxExp;
+                //    break;
+                //case InfoType.Coin:
+                    
+                //    mytext.text = string.Format("{0:F0}", _playerStats.Money);
+                //    //플레이어의 Coin 소유량
+                //    //mytext.text = string.Format("{0:F0}",플레이어 코인 연결);
+                //    break;
                 case InfoType.Time:
                     /*mytext.text = "Time : " + PlayerManager.instance.gameTime.ToString("F2");
                      게임의 절대값시간 흐른시간 난이도 조절부분 확정되지 않음으로 예비.*/
@@ -77,10 +88,59 @@ namespace SHL
                     break;
 
                 case InfoType.GuideMessage:
+                    if(messageCorutine)
+                    {
+                        StartCoroutine(guidemessage(guide1,guide2,10,5));
+                    }
+                    //기획후 조정.
+                    break;
+                case InfoType.StartMessage:
+                    if(isStartMessage)
+                    {
+                        // 게임 시작 메시지 표시
+                        // 0은 스테이지 번호를 받아옴 
+                        //1은 스테이지   이름을 받아옴
+                        StartCoroutine(_startmessage());
+                        // 시작 메시지는 한 번만 표시
+                       
+                    }
+                    //mytext.text = string.Format("스테이지 {0} {1}","1","스테이지 이름");
                     //기획후 조정.
                     break;
             }
+            
         }
-
+        string guide1 = "텔레포트 장치를 찾으세요";
+        string guide2 = "텔레포트 시부렁시부렁 뭐시기저시기";
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="one"></param>메세지1
+        /// <param name="two"></param>메세지2
+        /// <param name="waittime"></param>대기시간1
+        /// <param name="waittime2"></param> 대기시간2
+        
+        /// <returns></returns>
+        IEnumerator guidemessage(string one,string two,int waittime,int waittime2)
+        {             //기획후 조정.
+            messageCorutine = false; // 코루틴이 실행 중임을 표시
+            yield return new WaitForSeconds(waittime); // 10초 대기
+            mytext.text = string.Format(one);
+            yield return new WaitForSeconds(waittime2);
+            mytext.text = string.Format(two);
+            yield return new WaitForSeconds(waittime2);
+            messageCorutine = true; // 코루틴이 끝났음을 표시
+              
+        }
+        IEnumerator _startmessage()
+        {
+            isStartMessage = false; // 시작 메시지 표시 후 재실행금지.
+            yield return new WaitForSeconds(2); // 2초 대기
+            mytext.text = string.Format("스테이지 {0} {1}", "1", "스테이지 이름");
+            yield return new WaitForSeconds(4); // 4초 대기
+            mytext.text = string.Format($"{guide1}");
+            yield return new WaitForSeconds(4); // 4초 대기
+            gameObject.SetActive(false); // 메시지 표시 후 UI 비활성화
+        }
     }
 }

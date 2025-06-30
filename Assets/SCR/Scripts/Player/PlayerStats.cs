@@ -1,9 +1,9 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace SCR
 {
-<<<<<<< Updated upstream
-=======
     [System.Serializable]
     public struct Stats
     {
@@ -66,304 +66,267 @@ namespace SCR
         }
     }
 
->>>>>>> Stashed changes
     public class PlayerStats : MonoBehaviour
     {
-        [Header("ÄÉ¸¯ÅÍ ±âº» Á¤º¸")] // ÈÄ¿¡ ÇÁ¶óÀÌºøÀ¸·Î º¯°æ
-        [SerializeField] private int level = 1;
-        [SerializeField] private float currentHp;
-        [SerializeField] private float currentExp = 0;
-        [SerializeField] private float money = 0;
+        private Player player;
 
-        [Header("±âº» ½ºÅÈ")]
-        [SerializeField] public float maximumHp = 100f;
-        [SerializeField] private float reqExp;
-        [SerializeField] public float atk = 10f;
-        [SerializeField] public float hpRegen = 1f;
-        [SerializeField] public float speed = 7f;
-        [SerializeField] public float jump = 1f;
+        [Header("ì¼€ë¦­í„° ê¸°ë³¸ ì •ë³´")] // í›„ì— í”„ë¼ì´ë¹—ìœ¼ë¡œ ë³€ê²½
+        [SerializeField] private int _level = 1;
+        [SerializeField] private float _currentHp;
+        [SerializeField] private int _currentExp;
+        [SerializeField] private int _reqExp;
+        [SerializeField] private int _money = 0;
 
-        [Header("º¸³Ê½º ½ºÅÈ (Àåºñ/¹öÇÁ)")]
-        [SerializeField] private float bonusMaximumHp = 0f;
-        [SerializeField] private float bonusAtk = 0f;
-        [SerializeField] private float bonusHpRegen = 0f;
-        [SerializeField] private float bonusSpeed = 0f;
-        [SerializeField] private float bonusJump = 0f;
+        [Header("ê¸°ë³¸ ìŠ¤íƒ¯")]
+        [SerializeField] private Stats _baseStats;
 
-        [Header("ÇöÀç »óÅÂ")]
-        [SerializeField] private bool isDead = false;
+        [Header("ë³´ë„ˆìŠ¤ ìŠ¤íƒ¯ (ì¥ë¹„/ë²„í”„)")]
+        [SerializeField] private Stats _bonusStats;
 
-        // Ã¼·Â Àç»ı Å¸ÀÌ¸Ó
+        [Header("í˜„ì¬ ìƒíƒœ")]
+        [SerializeField] private Stats _finalStats;
+
+        // ì²´ë ¥ ì¬ìƒ íƒ€ì´ë¨¸
         private float regenTimer = 0f;
 
-        // º¯¼ö ÀĞ±â ¾²±â °ü¸®
-        public int Level => level;
-        public float CurrentExp
-        {
-            get => currentExp;
-            set
-            {
-                currentExp = value;
-                LevelUpCheck();
-            }
-        }
-        public float Money { get; set; }
-        public float MaximumHp => maximumHp;
-        public float Atk => atk;
-        public float HPRegen => hpRegen;
-        public float Speed => speed;
-        public float Jump => jump;
-        public float CurrentHp => currentHp;
+        // ë³€ìˆ˜ ì½ê¸° ì“°ê¸° ê´€ë¦¬
+        public int Level { get { return _level; } }
+        public float CurrentHp { get { return _currentHp; } set { _currentHp = value; _changeHp?.Invoke(); } }
+        public int CurrentExp { get => _currentExp; set { _currentExp = value; _changeExp?.Invoke(); } }
+        public int Money { get => _money; set { _money = value; _changeMoney?.Invoke(); } }
+        public Stats FinalStats { get => _finalStats; }
+        public float ReqExp { get { return _reqExp; } }
+        private UnityAction _changeHp;
+        private UnityAction _changeExp;
+        private UnityAction _changeMoney;
+        private UnityAction _changeStats;
+        private UnityAction _changeLevel;
+        private UnityAction _isDead;
 
+        private Coroutine _hpRegenCor;
 
         void Awake()
         {
-
+            player = GetComponent<Player>();
+            _baseStats.BaseStats();
+            _bonusStats.ResetStats();
+            _changeStats += SetFinalStats;
+            _changeStats?.Invoke();
+            _changeHp += SetHp;
+            _changeExp += LevelUpCheck;
+            _changeExp += SetExp;
+            _changeMoney += SetMoney;
+            _changeLevel += SetLevel;
+            _isDead += Die;
+            Money = 0;
         }
+
         void Start()
         {
-
+            FullHPRecovery();
+            RequiredExp();
+            CurrentExp = 0;
+            _hpRegenCor = StartCoroutine(HpRegen());
         }
 
         private void Update()
         {
-            PlayerHpRegen();
+
         }
 
-        #region °æÇèÄ¡ ¹× ·¹º§ °ü¸®
+        #region ê²½í—˜ì¹˜ ë° ë ˆë²¨ ê´€ë¦¬
         public void LevelUpCheck()
         {
-            while (currentExp >= reqExp)
+            while (CurrentExp >= _reqExp)
             {
-                currentExp -= reqExp;
+                CurrentExp -= _reqExp;
                 LevelUp();
             }
         }
 
         public void LevelUp()
         {
-            level++;
-            RequiredExp(); // ÇÊ¿ä°æÇèÄ¡ Àç°è»ê
-            LevelUpRecalculateStats();
-            currentHp = FinalMaximumHp;
-            // ·¹º§ º¯°æ ¾Ë¸² OnLevelUp?.Invoke(level);
+            _level++;
+            RequiredExp(); // í•„ìš”ê²½í—˜ì¹˜ ì¬ê³„ì‚°
+            _baseStats.LevelUp();
+            CurrentHp = _finalStats.MaxHp;
+            _changeLevel?.Invoke();
+            _changeStats?.Invoke();
+            // ë ˆë²¨ ë³€ê²½ ì•Œë¦¼ OnLevelUp?.Invoke(level);
         }
 
         /// <summary>
-        /// ÇÊ¿ä °æÇèÄ¡ °è»ê (¼Ò¼ö Ã¹ÀÚ¸®±îÁö ¹İ¿Ã¸²)
+        /// í•„ìš” ê²½í—˜ì¹˜ ê³„ì‚° (ì†Œìˆ˜ ì²«ìë¦¬ê¹Œì§€ ë°˜ì˜¬ë¦¼)
         /// </summary>
         public void RequiredExp()
         {
-            float requiredExp = 30f; // 1·¹º§ ±âº» °æÇèÄ¡
+            float requiredExp = 30f; // 1ë ˆë²¨ ê¸°ë³¸ ê²½í—˜ì¹˜
 
-            for (int i = 2; i <= level; i++)
+            for (int i = 2; i <= _level; i++)
             {
                 requiredExp *= 1.6f;
             }
 
-            reqExp = Mathf.Round(requiredExp * 10) * 0.1f;
+            _reqExp = (int)Mathf.Round(requiredExp);
         }
         #endregion
 
-        #region ·¹º§ ±â¹İ ½ºÅÈ Àç°è»ê 
-        public void LevelUpRecalculateStats()
-        {
-            LevelUpRecalculateHpStats();
-            LevelUpRecalculateAtkStats();
-            LevelUpRecalculateHPRegenStats();
-        }
-
-        public void LevelUpRecalculateHpStats()
-        {
-            float RecalculateHP = 100f; // 1·¹º§ ±âº» Ã¼·Â
-
-            for (int i = 2; i <= level; i++)
-            {
-                RecalculateHP += 33f;
-            }
-
-            maximumHp = Mathf.Round(RecalculateHP * 10) * 0.1f;
-        }
-
-        public void LevelUpRecalculateAtkStats()
-        {
-            float RecalculateAtk = 10f; // 1·¹º§ ±âº» °ø°İ·Â
-
-            for (int i = 2; i <= level; i++)
-            {
-                RecalculateAtk += 2.5f;
-            }
-
-            atk = Mathf.Round(RecalculateAtk * 10) * 0.1f;
-        }
-
-        public void LevelUpRecalculateHPRegenStats()
-        {
-            float RecalculateHPRegen = 1f; // 1·¹º§ ±âº» Ã¼·Â
-
-            for (int i = 2; i <= level; i++)
-            {
-                RecalculateHPRegen += 0.2f;
-            }
-
-            hpRegen = Mathf.Round(RecalculateHPRegen * 10) * 0.1f;
-        }
-        #endregion
-
-        #region »ı¸í °ü¸®
+        #region ìƒëª… ê´€ë¦¬
         public void Die()
         {
-            isDead = true;
-            // OnDie?.Invoke(isDead); ÇöÀç Á×À½ »óÅÂ ¾Ë¸² (ÄÁÆ®·Ñ ¸ØÃß±â)
+            StopCoroutine(_hpRegenCor);
+            Time.timeScale = 0f;
         }
 
-        public void Live()
-        {
-            isDead = false;
-            // OnDie?.Invoke(isDead); ÇöÀç Á×À½ »óÅÂ ¾Ë¸² (ÄÁÆ®·Ñ º¹±¸)
-        }
 
-        // ¸®¼Â
+        // ë¦¬ì…‹
         #endregion
 
-        #region HP °ü¸®
+        #region HP ê´€ë¦¬
         /// <summary>
-        /// Ã¼·Â È¸º¹
+        /// ì²´ë ¥ íšŒë³µ
         /// </summary>
         public void Heal(float healAmount)
         {
-            float oldHp = currentHp;
-            currentHp = Mathf.Min(currentHp + healAmount, FinalMaximumHp);
+            float oldHp = CurrentHp;
+            CurrentHp = Mathf.Min(CurrentHp + healAmount, _finalStats.MaxHp);
 
-            if (currentHp != oldHp)
+            if (CurrentHp != oldHp)
             {
-                // OnHpChanged?.Invoke(currentHp); ÇöÀç Ã¼·Â º¯°æ ¾Ë¸²
+                // OnHpChanged?.Invoke(currentHp); í˜„ì¬ ì²´ë ¥ ë³€ê²½ ì•Œë¦¼
             }
         }
 
         /// <summary>
-        /// µ¥¹ÌÁö ¹Ş±â
+        /// ë°ë¯¸ì§€ ë°›ê¸°
         /// </summary>
         public void TakeDamage(float damage)
         {
-            float oldHp = currentHp;
-            currentHp = Mathf.Max(currentHp - damage, 0f);
+            float oldHp = CurrentHp;
+            CurrentHp = Mathf.Max(CurrentHp - damage, 0f);
 
-            if (currentHp != oldHp)
+            // ì¼ì • ì‹œê°„ ë¬´ì  êµ¬í˜„ (ê¸°íš ë…¼ì˜ì¤‘)
+            // ê²½ì§ (ê¸°íš ë…¼ì˜ì¤‘)
+            if (CurrentHp != oldHp)
             {
-                // OnHpChanged?.Invoke(currentHp); ÇöÀç Ã¼·Â º¯°æ ¾Ë¸²
+                // OnHpChanged?.Invoke(currentHp); í˜„ì¬ ì²´ë ¥ ë³€ê²½ ì•Œë¦¼
             }
 
-            if (currentHp <= 0)
+            if (CurrentHp <= 0)
             {
-                Die();
-                // »ç¸Á Ã³¸® ·ÎÁ÷
-            }
-        }
-
-        /// <summary>
-        /// Ã¼·Â Àç»ı
-        /// </summary>
-        public void PlayerHpRegen()
-        {
-            if (isDead == true) { return; }
-            if (currentHp == FinalMaximumHp) { return; }
-
-            regenTimer += Time.deltaTime;
-
-            if (regenTimer > 0.2)
-            {
-                regenTimer -= 0.2f;
-                Heal(FinalHpRegen * 0.2f);
+                _isDead.Invoke();
+                // ì‚¬ë§ ì²˜ë¦¬ ë¡œì§
             }
         }
 
         /// <summary>
-        /// Ã¼·Â ÃÖ´ëÀ¸·Î È¸º¹
+        /// ì²´ë ¥ ì¬ìƒ
         /// </summary>
-        public void FullHPRecovery()
+        private IEnumerator HpRegen()
         {
-            currentHp = FinalMaximumHp;
-        }
-
-        /// <summary>
-        /// HP ºñÀ² ¹İÈ¯ (0~1) _Àåºñ ¾ÆÀÌÅÛ¿¡ ÀÇÇØ Ã¼·ÂÀÌ Áõ°¡ÇÏ¸é ºñÀ²À» À¯ÁöÇÏ¸ç Áõ°¡ÇÏµµ·Ï ÇÔ _¹İ´ëµµ ¸¶Âù°¡Áö
-        /// </summary>
-        public float GetHpRatio()
-        {
-            if (FinalMaximumHp <= 0)
-                return 0f;
-            return currentHp / FinalMaximumHp;
-        }
-        #endregion
-
-        #region Àåºñ ¶Ç´Â ¹öÇÁ ¿ÜºÎ ¿ä¼Ò¿¡ ÀÇÇÑ ½ºÅÈ Áõ°¨
-        // º¸³Ê½º ½ºÅÈ°¡Á®°¡¼­ ¼öÁ¤ (¿µ±¸ÀûÀÎ°Ô ¾Æ´Ï¶ó¸é ¿ø·¡´ë·Î ÇØÁà¾ßÇÔ)
-        public float BonusMaximumHp
-        {
-            get => bonusMaximumHp;
-            set
+            while (true)
             {
-                if (bonusMaximumHp != value) // °ªÀÌ ½ÇÁ¦·Î º¯°æµÉ ¶§¸¸
+                float RegenTime = 5f;
+                Heal(_finalStats.HpRegen);
+                while (RegenTime > 0.0f)
                 {
-                    float hpRatio = GetHpRatio();
-                    bonusMaximumHp = value;
-                    currentHp = FinalMaximumHp * hpRatio;
-
-                    // OnHpChanged?.Invoke(currentHp); HP º¯°æ ¾Ë¸²
+                    RegenTime -= Time.deltaTime;
+                    yield return new WaitForFixedUpdate();
                 }
             }
         }
-        public float BonusAtk
-        {
-            get => bonusAtk;
-            set => bonusAtk = value;
-        }
 
-        public float BonusHpRegen
-        {
-            get => bonusHpRegen;
-            set => bonusHpRegen = value;
-        }
-<<<<<<< Updated upstream
-
-        public float BonusSpeed
-        {
-            get => bonusSpeed;
-            set => bonusSpeed = value;
-        }
-
-        public float BonusJump
-        {
-            get => bonusJump;
-            set => bonusJump = value;
-        }
-=======
->>>>>>> Stashed changes
-        #endregion
-
-        #region ÃÖÁ¾ ½ÇÁ¦ Àû¿ë ½ºÅÈ
-        public float FinalMaximumHp { get => Mathf.Max(1, maximumHp + BonusMaximumHp); }
-        public float FinalAtk { get => atk + BonusAtk; }
-        public float FinalHpRegen { get => hpRegen + BonusHpRegen; }
-        public float FinalSpeed { get => speed + BonusSpeed; }
-        public float FinalJump { get => jump + BonusJump; }
-        #endregion
-
-        #region µ· °ü¸®
         /// <summary>
-        /// µ· ¼Ò¸ğ ¹× »ç¿ë
+        /// ì²´ë ¥ ìµœëŒ€ìœ¼ë¡œ íšŒë³µ
         /// </summary>
-        /// <param name="amount">ºñ¿ë</param>
-        /// <returns>°áÁ¦ ¼º°ø ¿©ºÎ</returns>
-        public bool SpendMoney(float amount)
+        public void FullHPRecovery()
         {
-            if (money >= amount)
+            CurrentHp = _finalStats.MaxHp;
+        }
+
+        // ì—†ëŠ”ê²Œ ë§ì„ê±° ê°™ìŒ
+        /// <summary>
+        /// HP ë¹„ìœ¨ ë°˜í™˜ (0~1) _ì¥ë¹„ ì•„ì´í…œì— ì˜í•´ ì²´ë ¥ì´ ì¦ê°€í•˜ë©´ ë¹„ìœ¨ì„ ìœ ì§€í•˜ë©° ì¦ê°€í•˜ë„ë¡ í•¨ _ë°˜ëŒ€ë„ ë§ˆì°¬ê°€ì§€
+        /// </summary>
+        public float GetHpRatio()
+        {
+            if (_finalStats.MaxHp <= 0)
+                return 0f;
+            return _currentHp / _finalStats.MaxHp;
+        }
+        #endregion
+
+        #region ì¥ë¹„ ë˜ëŠ” ë²„í”„ ì™¸ë¶€ ìš”ì†Œì— ì˜í•œ ìŠ¤íƒ¯ ì¦ê°
+        // ë³´ë„ˆìŠ¤ ìŠ¤íƒ¯ê°€ì ¸ê°€ì„œ ìˆ˜ì • (ì˜êµ¬ì ì¸ê²Œ ì•„ë‹ˆë¼ë©´ ì›ë˜ëŒ€ë¡œ í•´ì¤˜ì•¼í•¨)
+        /// <summary>
+        /// ì¥ë¹„ ì¥ì°©/í•´ì œ, ë²„í”„ ë“± ì™¸ë¶€ ìš”ì†Œì— ì˜í•œ ìŠ¤íƒ¯ ì¦ê°
+        /// </summary>
+        /// <param name="addstats">ì „ë‹¬í•  ìŠ¤íƒ¯ ì •ë³´</param>
+        /// <param name="equip">ì¦ê°€ = true, ê°ì†Œ = false</param>
+        public void EquipItem(Stats addstats, bool equip = true)
+        {
+            if (equip) _bonusStats.AddStats(addstats);
+            else _bonusStats.SubStats(addstats);
+            _changeStats?.Invoke();
+        }
+
+        private void SetFinalStats()
+        {
+            _finalStats.FinalStats(_baseStats, _bonusStats);
+        }
+
+        #endregion
+
+        #region ê²½í—˜ì¹˜ ì–»ê¸°
+        /// <summary>
+        /// ê²½í—˜ì¹˜ ì–»ê¸°
+        /// </summary>
+        public void GetExp(int exp)
+        {
+            CurrentExp += exp;
+            LevelUpCheck();
+        }
+
+
+        #endregion
+
+
+
+        #region ëˆ ê´€ë¦¬
+        /// <summary>
+        /// ëˆ ì†Œëª¨ ë° ì‚¬ìš©
+        /// </summary>
+        /// <param name="amount">ë¹„ìš©</param>
+        /// <returns>ê²°ì œ ì„±ê³µ ì—¬ë¶€</returns>
+        public bool SpendMoney(int amount)
+        {
+            if (Money >= amount)
             {
-                money -= amount;
+                Money -= amount;
                 return true;
             }
             return false;
+        }
+        #endregion
+
+        #region UIì—°ë™
+        private void SetLevel()
+        {
+            player.AlwaysOnUI.SetLevel(_level);
+        }
+        private void SetHp()
+        {
+            player.AlwaysOnUI.SetHp((int)_currentHp, (int)FinalStats.MaxHp);
+        }
+
+        private void SetExp()
+        {
+            player.AlwaysOnUI.SetExp(_currentExp, _reqExp);
+        }
+
+        private void SetMoney()
+        {
+            player.AlwaysOnUI.SetCoin(_money);
         }
         #endregion
     }

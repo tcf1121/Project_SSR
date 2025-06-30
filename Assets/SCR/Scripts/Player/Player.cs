@@ -9,13 +9,15 @@ namespace SCR
     {
         // ===== Link =====
         private Equipped _equipped;
-        public Equipped Equipped { get { return _equipped; } }
+        public Equipped Equipped { get => _equipped; }
         private PlayerController _playerController;
-        public PlayerController PlayerController { get { return _playerController; } }
+        public PlayerController PlayerController { get => _playerController; }
         private PlayerPhysical _playerPhysical;
-        public PlayerPhysical PlayerPhysical { get { return _playerPhysical; } }
+        public PlayerPhysical PlayerPhysical { get => _playerPhysical; }
         private PlayerStats _playerStats;
-        public PlayerStats PlayerStats { get { return _playerStats; } }
+        public PlayerStats PlayerStats { get => _playerStats; }
+        private PlayerWeapon _playerWeapon;
+        public PlayerWeapon PlayerWeapon { get => _playerWeapon; }
 
         // ===== UI =====
         [Header("UI")]
@@ -33,7 +35,7 @@ namespace SCR
         private Rigidbody2D _rigid;
         public Collider2D Collider { get { return _collider; } }
         private Collider2D _collider;
-        Coroutine pickCor;
+
 
 
 
@@ -53,6 +55,7 @@ namespace SCR
             _playerController = GetComponent<PlayerController>();
             _playerPhysical = GetComponent<PlayerPhysical>();
             _playerStats = GetComponent<PlayerStats>();
+            _playerWeapon = GetComponent<PlayerWeapon>();
             _alwaysOnUI.LinkedPlayer(this);
             _conditionalUI.LinkedPlayer(this);
             _originalGravityScale = _rigid.gravityScale;
@@ -82,22 +85,6 @@ namespace SCR
             _playerPhysical.SetGroundCheck(transform.Find("GroundCheckPos"));
         }
 
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                if (pickCor == null)
-                {
-                    pickCor = StartCoroutine(pickup());
-                }
-            }
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                _conditionalUI.EquipUI.OnOffEquipUI();
-            }
-        }
-
-
         public void Equip(GameObject item)
         {
             if (_equipped.CheckItem(item))
@@ -126,14 +113,7 @@ namespace SCR
             }
         }
 
-        IEnumerator pickup()
-        {
-            _playerPhysical.PickTrigger.SetActive(true);
-            yield return new WaitForSeconds(1.0f);
-            _playerPhysical.PickTrigger.SetActive(false);
-            StopCoroutine(pickCor);
-            pickCor = null;
-        }
+
     }
 }
 

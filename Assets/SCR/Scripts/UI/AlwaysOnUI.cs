@@ -45,6 +45,11 @@ namespace SCR
             _coolTimeObj[index].SetActive(IsCool);
         }
 
+        public void SetAttack(bool IsAttack)
+        {
+            _coolTimeObj[1].SetActive(IsAttack);
+        }
+
         public void SetCool(int index, float maxCoolTime, float curCoolTime)
         {
             _coolTimeText[index].text = curCoolTime.ToString("F1");

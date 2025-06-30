@@ -90,15 +90,23 @@ namespace SCR
             if (_equipped.CheckItem(item))
             {
                 item.SetActive(false);
+                _conditionalUI.EnhancementInfo.SetItem(item);
+                _conditionalUI.EnhancementInfo.GetItem();
             }
             else
             {
                 if (_equipped.CheckFull(item))
                 {
                     _equipped.EquipItem(item);
+
+
                     item.SetActive(false);
                     _conditionalUI.ItemInfoUI.SetItem(item);
                     _conditionalUI.ItemInfoUI.GetItem();
+                    if (item.GetComponent<AttackItem>())
+                        _playerWeapon.AddWeapon(item.GetComponent<AttackItem>());
+                    else
+                        _playerStats.BonusStats.AddStats(item.GetComponent<StatItem>().CurrentStat);
                 }
                 else
                 {

@@ -52,34 +52,34 @@ namespace SCR
             {
 
                 case ItemPart.Head:
-                    find = _head.FindIndex(n => n.GetComponent<Item>().Name == ObjItem.Name);
+                    find = _head.FindIndex(n => n.GetComponent<AttackItem>().Name == ObjItem.Name);
                     if (find != -1)
                     {
-                        _head[find].GetComponent<AttackItem>().ItemEnhancement();
+                        EnhancementItem(ItemPart.Head, find);
                         return true;
                     }
                     break;
                 case ItemPart.Body:
-                    find = _body.FindIndex(n => n.GetComponent<Item>().Name == ObjItem.name);
+                    find = _body.FindIndex(n => n.GetComponent<AttackItem>().Name == ObjItem.Name);
                     if (find != -1)
                     {
-                        _body[find].GetComponent<AttackItem>().ItemEnhancement();
+                        EnhancementItem(ItemPart.Body, find);
                         return true;
                     }
                     break;
                 case ItemPart.Arm:
-                    find = _arm.FindIndex(n => n.GetComponent<Item>().Name == ObjItem.name);
+                    find = _arm.FindIndex(n => n.GetComponent<AttackItem>().Name == ObjItem.Name);
                     if (find != -1)
                     {
-                        _arm[find].GetComponent<AttackItem>().ItemEnhancement();
+                        EnhancementItem(ItemPart.Arm, find);
                         return true;
                     }
                     break;
                 case ItemPart.Leg:
-                    find = _leg.FindIndex(n => n.GetComponent<Item>().Name == ObjItem.name);
+                    find = _leg.FindIndex(n => n.GetComponent<StatItem>().Name == ObjItem.Name);
                     if (find != -1)
                     {
-                        _leg[find].GetComponent<StatItem>().ItemEnhancement();
+                        EnhancementItem(ItemPart.Leg, find);
                         return true;
                     }
                     break;
@@ -133,6 +133,29 @@ namespace SCR
             }
         }
 
+        // 아이템 강화하기
+        public void EnhancementItem(ItemPart itemPart, int index)
+        {
+            switch (itemPart)
+            {
+                case ItemPart.Head:
+                    _head[index].ItemEnhancement();
+                    player.PlayerWeapon.HeadWeapons[index].Enhancement();
+                    break;
+                case ItemPart.Body:
+                    _body[index].ItemEnhancement();
+                    player.PlayerWeapon.BodyWeapons[index].Enhancement();
+                    break;
+                case ItemPart.Arm:
+                    _arm[index].ItemEnhancement();
+                    player.PlayerWeapon.ArmWeapons[index].Enhancement();
+                    break;
+                case ItemPart.Leg:
+                    _leg[index].ItemEnhancement();
+                    break;
+            }
+        }
+
         // 아이템 버리기
         public void DropItem(ItemPart itemPart, int index)
         {
@@ -142,22 +165,25 @@ namespace SCR
                 case ItemPart.Head:
                     DropObj = Instantiate(_head[index].itemPrefab);
                     _head.RemoveAt(index);
+                    Destroy(player.PlayerWeapon.HeadWeapons[index].gameObject);
+                    player.PlayerWeapon.HeadWeapons.RemoveAt(index);
                     _head.Add(player.WaitItem.GetComponent<AttackItem>());
                     break;
                 case ItemPart.Body:
                     DropObj = Instantiate(_body[index].itemPrefab);
                     _body.RemoveAt(index);
+                    Destroy(player.PlayerWeapon.BodyWeapons[index].gameObject);
+                    player.PlayerWeapon.BodyWeapons.RemoveAt(index);
                     _body.Add(player.WaitItem.GetComponent<AttackItem>());
                     break;
                 case ItemPart.Arm:
                     DropObj = Instantiate(_arm[index].itemPrefab);
                     _arm.RemoveAt(index);
+                    Destroy(player.PlayerWeapon.ArmWeapons[index].gameObject);
+                    player.PlayerWeapon.ArmWeapons.RemoveAt(index);
                     _arm.Add(player.WaitItem.GetComponent<AttackItem>());
                     break;
                 case ItemPart.Leg:
-                    DropObj = Instantiate(_leg[index].itemPrefab);
-                    _leg.RemoveAt(index);
-                    _leg.Add(player.WaitItem.GetComponent<StatItem>());
                     break;
             }
             DropObj.transform.position = player.transform.position;

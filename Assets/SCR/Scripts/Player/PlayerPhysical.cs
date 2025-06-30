@@ -18,7 +18,7 @@ namespace SCR
         [SerializeField] private float _jumpBufferTime = 0.2f;
 
         [Header("하단 점프 설정")]
-        [SerializeField] private float _dropThroughTime = 0.3f;  // 하단점프 관통 지속 시간
+        [SerializeField] private float _dropThroughTime = 0.5f;  // 하단점프 관통 지속 시간
 
         [Header("대쉬 설정")]
         [SerializeField] private float _dashForce = 5f;
@@ -104,7 +104,7 @@ namespace SCR
 
         public void SetSpeed()
         {
-            _finalJump = 1f + player.PlayerStats.FinalStats.Jump * 0.5f;
+            _finalSpeed = 1f + player.PlayerStats.FinalStats.Speed * 0.5f;
         }
 
         public void SetJump()

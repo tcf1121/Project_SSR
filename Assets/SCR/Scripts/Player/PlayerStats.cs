@@ -64,6 +64,15 @@ namespace SCR
             Speed = baseStats.Speed + bonusStats.Speed;
             Jump = baseStats.Jump + bonusStats.Jump;
         }
+
+        public void Enhancement(Stats baseStats, float Strengthening)
+        {
+            MaxHp = baseStats.MaxHp + (int)(baseStats.MaxHp * Strengthening);
+            Atk = baseStats.Atk + (int)(baseStats.Atk * Strengthening);
+            HpRegen = baseStats.HpRegen + (int)(baseStats.HpRegen * Strengthening);
+            Speed = baseStats.Speed + (int)(baseStats.Speed * Strengthening);
+            Jump = baseStats.Jump + (int)(baseStats.Jump * Strengthening);
+        }
     }
 
     public class PlayerStats : MonoBehaviour
@@ -82,6 +91,7 @@ namespace SCR
 
         [Header("보너스 스탯 (장비/버프)")]
         [SerializeField] private Stats _bonusStats;
+        public Stats BonusStats { get => _bonusStats; }
 
         [Header("현재 상태")]
         [SerializeField] private Stats _finalStats;

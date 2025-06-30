@@ -6,12 +6,14 @@ namespace SCR
 {
     public class StatItem : Item
     {
-        // 기본 스탯
-        [SerializeField] private float _basicStat;
+        [Header("기본 스탯")]
+        [SerializeField] private Stats _basicStat;
+        public Stats BasicStat { get { return _basicStat; } }
 
-        // 현재 스탯
-        public float CurrentStat { get { return _currentStat; } }
-        private float _currentStat;
+
+        [Header("현재 스탯")]
+        [SerializeField] private Stats _currentStat;
+        public Stats CurrentStat { get { return _currentStat; } }
 
         // 특수 스탯
         public float SpecialStat { get { return _specialStat; } }
@@ -29,7 +31,7 @@ namespace SCR
         override public void ItemEnhancement()
         {
             base.ItemEnhancement();
-            _currentStat = _basicStat + (int)(_basicStat * _strengthening);
+            _currentStat.Enhancement(_basicStat, _strengthening * _enhance);
         }
     }
 }

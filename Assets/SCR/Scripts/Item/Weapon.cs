@@ -7,42 +7,32 @@ namespace SCR
 {
     public class Weapon : MonoBehaviour
     {
+        public Player Player { get => _player; }
+        private Player _player;
         public ItemPart ItemPart { get => itemPart; }
         public float AttackCycle { get => attackCycle; }
         [SerializeField] private float attackCycle;
         public float DamageRatio { get => damageRatio; }
         [SerializeField] private float damageRatio;
+        [SerializeField] private float _strengthening;
         [SerializeField] private ItemPart itemPart;
-        [SerializeField] private List<BoxCollider2D> _AttackCollider;
-        [SerializeField] Animator _animator;
 
+        [SerializeField] List<Animator> _animator;
+
+        public void SetPlayer(Player player)
+        {
+            _player = player;
+        }
+
+        public void Enhancement()
+        {
+            damageRatio += _strengthening;
+        }
 
         public void Attack()
         {
-            _animator.SetTrigger("Attack");
-        }
-
-        public void AttackOnAll()
-        {
-            for (int i = 0; i < _AttackCollider.Count; i++)
-                AttackOn(i);
-        }
-
-        public void AttackOffAll()
-        {
-            for (int i = 0; i < _AttackCollider.Count; i++)
-                AttackOff(i);
-        }
-
-
-        public void AttackOn(int index)
-        {
-            _AttackCollider[index].enabled = true;
-        }
-
-        public void AttackOff(int index)
-        {
-            _AttackCollider[index].enabled = false;
+            foreach (Animator animator in _animator)
+                animator.SetTrigger("Attack");
         }
     }
 }

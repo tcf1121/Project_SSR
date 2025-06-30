@@ -8,6 +8,7 @@ TagManager:
   - Item
   - Ladder
   - Ground
+  - Monster
   layers:
   - Default
   - TransparentFX
@@ -44,4 +45,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 994772207
     locked: 0

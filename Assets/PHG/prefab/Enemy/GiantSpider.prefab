@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5137852945883458378}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: PlatformSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1092701907760770313}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.77, y: 1.52, z: 0}
+  m_LocalPosition: {x: 0.008, y: 0.115, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -40,15 +40,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6182902077073218114}
-  - component: {fileID: 7792358915471593198}
   - component: {fileID: 5981162236118291633}
   - component: {fileID: 5873029866277956050}
   - component: {fileID: 5642060323633669252}
   - component: {fileID: 6814179393972850163}
   - component: {fileID: 1630876321000049875}
   - component: {fileID: 857401054610415467}
-  - component: {fileID: -6131449699646069132}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: GiantSpider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,30 +69,6 @@ Transform:
   - {fileID: 5811173979555560127}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7792358915471593198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1518277853401147515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dfb09c908eed5143ba5ac539ab345c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  climbSpeed: 1
-  alignSpeed: 2
-  jumpAwayForce: 3
-  climbYThreshold: 2.5
-  ladderMask:
-    serializedVersion: 2
-    m_Bits: 256
-  detectRadius: 0.1
-  forwardOffset: {x: 0.15, y: 0}
-  debugDraw: 0
-  verboseLog: 0
-  showThreshold: 1
 --- !u!114 &5981162236118291633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,13 +82,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sensor: {fileID: 5301052598688163225}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 136
-  canClimbLadders: 1
+  wallSensor: {fileID: 7440258318983191197}
   hitBox: {fileID: 5709347393703756196}
-  stats: {fileID: 1630876321000049875}
-  statData: {fileID: 11400000, guid: 4f7df2d354773bb47b41287353346341, type: 2}
+  _runtimeStats: {fileID: 1630876321000049875}
+  allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
+  thisMonsterType: 1
 --- !u!114 &5873029866277956050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b2584caa33b1bc4ea56ec653e799871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showGizmos: 1
 --- !u!50 &5642060323633669252
 Rigidbody2D:
   serializedVersion: 4
@@ -186,7 +159,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.045, y: 0.05}
+  m_Offset: {x: -0.05, y: 0.03}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -197,7 +170,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.45, y: 0.3}
+  m_Size: {x: 0.4, y: 0.25}
   m_EdgeRadius: 0.013
 --- !u!114 &1630876321000049875
 MonoBehaviour:
@@ -211,7 +184,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afebd25277e31ad4dba41e4f7888a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statData: {fileID: 11400000, guid: 4f7df2d354773bb47b41287353346341, type: 2}
+  statData:
+    monsterType: 1
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 0
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 0
+    maxHP: 100
+    damage: 10
+    moveSpeed: 2
+    rushMultiplier: 1.5
+    maxClimbableHeight: 2
+    patrolRange: 3
+    chaseRange: 6
+    attackRange: 1
+    chargeRange: 2.5
+    enableJump: 0
+    jumpHorizontalFactor: 0.6
+    jumpForce: 4
+    jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
+    usePatrol: 1
+    idleMode: 0
+    rangedCooldown: 2
+    projectileprefab: {fileID: 0}
+    readyRange: 10
+    projectileSpeed: 10
+    projectileLife: 3
+    firePattern: 0
+    pelletCount: 5
+    spreadAngle: 60
+    meleeCooldown: 0.6
+    meleeRadius: 1
+    isFlying: 0
+    isRanged: 0
+    isCharging: 0
+    enableLadderClimb: 0
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3
 --- !u!95 &857401054610415467
 Animator:
   serializedVersion: 5
@@ -233,18 +248,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-6131449699646069132
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1518277853401147515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d5006bdad378b241b138bee3317e2cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6999564634121072551
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,7 +257,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7440258318983191197}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: WallSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -270,7 +273,7 @@ Transform:
   m_GameObject: {fileID: 6999564634121072551}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.08, y: -0.136, z: 0}
+  m_LocalPosition: {x: 0.155, y: -0.115, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -285,7 +288,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5301052598688163225}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -301,7 +304,7 @@ Transform:
   m_GameObject: {fileID: 7604092074960839037}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3, y: -0.172, z: 0}
+  m_LocalPosition: {x: -0.012, y: -0.172, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -317,7 +320,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3747931784108139099}
   - component: {fileID: 5709347393703756196}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: HitBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -371,7 +374,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.05, y: -0.05}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -382,7 +385,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.4, y: 0.25}
   m_EdgeRadius: 0
 --- !u!1 &8001613156621822470
 GameObject:
@@ -394,7 +397,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5811173979555560127}
   - component: {fileID: 1628103864616032925}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: SpiderBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9035146775863950717}
-  m_Layer: 9
-  m_Name: GameObject
+  m_Layer: 12
+  m_Name: G_Check
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3413390371781059055}
   - component: {fileID: 6179750502833708692}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ Transform:
   m_GameObject: {fileID: 1990742737241820695}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.288, y: 0, z: 0}
+  m_LocalPosition: {x: -0.095, y: 0.077, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -106,7 +106,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.35, y: 0.35}
   m_EdgeRadius: 0
 --- !u!1 &3028759376588362661
 GameObject:
@@ -120,10 +120,9 @@ GameObject:
   - component: {fileID: 5956522131150013274}
   - component: {fileID: 6041105704375229642}
   - component: {fileID: 1972706624924176348}
-  - component: {fileID: 6453739840987346053}
-  - component: {fileID: 1133545975535523169}
   - component: {fileID: 8879609475013827189}
-  m_Layer: 9
+  - component: {fileID: -8480110139499212012}
+  m_Layer: 12
   m_Name: Bat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -179,9 +178,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.01, y: 0.12}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.2
 --- !u!50 &6041105704375229642
 Rigidbody2D:
   serializedVersion: 4
@@ -222,37 +221,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sensor: {fileID: 9035146775863950717}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 136
-  canClimbLadders: 1
+  wallSensor: {fileID: 3264109622854126545}
   hitBox: {fileID: 6179750502833708692}
-  stats: {fileID: 8879609475013827189}
-  statData: {fileID: 11400000, guid: f1cb1b5453ebe224bad5e11ed9f24838, type: 2}
---- !u!114 &6453739840987346053
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3028759376588362661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfde0eec9b549944ca31d25dbb80b9e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1133545975535523169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3028759376588362661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b2584caa33b1bc4ea56ec653e799871, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  _runtimeStats: {fileID: 8879609475013827189}
+  allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
+  thisMonsterType: 6
 --- !u!114 &8879609475013827189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,7 +238,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afebd25277e31ad4dba41e4f7888a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statData: {fileID: 11400000, guid: f1cb1b5453ebe224bad5e11ed9f24838, type: 2}
+  statData:
+    monsterType: 8
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 0
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 0
+    maxHP: 100
+    damage: 10
+    moveSpeed: 2
+    rushMultiplier: 1.5
+    maxClimbableHeight: 2
+    patrolRange: 2.41
+    chaseRange: 6
+    attackRange: 1
+    chargeRange: 2.5
+    enableJump: 0
+    jumpHorizontalFactor: 0.6
+    jumpForce: 4
+    jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
+    usePatrol: 1
+    idleMode: 0
+    rangedCooldown: 2
+    projectileprefab: {fileID: 0}
+    readyRange: 10
+    projectileSpeed: 10
+    projectileLife: 3
+    firePattern: 0
+    pelletCount: 5
+    spreadAngle: 60
+    meleeCooldown: 0.6
+    meleeRadius: 1
+    isFlying: 0
+    isRanged: 0
+    isCharging: 0
+    enableLadderClimb: 0
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3
+--- !u!114 &-8480110139499212012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3028759376588362661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2584caa33b1bc4ea56ec653e799871, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showGizmos: 1
 --- !u!1 &6663964249537964713
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,7 +304,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6278373878536270111}
   - component: {fileID: 4035661589145116894}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: Flyer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,6 +325,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9035146775863950717}
+  - {fileID: 3264109622854126545}
   m_Father: {fileID: 2542669624320578075}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4035661589145116894
@@ -351,3 +380,34 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &7882606505524606306
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3264109622854126545}
+  m_Layer: 12
+  m_Name: W_Check
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3264109622854126545
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7882606505524606306}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6278373878536270111}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -109,7 +109,7 @@ namespace SCR
 
         public void SetJump()
         {
-            _finalJump = 5f + player.PlayerStats.FinalStats.Jump * 0.5f;
+            _finalJump = 1f + player.PlayerStats.FinalStats.Jump * 0.5f;
         }
 
     }

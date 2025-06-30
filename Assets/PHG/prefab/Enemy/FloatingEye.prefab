@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 458586035523979663}
-  m_Layer: 9
+  m_Layer: 12
   m_Name: MuzzlePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,6 +43,10 @@ PrefabInstance:
       propertyPath: statData
       value: 
       objectReference: {fileID: 11400000, guid: 959364f974ad797429ec8fc918312a2e, type: 2}
+    - target: {fileID: 1972706624924176348, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
+      propertyPath: thisMonsterType
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 2542669624320578075, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.7
@@ -87,9 +91,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: FloatingEye
       objectReference: {fileID: 0}
+    - target: {fileID: 3264109622854126545, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -25.7
+      objectReference: {fileID: 0}
     - target: {fileID: 4035661589145116894, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
       propertyPath: m_FlipX
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4035661589145116894, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
       propertyPath: m_Size.x
@@ -123,6 +131,14 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5956522131150013274, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
+      propertyPath: m_Offset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5956522131150013274, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
+      propertyPath: m_Offset.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6278373878536270111, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.01
@@ -139,34 +155,26 @@ PrefabInstance:
       propertyPath: statData
       value: 
       objectReference: {fileID: 11400000, guid: 959364f974ad797429ec8fc918312a2e, type: 2}
+    - target: {fileID: 8879609475013827189, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
+      propertyPath: statData.monsterType
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035146775863950717, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -23.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035146775863950717, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2542669624320578075, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
       insertIndex: -1
       addedObject: {fileID: 458586035523979663}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3028759376588362661, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 9108738468007612964}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
---- !u!1 &5781301716991986560 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3028759376588362661, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
-  m_PrefabInstance: {fileID: 8805416730270046245}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &9108738468007612964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5781301716991986560}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9847738fc4c0ab746a138e465f6599d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &6447605805788875326 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2542669624320578075, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}

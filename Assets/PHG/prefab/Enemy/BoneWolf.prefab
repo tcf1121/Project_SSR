@@ -10,12 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5340629166944871666}
   - component: {fileID: 5535757496672610817}
-  - component: {fileID: 5643745682011346786}
   - component: {fileID: 5881475406836341300}
   - component: {fileID: 4702735813726073667}
   - component: {fileID: -8542866561908444573}
   - component: {fileID: 1456269029054800347}
-  - component: {fileID: 998962513671491323}
   - component: {fileID: 174896734613105963}
   m_Layer: 12
   m_Name: BoneWolf
@@ -54,27 +52,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensor: {fileID: 6215726151685872425}
   wallSensor: {fileID: 8688207590121595949}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 1536
-  canClimbLadders: 1
   hitBox: {fileID: 5829910218819796756}
   _runtimeStats: {fileID: -8542866561908444573}
   allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
   thisMonsterType: 0
---- !u!114 &5643745682011346786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 775090731613083339}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b2584caa33b1bc4ea56ec653e799871, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showGizmos: 1
 --- !u!50 &5881475406836341300
 Rigidbody2D:
   serializedVersion: 4
@@ -161,6 +142,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statData:
     monsterType: 6
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 0
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 0
     maxHP: 100
     damage: 10
     moveSpeed: 2
@@ -174,6 +161,9 @@ MonoBehaviour:
     jumpHorizontalFactor: 0.6
     jumpForce: 4
     jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
     usePatrol: 1
     idleMode: 0
     rangedCooldown: 2
@@ -186,6 +176,14 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
+    isFlying: 0
+    isRanged: 0
+    isCharging: 0
+    enableLadderClimb: 0
+    climbYThreshold: 0.7
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3
 --- !u!95 &1456269029054800347
 Animator:
   serializedVersion: 5
@@ -207,25 +205,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &998962513671491323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 775090731613083339}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6273e8af0f7bcd419eb1cd5178991e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  castRadius: 0.28
-  castDistance: 0.1
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 1536
-  lockDurationDefault: 0.45
-  maxJumpYDiffForAdjustment: 4
 --- !u!114 &174896734613105963
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -101,7 +101,7 @@ namespace PHG
             if (EditorGUI.EndChangeCheck())
             {
                 // 변경이 있었다면 Scene 뷰를 강제로 다시 그립니다.
-                SceneView.RepaintAll();
+                //SceneView.RepaintAll();
             }
 
             EditorGUI.EndProperty();

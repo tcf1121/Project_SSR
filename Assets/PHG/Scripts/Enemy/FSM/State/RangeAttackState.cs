@@ -11,7 +11,7 @@ namespace PHG
         readonly MonsterBrain brain;
         readonly Rigidbody2D rb;
         readonly Transform tf;
-        readonly MonsterStatEntry statData; // MonsterStatData -> MonsterStatEntry로 변경
+        readonly MonsterStatEntry statData;
         readonly bool isFlying;
 
         Transform player;
@@ -19,26 +19,23 @@ namespace PHG
         float lastShot;
 
         /* ───────── cached values ───────── */
-        // brain.Stats -> statData 직접 참조로 변경
         float AttackR => statData.attackRange;
         float ReadyR => statData.readyRange;
         float ChaseR => statData.chaseRange;
         float Cooldown => statData.rangedCooldown;
         float MoveSpd => statData.moveSpeed;
-        float AirAccel => 8f; // 이 값은 statData에 없으므로 그대로 둡니다.
+        const float AirAccel = 8f;
 
-        /* -------------------------------------------------- */
         public RangeAttackState(MonsterBrain brain)
         {
             this.brain = brain;
-            rb = brain.rb; // brain.GetComponent<Rigidbody2D>() -> brain.rb로 변경
-            tf = brain.tf; // brain.transform -> brain.tf로 변경
-            statData = brain.statData; // brain.StatData -> brain.statData로 변경 (프로퍼티 이름 변경)
+            rb = brain.rb;
+            tf = brain.tf;
+            statData = brain.statData;
             muzzle = tf.Find("MuzzlePoint");
-            isFlying = brain.GetComponent<FlyingTag>() != null;
+            isFlying = brain.IsFlying;
         }
 
-        /* ================= IState ========================= */
         public void Enter()
         {
             player = GameObject.FindWithTag("Player")?.transform;
@@ -51,85 +48,66 @@ namespace PHG
             if (player == null)
             {
                 player = GameObject.FindWithTag("Player")?.transform;
-                if (player == null) return; // 플레이어를 찾지 못하면 아무것도 하지 않음
+                if (player == null) return;
             }
 
-            // ★★★ 수정: Vector3를 Vector2로 명시적 형변환 ★★★
             Vector2 toPl = (Vector2)player.position - (Vector2)tf.position;
             float dist = toPl.magnitude;
 
             FacePlayer();
 
-            // 추격 범위 내에 없으면 추격 상태로 전환
-            if (dist > statData.chaseRange)
+            /* --- 상태 전이 처리 --- */
+
+            if (dist > ChaseR)
             {
-                brain.ChangeState(StateID.Chase);
+                brain.ChangeState(StateID.Chase); // 추격 포기
                 return;
             }
 
-            // 공격 범위 내에 있으면 공격
-            if (dist <= statData.attackRange)
+            if (dist > ReadyR && dist <= ChaseR)
             {
-                rb.velocity = Vector2.zero; // 공격 중에는 정지
-                if (Time.time - lastShot >= statData.rangedCooldown)
+                brain.ChangeState(StateID.Chase); // 다시 추격 상태로
+                return;
+            }
+
+            if (dist <= AttackR)
+            {
+                rb.velocity = Vector2.zero;
+
+                if (Time.time - lastShot >= Cooldown)
                 {
                     Shoot();
                     lastShot = Time.time;
                 }
-                return; // 공격 로직 처리 후 이동 로직은 스킵
+
+                return; // 사격 후 이동 생략
             }
 
-            // 사격 대기 범위 내에서 플레이어와 거리를 유지하며 이동
-            if (dist <= statData.readyRange)
-            {
-                // 플레이어와 가까워지면 뒤로, 멀어지면 앞으로 이동 (원거리 몬스터 특유의 거리 유지)
-                Vector2 targetVel = -toPl.normalized * MoveSpd; // 거리를 좁히거나 벌릴 때 사용
+            /* --- readyRange 내부일 때 거리 유지 (뒤로 물러남) --- */
 
-                if (isFlying) // 비행 몬스터
-                {
-                    rb.velocity = Vector2.Lerp(rb.velocity, targetVel, Time.deltaTime * AirAccel);
-                }
-                else // 일반 몬스터 (지상)
-                {
-                    // 벽 감지 (벽에 막히면 움직임을 멈춤)
-                    RaycastHit2D wallCheck = Physics2D.Raycast(tf.position, tf.right * Mathf.Sign(tf.localScale.x), statData.attackRange, brain.groundMask);
-                    if (wallCheck.collider != null)
-                    {
-                        rb.velocity = Vector2.zero; // 벽에 막히면 정지
-                    }
-                    else
-                    {
-                        rb.velocity = new Vector2(targetVel.x, rb.velocity.y);
-                    }
-                }
-            }
-            else // 사격 대기 범위를 벗어나면 추격 (필요시)
+            Vector2 targetVel = -toPl.normalized * MoveSpd;
+
+            if (isFlying)
             {
-                // 현재 RangeAttackState에 진입했다는 것은 이미 추격 범위 내라는 가정.
-                // readyRange를 벗어나면 다시 chaseRange까지 추격하거나, 단순 이동 로직을 추가할 수 있습니다.
-                Vector2 targetVel = toPl.normalized * MoveSpd;
-                if (isFlying)
-                {
-                    rb.velocity = Vector2.Lerp(rb.velocity, targetVel, Time.deltaTime * AirAccel);
-                }
-                else
-                {
-                    rb.velocity = new Vector2(targetVel.x, rb.velocity.y);
-                }
+                rb.velocity = Vector2.Lerp(rb.velocity, targetVel, Time.deltaTime * AirAccel);
+            }
+            else
+            {
+                rb.velocity = new Vector2(targetVel.x, rb.velocity.y);
             }
         }
 
-        public void Exit()
-        {
-            rb.velocity = Vector2.zero;
-        }
+        public void Exit() => rb.velocity = Vector2.zero;
 
-        /* -------------------------------------------------- */
         void Shoot()
         {
-            // ProjectilePool 인스턴스가 있는지 확인
+            if (muzzle == null) return;
             ProjectilePool pool = ProjectilePool.Instance;
-            if (pool == null) { Debug.LogError("ProjectilePool is null"); return; }
+            if (pool == null)
+            {
+                Debug.LogError("ProjectilePool is null");
+                return;
+            }
 
             Vector2 baseDir = (player.position - muzzle.position).normalized;
             Projectile prefab = statData.projectileprefab;
@@ -140,11 +118,11 @@ namespace PHG
                 p.transform.rotation = Quaternion.FromToRotation(Vector2.right, baseDir);
                 p.Launch(baseDir, statData.projectileSpeed);
             }
-            else // Spread 패턴
+            else
             {
                 int pellets = Mathf.Max(1, statData.pelletCount);
                 float spread = statData.spreadAngle;
-                float step = pellets > 1 ? spread / (pellets - 1) : 0f;
+                float step = (pellets > 1) ? spread / (pellets - 1) : 0f;
 
                 for (int i = 0; i < pellets; ++i)
                 {
@@ -161,7 +139,7 @@ namespace PHG
         void FacePlayer()
         {
             if (player == null) return;
-            int sign = (player.position.x >= tf.position.x) ? 1 : -1;
+            int sign = player.position.x >= tf.position.x ? 1 : -1;
             Vector3 sc = tf.localScale;
             sc.x = Mathf.Abs(sc.x) * sign;
             tf.localScale = sc;

@@ -120,7 +120,6 @@ GameObject:
   - component: {fileID: 5956522131150013274}
   - component: {fileID: 6041105704375229642}
   - component: {fileID: 1972706624924176348}
-  - component: {fileID: 6453739840987346053}
   - component: {fileID: 8879609475013827189}
   - component: {fileID: -8480110139499212012}
   m_Layer: 12
@@ -223,26 +222,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensor: {fileID: 9035146775863950717}
   wallSensor: {fileID: 3264109622854126545}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 1536
-  canClimbLadders: 1
   hitBox: {fileID: 6179750502833708692}
   _runtimeStats: {fileID: 8879609475013827189}
   allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
   thisMonsterType: 6
---- !u!114 &6453739840987346053
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3028759376588362661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfde0eec9b549944ca31d25dbb80b9e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8879609475013827189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +240,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statData:
     monsterType: 8
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 0
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 0
     maxHP: 100
     damage: 10
     moveSpeed: 2
@@ -270,6 +259,9 @@ MonoBehaviour:
     jumpHorizontalFactor: 0.6
     jumpForce: 4
     jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
     usePatrol: 1
     idleMode: 0
     rangedCooldown: 2
@@ -282,6 +274,13 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
+    isFlying: 0
+    isRanged: 0
+    isCharging: 0
+    enableLadderClimb: 0
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3
 --- !u!114 &-8480110139499212012
 MonoBehaviour:
   m_ObjectHideFlags: 0

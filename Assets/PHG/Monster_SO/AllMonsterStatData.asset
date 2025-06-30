@@ -14,20 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterStats:
   - monsterType: 0
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 1536
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 2048
     maxHP: 100
     damage: 10
-    moveSpeed: 1
+    moveSpeed: 2
     rushMultiplier: 1.5
-    maxClimbableHeight: 2
+    maxClimbableHeight: 4
     patrolRange: 2
     chaseRange: 5
     attackRange: 0.5
     chargeRange: 0
-    enableJump: 0
-    jumpHorizontalFactor: 0.269
+    enableJump: 1
+    jumpHorizontalFactor: 0.499
     jumpForce: 4
-    jumpCooldown: 0.45
-    usePatrol: 1
+    jumpCooldown: 1
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 1
+    usePatrol: 0
     idleMode: 0
     rangedCooldown: 2
     projectileprefab: {fileID: 0}
@@ -39,11 +48,25 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
+    isFlying: 0
+    isRanged: 0
+    isCharging: 0
+    enableLadderClimb: 0
+    climbYThreshold: 0.7
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3
   - monsterType: 1
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 1536
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 2048
     maxHP: 100
     damage: 10
     moveSpeed: 2
-    rushMultiplier: 1.5
+    rushMultiplier: 3
     maxClimbableHeight: 2
     patrolRange: 4
     chaseRange: 5
@@ -53,6 +76,9 @@ MonoBehaviour:
     jumpHorizontalFactor: 0.6
     jumpForce: 4
     jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
     usePatrol: 1
     idleMode: 0
     rangedCooldown: 2
@@ -65,7 +91,21 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
+    isFlying: 0
+    isRanged: 0
+    isCharging: 1
+    enableLadderClimb: 1
+    climbYThreshold: 3
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 1
+    climbSpeed: 3
   - monsterType: 2
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 1536
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 2048
     maxHP: 100
     damage: 10
     moveSpeed: 2
@@ -79,6 +119,9 @@ MonoBehaviour:
     jumpHorizontalFactor: 0.6
     jumpForce: 4
     jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
     usePatrol: 0
     idleMode: 1
     rangedCooldown: 2
@@ -91,20 +134,37 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
+    isFlying: 0
+    isRanged: 0
+    isCharging: 0
+    enableLadderClimb: 0
+    climbYThreshold: 0.7
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3
   - monsterType: 3
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 1536
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 2048
     maxHP: 100
     damage: 10
-    moveSpeed: 1
-    rushMultiplier: 0.5
+    moveSpeed: 2
+    rushMultiplier: 2
     maxClimbableHeight: 4
     patrolRange: 3
     chaseRange: 6
-    attackRange: 0.31
-    chargeRange: 2
+    attackRange: 0.32
+    chargeRange: 1.68
     enableJump: 1
-    jumpHorizontalFactor: 0
+    jumpHorizontalFactor: 0.303
     jumpForce: 4
     jumpCooldown: 1
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 1
     usePatrol: 1
     idleMode: 0
     rangedCooldown: 2
@@ -117,33 +177,64 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
+    isFlying: 0
+    isRanged: 0
+    isCharging: 1
+    enableLadderClimb: 1
+    climbYThreshold: 4
+    ladderForwardOffset: {x: 0, y: 0}
+    ladderDetectRadius: 0.7
+    climbSpeed: 3
   - monsterType: 4
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 1536
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 2048
     maxHP: 100
     damage: 10
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 2
-    patrolRange: 3
-    chaseRange: 8
+    patrolRange: 8
+    chaseRange: 10
     attackRange: 7
     chargeRange: 2.5
     enableJump: 0
     jumpHorizontalFactor: 0.6
     jumpForce: 4
     jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
     usePatrol: 1
     idleMode: 0
-    rangedCooldown: 2
+    rangedCooldown: 1
     projectileprefab: {fileID: -4595588588518355158, guid: 6d727b2ffdf049d40b7b74472effffbf, type: 3}
-    readyRange: 9
-    projectileSpeed: 10
+    readyRange: 7
+    projectileSpeed: 5
     projectileLife: 3
     firePattern: 0
-    pelletCount: 5
-    spreadAngle: 60
+    pelletCount: 10
+    spreadAngle: 360
     meleeCooldown: 0.6
     meleeRadius: 1
+    isFlying: 0
+    isRanged: 1
+    isCharging: 0
+    enableLadderClimb: 0
+    climbYThreshold: 0.7
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3
   - monsterType: 5
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 1536
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 2048
     maxHP: 100
     damage: 10
     moveSpeed: 2
@@ -157,6 +248,9 @@ MonoBehaviour:
     jumpHorizontalFactor: 0.6
     jumpForce: 4
     jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
     usePatrol: 1
     idleMode: 0
     rangedCooldown: 2
@@ -169,7 +263,21 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
+    isFlying: 0
+    isRanged: 1
+    isCharging: 0
+    enableLadderClimb: 0
+    climbYThreshold: 0.7
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3
   - monsterType: 6
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 1536
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 2048
     maxHP: 100
     damage: 10
     moveSpeed: 2
@@ -183,6 +291,9 @@ MonoBehaviour:
     jumpHorizontalFactor: 0.6
     jumpForce: 4
     jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
     usePatrol: 0
     idleMode: 0
     rangedCooldown: 2
@@ -195,7 +306,21 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
+    isFlying: 1
+    isRanged: 0
+    isCharging: 0
+    enableLadderClimb: 0
+    climbYThreshold: 0.7
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3
   - monsterType: 7
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 1536
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 2048
     maxHP: 100
     damage: 10
     moveSpeed: 2
@@ -209,6 +334,9 @@ MonoBehaviour:
     jumpHorizontalFactor: 0.6
     jumpForce: 4
     jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
     usePatrol: 0
     idleMode: 0
     rangedCooldown: 2
@@ -221,3 +349,11 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
+    isFlying: 1
+    isRanged: 1
+    isCharging: 0
+    enableLadderClimb: 0
+    climbYThreshold: 0.7
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3

@@ -4,90 +4,93 @@ using UnityEngine;
 namespace PHG
 {
     /// <summary>
-    /// ScriptableObject holding balance‑tunable parameters for each monster type.
-    /// Jump 관련 필드는 <see cref="JumpMove"/> 컴포넌트가 존재할 때만 사용한다.
+    /// ScriptableObject holding balance-tunable parameters for each monster type.
+    /// Jump 관련 필드는 <see cref="JumpMove"/> 컴포넌트(또는 CanJump 플래그)가 true일 때만 사용한다.
     /// </summary>
     [CreateAssetMenu(fileName = "MonsterStatData", menuName = "Samsara/Monster Stat Data", order = 1)]
     [Serializable]
-    public class MonsterStatEntry 
+    public class MonsterStatEntry
     {
+        /* ───────── Basic Info ───────── */
         [Tooltip("몬스터 이름 (디버그용)")]
         public MonsterType monsterType = MonsterType.None;
+        [Header("Sensor Masks")]
+        [Tooltip("감지할 바닥 레이어")]
+        public LayerMask groundMask;
+        [Tooltip("감지할 사다리 레이어")]
+        public LayerMask ladderMask;
 
-        [Header("기본 스탯")]
-        [Tooltip("체력")]
-        public int maxHP = 100;
-        [Tooltip("공격력")]
-        public int damage = 10;
-        [Tooltip("이동속도")]
-        public float moveSpeed = 2f;
-        [Tooltip("돌진 가속도")]
-        public float rushMultiplier = 1.5f;
-        [Tooltip("몬스터 점프판단 높이")]
-        public float maxClimbableHeight = 2.0f;
+        /* ───────── 기본 스탯 ───────── */
+        [Header("Base Stats")]
+        [Tooltip("체력")] public int maxHP = 100;    // 멤버 변수
+        [Tooltip("공격력")] public int damage = 10;     // 멤버 변수
+        [Tooltip("이동속도")] public float moveSpeed = 2f;     // 멤버 변수
+        [Tooltip("돌진 가속도 배수")] public float rushMultiplier = 1.5f;// 멤버 변수
+        [Tooltip("점프판단 허용 높이")] public float maxClimbableHeight = 2f; // 멤버 변수
 
+        /* ───────── AI 감지 범위 ───────── */
+        [Header("AI Detection Ranges")]
+        [Tooltip("순찰 감지 범위")] public float patrolRange = 3f;    // 멤버 변수
+        [Tooltip("추격 종료 범위")] public float chaseRange = 6f;    // 멤버 변수
+        [Tooltip("공격 범위")] public float attackRange = 1f;    // 멤버 변수
+        [Tooltip("돌진(가속) 발동 범위")] public float chargeRange = 2.5f;  // 멤버 변수
 
-        [Header("AI 인식 범위")]
-        [Tooltip("감지 범위 (순찰 감지)")]
-        public float patrolRange = 3f;
-        [Tooltip("추격 범위")]
-        public float chaseRange = 6f;
-        [Tooltip("공격 범위")]
-        public float attackRange = 1f;
-        [Tooltip("돌진 범위 (근접/비행 가속)")]
-        public float chargeRange = 2.5f;
+        /* ───────── 점프 설정 ───────── */
+        [Header("Jump Settings")]
+        [Tooltip("점프 기능 활성 여부")] public bool enableJump = false;       // 멤버 변수
+        [Tooltip("수평 임펄스 계수 (0~1)")][Range(0f, 1f)] public float jumpHorizontalFactor = 0.6f; // 멤버 변수
+        [Tooltip("기본 수직 점프 힘")] public float jumpForce = 4f;           // 멤버 변수
+        [Tooltip("연속 점프 최소 간격(초)")] public float jumpCooldown = 0.45f;     // 멤버 변수
+        [Tooltip("점프 시 y 위치 차이에 따른 점프력 보정 최대치")]
+        public float maxJumpYDiffForAdjustment = 4f;
+        [Tooltip("바닥 감지 오프셋 (Pivot 기준)")]
+        public Vector2 groundCheckOffset = new Vector2(0f, -0.05f);
+        [Tooltip("바닥 감지 반경")]
+        public float groundCheckRadius = 0.12f;
 
-        
-
-        [Header("점프 설정")]
-        [Tooltip("점프 기능 활성 여부 (JumpMove 컴포넌트가 있을 때만 적용)")]
-        public bool enableJump = false;
-        [Tooltip("수평 임펄스 계수 (0~1)")]
-        [Range(0f, 1f)] public float jumpHorizontalFactor = 0.6f;
-        [Tooltip("기본 수직 점프 힘")]
-        public float jumpForce = 4f;
-        [Tooltip("연속 점프 최소 간격 (초)")]
-        public float jumpCooldown = 0.45f;
-
-        [Header("동작 플래그")]
-        [Tooltip("순찰 AI 사용 여부")]
-        public bool usePatrol = true;
+        /* ───────── 동작 모드 ───────── */
+        [Header("Behaviour Flags")]
+        [Tooltip("순찰 AI 사용 여부")] public bool usePatrol = true;      // 멤버 변수
         public enum IdleMode { Default, GreedInteract }
-        [Tooltip("Idle 상태동작 타입")]
-        public IdleMode idleMode = IdleMode.Default;
+        [Tooltip("Idle 동작 타입")] public IdleMode idleMode = IdleMode.Default; // 멤버 변수
 
-        [Header("원거리 전용")]
-        [SerializeField, Tooltip("원거리 공격 쿨타임")]
-        public float rangedCooldown = 2f;
-        [SerializeField, Tooltip("투사체 프리팹")]
-        public Projectile projectileprefab;
-        [SerializeField, Tooltip("사격 대기 범위")]
-        public float readyRange = 10f;
-        [SerializeField, Tooltip("탄속")]
-        public float projectileSpeed = 10f;
-        [SerializeField, Tooltip("투사체 최대 생존 시간 (초)")]
-        public float projectileLife = 3f;
-
+        /* ───────── 원거리 전용 ───────── */
+        [Header("Ranged Attack")]
+        [Tooltip("원거리 공격 쿨타임")] public float rangedCooldown = 2f;   // 멤버 변수
+        [Tooltip("투사체 프리팹")] public Projectile projectileprefab;  // 멤버 변수
+        [Tooltip("사격 대기 범위")] public float readyRange = 10f;      // 멤버 변수
+        [Tooltip("탄속")] public float projectileSpeed = 10f;   // 멤버 변수
+        [Tooltip("투사체 수명(초)")] public float projectileLife = 3f;     // 멤버 변수
         public enum FirePattern { Single, Spread }
-        [Tooltip("발사 패턴")]
-        public FirePattern firePattern = FirePattern.Single;
+        [Tooltip("발사 패턴")] public FirePattern firePattern = FirePattern.Single; // 멤버 변수
+        [Tooltip("Spread 탄알 수")] public int pelletCount = 5;          // 멤버 변수
+        [Tooltip("Spread 각도(°)")][Range(30f, 360f)] public float spreadAngle = 60f; // 멤버 변수
 
-        [Tooltip("Spread 모드시 탄알 수")]
-        public int pelletCount = 5;
-        [Tooltip("Spread 모드시 발사 각도 (도 단위)")]
-        [Range(30, 360f)] public float spreadAngle = 60f;
+        /* ───────── 근접 전용 ───────── */
+        [Header("Melee Attack")]
+        [Tooltip("공격 주기")] public float meleeCooldown = 0.6f;    // 멤버 변수
+        [Tooltip("근접 공격 범위")] public float meleeRadius = 1f;     // 멤버 변수
+
+        /* ───────── Ability Flags (NEW) ───────── */
+        [Header("Ability Flags")]
+        [Tooltip("비행 유닛 여부")] public bool isFlying = false; // 멤버 변수
+        [Tooltip("원거리 유닛 여부")] public bool isRanged = false; // 멤버 변수
+        [Tooltip("추가 이동속도(Charge) 발동 유닛")] public bool isCharging = false; // 멤버 변수
+        [Tooltip("사다리 등반 가능 여부")] public bool enableLadderClimb = false; // 멤버 변수
 
 
+        [Header("Ladder Climb Settings")]
+        [Tooltip("사다리 등반 기준이 되는 Y 거리 차이 (Threshold)")]
+        public float climbYThreshold = 0.7f;
+        [Tooltip("앞으로 탐색할 거리 (사다리 감지용)")]
+        public Vector2 ladderForwardOffset = new Vector2(0.15f, 0f);
 
-        [Header("근거리 전용")]
-        [Tooltip("공격주기")]
-        public float meleeCooldown = 0.6f;
-        [Tooltip("근접 공격 범위")]
-        public float meleeRadius = 1f;
+        [Tooltip("OverlapCircle 탐지 반경 (사다리 감지용)")]
+        public float ladderDetectRadius = 0.35f;
 
-        
-
-        // ───────── Convenience Accessors ─────────
+        [Tooltip("사다리 오르내리는 속도")]
+        public float climbSpeed = 3f;
+        /* ───────── Convenience Accessors ───────── */
         public float JumpForce => enableJump ? jumpForce : 0f;
         public float JumpCooldown => enableJump ? jumpCooldown : 0f;
     }

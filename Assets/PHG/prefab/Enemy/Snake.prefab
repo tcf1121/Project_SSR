@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 8705694338803635892}
   - component: {fileID: 5352187553758812129}
   - component: {fileID: 7464195173402394374}
-  - component: {fileID: 3301224070400611996}
   m_Layer: 12
   m_Name: Snake
   m_TagString: Untagged
@@ -53,10 +52,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensor: {fileID: 8840461992977248074}
   wallSensor: {fileID: 5329349562107394875}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 1536
-  canClimbLadders: 0
   hitBox: {fileID: 0}
   _runtimeStats: {fileID: 7464195173402394374}
   allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
@@ -160,6 +155,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statData:
     monsterType: 4
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 0
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 0
     maxHP: 100
     damage: 10
     moveSpeed: 2
@@ -173,6 +174,9 @@ MonoBehaviour:
     jumpHorizontalFactor: 0.6
     jumpForce: 4
     jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
     usePatrol: 1
     idleMode: 0
     rangedCooldown: 2
@@ -185,18 +189,13 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
---- !u!114 &3301224070400611996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 494904055392974845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9847738fc4c0ab746a138e465f6599d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+    isFlying: 0
+    isRanged: 0
+    isCharging: 0
+    enableLadderClimb: 0
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3
 --- !u!1 &696796940601295108
 GameObject:
   m_ObjectHideFlags: 0

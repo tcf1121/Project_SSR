@@ -137,6 +137,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 3ef6117db7f53a845b252a4a3e74d21a, type: 2}
     - target: {fileID: 5535757496672610817, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+      propertyPath: _runtimeStats
+      value: 
+      objectReference: {fileID: 1376528467636695723}
+    - target: {fileID: 5535757496672610817, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
       propertyPath: canClimbLadders
       value: 1
       objectReference: {fileID: 0}
@@ -214,54 +218,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1456269029054800347, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+    - {fileID: 998962513671491323, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 775090731613083339, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2317537992393688148}
-    - targetCorrespondingSourceObject: {fileID: 775090731613083339, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 307687920829342221}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
---- !u!1 &1200879656827229699 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 775090731613083339, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
+--- !u!114 &1376528467636695723 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -8542866561908444573, guid: 8a9c79523b3e82a47898bd02881a6829, type: 3}
   m_PrefabInstance: {fileID: 1903840970664886472}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2317537992393688148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1200879656827229699}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d5006bdad378b241b138bee3317e2cd, type: 3}
+  m_Script: {fileID: 11500000, guid: afebd25277e31ad4dba41e4f7888a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &307687920829342221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1200879656827229699}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dfb09c908eed5143ba5ac539ab345c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  climbSpeed: 3
-  alignSpeed: 4
-  jumpAwayForce: 3
-  climbYThreshold: 3
-  ladderMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  detectRadius: 0.35
-  forwardOffset: {x: 0.15, y: 0}
-  debugDraw: 1
-  verboseLog: 1
-  showThreshold: 1

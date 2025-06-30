@@ -104,7 +104,11 @@ namespace SCR
 
         public void SetSpeed()
         {
+<<<<<<< Updated upstream
             _finalSpeed = 4f + player.PlayerStats.FinalSpeed * 0.2f;
+=======
+            _finalSpeed = 2f + player.PlayerStats.FinalStats.Speed * 0.2f;
+>>>>>>> Stashed changes
         }
 
         public void SetJump()

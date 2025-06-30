@@ -2,6 +2,71 @@ using UnityEngine;
 
 namespace SCR
 {
+<<<<<<< Updated upstream
+=======
+    [System.Serializable]
+    public struct Stats
+    {
+        public float MaxHp;
+        public float Atk;
+        public float HpRegen;
+        public float Speed;
+        public float Jump;
+
+        public void BaseStats()
+        {
+            MaxHp = 100f;
+            Atk = 10f;
+            HpRegen = 0.2f;
+            Speed = 1.5f;
+            Jump = 1f;
+        }
+
+        public void ResetStats()
+        {
+            MaxHp = 0;
+            Atk = 0;
+            HpRegen = 0;
+            Speed = 0;
+            Jump = 0;
+        }
+
+        public void AddStats(Stats stats)
+        {
+            MaxHp += stats.MaxHp;
+            Atk += stats.Atk;
+            HpRegen += stats.HpRegen;
+            Speed += stats.Speed;
+            Jump += stats.Jump;
+        }
+
+        public void SubStats(Stats stats)
+        {
+            MaxHp -= stats.MaxHp;
+            Atk -= stats.Atk;
+            HpRegen -= stats.HpRegen;
+            Speed -= stats.Speed;
+            Jump -= stats.Jump;
+        }
+
+        public void LevelUp()
+        {
+            MaxHp += 33f;
+            Atk += 2f;
+            HpRegen += 0.2f;
+        }
+
+        public void FinalStats(Stats baseStats, Stats bonusStats)
+        {
+            MaxHp = baseStats.MaxHp + bonusStats.MaxHp;
+            Atk = baseStats.Atk + bonusStats.Atk;
+            HpRegen = baseStats.HpRegen + bonusStats.HpRegen;
+            Speed = baseStats.Speed + bonusStats.Speed;
+            Jump = baseStats.Jump + bonusStats.Jump;
+        }
+    }
+
+>>>>>>> Stashed changes
     public class PlayerStats : MonoBehaviour
     {
         [Header("케릭터 기본 정보")] // 후에 프라이빗으로 변경
@@ -260,6 +325,7 @@ namespace SCR
             get => bonusHpRegen;
             set => bonusHpRegen = value;
         }
+<<<<<<< Updated upstream
 
         public float BonusSpeed
         {
@@ -272,6 +338,8 @@ namespace SCR
             get => bonusJump;
             set => bonusJump = value;
         }
+=======
+>>>>>>> Stashed changes
         #endregion
 
         #region 최종 실제 적용 스탯

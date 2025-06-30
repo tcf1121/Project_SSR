@@ -23,7 +23,7 @@ namespace SHL
             max = new Vector2(mapsizex / 2, mapsizey / 2);
             BoxSpawn(); // 박스 위치 생성
             SpawnBoxes();
-            Debug.Log($"{min},{max}"); // 디버그용 로그
+            //Debug.Log($"{min},{max}"); // 디버그용 로그
             Teleporter();
         }
         void SpawnBoxes()

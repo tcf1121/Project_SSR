@@ -193,7 +193,7 @@ namespace SCR
         {
             // 현재 바라보는 방향으로 레이캐스트
             Vector2 wallCheckDirection = facingRight ? Vector2.right : Vector2.left;
-            RaycastHit2D wallHit = Physics2D.Raycast(transform.position, wallCheckDirection, player.PlayerPhysical.WallCheckDistance, player.PlayerPhysical.AllGroundLayers);
+            RaycastHit2D wallHit = Physics2D.Raycast(transform.position, wallCheckDirection, player.PlayerPhysical.WallCheckDistance, player.PlayerPhysical.WallLayers);
 
             bool currentlyTouchingWall = wallHit.collider != null;
 
@@ -498,7 +498,7 @@ namespace SCR
             if (playerState != PlayerState.Climb) return;
 
             float climbDirection = CalculateClimbDirection();
-            player.Rigid.velocity = new Vector2(0f, climbDirection * player.PlayerPhysical.ClimbSpeed);
+            player.Rigid.velocity = new Vector2(0f, climbDirection * player.PlayerPhysical.FinalSpeed);
         }
 
 

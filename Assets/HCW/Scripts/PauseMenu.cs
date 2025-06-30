@@ -85,7 +85,7 @@ namespace Utill
         {
             if (Input.GetKeyDown(pauseMenuKey))
             {
-                if (!isGameScene) return; // 게임중 이 아니면 일시정지 안함
+                //if (!isGameScene) return; // 게임중 이 아니면 일시정지 안함
 
                 if (isPaused)
                 {

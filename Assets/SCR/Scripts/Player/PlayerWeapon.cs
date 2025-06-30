@@ -16,6 +16,9 @@ namespace SCR
         [SerializeField] private List<Weapon> _headWeapons;
         [SerializeField] private List<Weapon> _bodyWeapons;
         [SerializeField] private List<Weapon> _armWeapons;
+        public List<Weapon> HeadWeapons { get => _headWeapons; }
+        public List<Weapon> BodyWeapons { get => _bodyWeapons; }
+        public List<Weapon> ArmWeapons { get => _armWeapons; }
         [SerializeField] private List<Coroutine> _armCor;
         private Coroutine _attackCor;
 
@@ -30,13 +33,16 @@ namespace SCR
             _armCor = new();
         }
 
-        public void AddWeapon(String weaponId)
+        public void AddWeapon(AttackItem item)
         {
-            GameObject weaponObj = Resources.Load(weaponId) as GameObject;
+            GameObject weaponObj = Instantiate(item.Attackrange);
+
             Weapon weapon = weaponObj.GetComponent<Weapon>();
+            weapon.SetPlayer(player);
             if (weapon.ItemPart == ItemPart.Head)
             {
                 weaponObj.transform.parent = _headObj.transform;
+
                 _headWeapons.Add(weapon);
             }
             else if (weapon.ItemPart == ItemPart.Body)
@@ -50,6 +56,7 @@ namespace SCR
                 _armWeapons.Add(weapon);
                 _armCor.Add(null);
             }
+            weaponObj.transform.localPosition = new Vector2(0, 0);
         }
 
         public void RemoveAtWeapon(ItemPart itemPart, int index)
@@ -106,7 +113,6 @@ namespace SCR
         {
             while (true)
             {
-                Debug.Log("공격");
                 for (int i = 0; i < _armWeapons.Count; i++)
                     if (_armCor[i] == null)
                         _armCor[i] = StartCoroutine(NormalAttack(i));

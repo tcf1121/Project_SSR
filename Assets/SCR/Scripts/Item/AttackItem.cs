@@ -21,7 +21,8 @@ namespace SCR
         [SerializeField] private float _coolTime;
 
         // 공격 범위
-        [SerializeField] GameObject _attackrange;
+        public GameObject Attackrange { get => _attackrange; }
+        [SerializeField] private GameObject _attackrange;
 
         override protected void Init()
         {

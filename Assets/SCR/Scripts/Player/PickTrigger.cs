@@ -26,7 +26,7 @@ namespace SCR
         void OnDisable()
         {
             _collider.enabled = false;
-            _player.Equip(CheckDistase());
+            _player.Equip(CheckDistance());
             itemObject.Clear();
         }
 
@@ -47,7 +47,7 @@ namespace SCR
             }
         }
 
-        public GameObject CheckDistase()
+        public GameObject CheckDistance()
         {
             if (itemObject.Count != 0)
             {

@@ -8,8 +8,10 @@ namespace SCR
 {
     public class ConditionalUI : MonoBehaviour
     {
-        [SerializeField] public ItemInfoUI ItemInfoUI { get { return _itemInfoUI; } }
+        public ItemInfoUI ItemInfoUI { get { return _itemInfoUI; } }
         [SerializeField] private ItemInfoUI _itemInfoUI;
+        public EnhancementInfo EnhancementInfo { get { return _enhancementInfo; } }
+        [SerializeField] private EnhancementInfo _enhancementInfo;
         [SerializeField] private TMP_Text _qusetText;
         [SerializeField] private TMP_Text _guideText;
 

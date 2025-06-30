@@ -4,8 +4,14 @@ using UnityEngine;
 
 namespace LHE
 {
-    public class PlayerNormalAttackType : MonoBehaviour
+    [CreateAssetMenu(fileName ="Arm Date", menuName = "Scriptable Object/Arm Date", order = int.MaxValue)]
+    public class ArmDate : ScriptableObject
     {
+        [SerializeField]
+        private string ArmName;
+
+
+
         // 공격 타입에 따른 데이터
 
         // 공격력 배울

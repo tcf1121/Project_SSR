@@ -46,7 +46,8 @@ namespace Utill
             Vector2 groundPos;
             float yLength = max.y - min.y;
             bool hitGround = false;
-            int layerMask = LayerMask.GetMask("Ground");
+            LayerMask _allGroundLayers = (1 << 9) | (1 << 10); // 모든 바닥
+            int layerMask = _allGroundLayers;
             int time = 0;
             do
             {
@@ -55,13 +56,15 @@ namespace Utill
                 time++;
                 if (hit.collider != null)
                 {
-                    groundPos.y = hit.collider.bounds.max.y;
+                    groundPos.y = hit.point.y + 1;
+                    RaycastHit2D hitdouble = Physics2D.Raycast(groundPos, Vector2.down, yLength, layerMask);
+                    if (hitdouble.collider != null)
+                        groundPos.y = hit.point.y;
                     hitGround = true;
                 }
                 if (time > 10)
                     break;
             } while (!hitGround);
-
             return groundPos;
         }
 
@@ -76,14 +79,13 @@ namespace Utill
         {
             List<Vector2> randomPosList = new();
             float divideX = (max.x - min.x) / num;
-            
+
             for (int i = 0; i < num; i++)
                 randomPosList.Add(RandomGroundPos(
                     new Vector2(min.x + (divideX * i), min.y),
                     new Vector2(min.x + (divideX * i + 1), max.y)
                     ));
             {
-                Debug.Log(divideX);
                 return randomPosList;
             }
         }

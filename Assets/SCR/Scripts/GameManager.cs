@@ -8,15 +8,21 @@ namespace SCR
 {
     public class GameManager : MonoBehaviour
     {
-
+        [SerializeField] private GameObject _playerPrefab;
         private static GameManager instance;
         public static GameManager Instance { get { return instance; } }
         public static UnityAction<ItemPart, int> SelectEvent;
+        public static GameObject Player { get { return _player; } }
+        private static GameObject _player;
+        public static int Stage { get => _stage; }
+        private static int _stage;
+        public static StageManager StageManager { get => _stageManager; }
+        private static StageManager _stageManager;
 
         private void Awake()
         {
             SetSingleton();
-
+            _stage = 1;
         }
         private void SetSingleton()
         {
@@ -29,6 +35,11 @@ namespace SCR
                 instance = this;
                 DontDestroyOnLoad(gameObject);
             }
+        }
+
+        private void Update()
+        {
+
         }
 
         private void OnEnable()
@@ -50,12 +61,27 @@ namespace SCR
 #endif
         }
 
-        private void Update()
-        {
-
-        }
 
         public void StartGame()
+        {
+            NextStage();
+            _player = Instantiate(_playerPrefab);
+            _player.transform.parent = this.transform;
+        }
+
+        public static void StageClear()
+        {
+            _stage++;
+            if (_stage > 1)
+                _stage = 1;
+        }
+
+        public static void SetStageManager(StageManager stageManager)
+        {
+            _stageManager = stageManager;
+        }
+
+        public static void NextStage()
         {
             LoadingSceneManager.LoadScene(2);
         }

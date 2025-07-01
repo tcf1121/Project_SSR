@@ -65,13 +65,13 @@ namespace SCR
             Jump = baseStats.Jump + bonusStats.Jump;
         }
 
-        public void Enhancement(Stats baseStats, float Strengthening)
+        public void Enhancement(Stats baseStats, Stats Strengthening)
         {
-            MaxHp = baseStats.MaxHp + (int)(baseStats.MaxHp * Strengthening);
-            Atk = baseStats.Atk + (int)(baseStats.Atk * Strengthening);
-            HpRegen = baseStats.HpRegen + (int)(baseStats.HpRegen * Strengthening);
-            Speed = baseStats.Speed + (int)(baseStats.Speed * Strengthening);
-            Jump = baseStats.Jump + (int)(baseStats.Jump * Strengthening);
+            MaxHp += baseStats.MaxHp + Strengthening.MaxHp;
+            Atk += baseStats.Atk + Strengthening.Atk;
+            HpRegen += baseStats.HpRegen + Strengthening.HpRegen;
+            Speed += baseStats.Speed + Strengthening.Speed;
+            Jump += baseStats.Jump + Strengthening.Jump;
         }
     }
 

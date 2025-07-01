@@ -8,8 +8,6 @@ namespace SCR
     public class BoxSpawner : MonoBehaviour
     {
         [SerializeField] private StageManager stageManager;
-        public ObjectPool ObjectPool { get { return _objectPool; } set { _objectPool = value; } }
-        [SerializeField] private ObjectPool _objectPool;
         [SerializeField] private SpriteRenderer mapSize;
         private List<Vector2> _spwanPoint;
         private Vector2 min;
@@ -19,7 +17,7 @@ namespace SCR
 
         private void Init()
         {
-            _objectPool = GetComponent<ObjectPool>();
+
         }
 
         void Start()
@@ -34,18 +32,18 @@ namespace SCR
             _spwanPoint = new();
             min = mapSize.bounds.min;
             max = mapSize.bounds.max;
-            _spwanPoint = RandomPosCreater.RandomPosList(min, max, _objectPool.Pool.Count);
+            _spwanPoint = RandomPosCreater.RandomPosList(min, max, ObjectPool.GetPool(EPoolObjectType.Box).Pool.Count);
         }
 
         private void Spawn()
         {
-
-            foreach (GameObject box in _objectPool.Pool)
+            for (int i = 0; i < ObjectPool.GetPool(EPoolObjectType.Box).PoolCount; i++)
             {
+                GameObject box = ObjectPool.TakeFromPool(EPoolObjectType.Box);
                 box.transform.position = _spwanPoint[0];
                 _spwanPoint.RemoveAt(0);
-                box.SetActive(true);
             }
+
         }
     }
 

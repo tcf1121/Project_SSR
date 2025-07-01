@@ -5,16 +5,16 @@ namespace SCR
     public class Box : MonoBehaviour
     {
 
-        private Animator _animator; // ¾Ö´Ï¸ŞÀÌÅÍ ÄÄÆ÷³ÍÆ®¸¦ ÂüÁ¶ÇÏ±â À§ÇÑ º¯¼ö
-        private bool _isOpen = false; //»óÀÚ°¡ ¿­·ÁÀÖ´ÂÁö ¿©ºÎ
+        private Animator _animator; // ì• ë‹ˆë©”ì´í„° ì»´í¬ë„ŒíŠ¸ë¥¼ ì°¸ì¡°í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
+        private bool _isOpen = false; //ìƒìê°€ ì—´ë ¤ìˆëŠ”ì§€ ì—¬ë¶€
 
         private void Start()
         {
-            _animator = GetComponent<Animator>(); // ¾Ö´Ï¸ŞÀÌÅÍ ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿È
+            _animator = GetComponent<Animator>(); // ì• ë‹ˆë©”ì´í„° ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜´
             _isOpen = false;
         }
         /// <summary>
-        /// »óÀÚ¸¦ ¿©´Â ¸Ş¼­µå
+        /// ìƒìë¥¼ ì—¬ëŠ” ë©”ì„œë“œ
         /// </summary>
         #region 
         public void BoxOpen()
@@ -32,10 +32,9 @@ namespace SCR
 
         public void GetItem()
         {
-            //StageManager ¾È¿¡ ItemSpawner¸¦ ³Ö¾î¼­ °¡Á® ¿Ã ¼ö ÀÖ°Ô ÇÔ.
-            // GameManger.StageManger.ItemSpawner.Spawn(Vector2 À§Ä¡);
-
-
+            Debug.Log("ì•„ì´í…œ ë½‘ëŠ” ì¤‘");
+            GameManager.StageManager.ItemSpawner.SetPos(gameObject.transform.position);
+            GameManager.StageManager.ItemSpawner.Spawn();
         }
     }
 }

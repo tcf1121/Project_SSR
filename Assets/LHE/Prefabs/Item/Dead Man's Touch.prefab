@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7193498357574733715}
   - component: {fileID: 6986018705534655587}
   - component: {fileID: 6565932659207503462}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Dead Man's Touch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,17 +101,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _image: {fileID: 0}
   _itemPart: 1
-  _code: Body1
+  _code: Body01
   _name: Dead Man's Touch
   _description: "\uB545\uC5D0\uC11C \uAC80\uC740 \uC190\uB4E4\uC774 \uC62C\uB77C\uC640
     \uADFC\uBC29 \uC801\uB4E4\uC5D0\uAC8C \uB370\uBBF8\uC9C0\uB97C \uC900\uB2E4."
-  _unlockDescription: "\uD574\uAE08 \uC870\uAC74"
+  _unlockDescription: '-'
   _isUnlock: 1
   itemPrefab: {fileID: 5170669583313043247}
   _basicDamage: 1.3
   _strengthening: 0.15
   _coolTime: 5
-  _attackrange: {fileID: 7919411012285020311, guid: 34c3e91c75f763c449c4bbdb2e212f0c, type: 3}
+  _attackrange: {fileID: 0}
 --- !u!50 &6986018705534655587
 Rigidbody2D:
   serializedVersion: 4
@@ -175,12 +175,12 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 5.6, y: 7.71}
+    oldSize: {x: 0.2734375, y: 0.37646484}
     newSize: {x: 5.6, y: 7.71}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5.6, y: 7.71}
+  m_Size: {x: 0.25, y: 0.25}
   m_EdgeRadius: 0

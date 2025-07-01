@@ -9,7 +9,7 @@ namespace SCR
     {
         // 아이템 이미지
         public Sprite Image { get { return _image; } }
-        [SerializeField] private Sprite _image;
+        [SerializeField] protected Sprite _image;
 
         // 아이템 부위
         public ItemPart ItemPart { get { return _itemPart; } }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utill;
 
 
 namespace SCR
@@ -87,9 +88,11 @@ namespace SCR
 
         public void Equip(GameObject item)
         {
+            bool IsAttackItem = item.GetComponent<AttackItem>() != null ? true : false;
             if (_equipped.CheckItem(item))
             {
-                item.SetActive(false);
+
+                ObjectPool.ReturnPool(item, IsAttackItem ? EPoolObjectType.AttackItem : EPoolObjectType.StatItem);
                 _conditionalUI.EnhancementInfo.SetItem(item);
                 _conditionalUI.EnhancementInfo.GetItem();
             }
@@ -100,7 +103,7 @@ namespace SCR
                     _equipped.EquipItem(item);
 
 
-                    item.SetActive(false);
+                    ObjectPool.ReturnPool(item, IsAttackItem ? EPoolObjectType.AttackItem : EPoolObjectType.StatItem);
                     _conditionalUI.ItemInfoUI.SetItem(item);
                     _conditionalUI.ItemInfoUI.GetItem();
                     if (item.GetComponent<AttackItem>())
@@ -111,6 +114,7 @@ namespace SCR
                 else
                 {
                     //교체하기
+                    ObjectPool.ReturnPool(item, IsAttackItem ? EPoolObjectType.AttackItem : EPoolObjectType.StatItem);
                     _waitItem = item;
                     _conditionalUI.EquipUI.gameObject.SetActive(true);
                     _conditionalUI.EquipUI.IsChangeEquip(true);

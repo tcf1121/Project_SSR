@@ -9,6 +9,7 @@ TagManager:
   - Ladder
   - Ground
   - Monster
+  - Teleport
   layers:
   - Default
   - TransparentFX

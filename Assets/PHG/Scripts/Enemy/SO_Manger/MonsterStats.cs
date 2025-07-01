@@ -7,10 +7,12 @@ namespace PHG
         [SerializeField] private MonsterStatEntry statData;
 
         private int currentHP;
+        private MonsterBrain brain;
 
-        public int MaxHP => statData.maxHP;
+
+        public int MaxHP => Mathf.RoundToInt(statData.maxHP * brain.Coeff);
         public int CurrentHP => currentHP;
-        public int Damage => statData.damage;
+        public int Damage => Mathf.RoundToInt(statData.damage * brain.Coeff);
         public float MoveSpeed => statData.moveSpeed;
         public float PatrolRange => statData.patrolRange;
         public float ChaseRange => statData.chaseRange;
@@ -18,10 +20,14 @@ namespace PHG
         public float ChargeRange => statData.chargeRange;
         public bool UsePatrol => statData.usePatrol; //  SO 플래그 사용
 
+
+
         private void Awake()
         {
             currentHP = statData.maxHP;
+            brain = GetComponent<MonsterBrain>();
         }
+    
 
         public void TakeDamage(int amount)
         {
@@ -29,7 +35,10 @@ namespace PHG
             if (currentHP <= 0)
             {
                 currentHP = 0;
-                // TODO: FSM 사망 상태 전환 등
+
+                if (brain != null)
+                    brain.ChangeState(StateID.Dead);
+
             }
         }
     }

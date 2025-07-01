@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using LHE;
+using System.Collections;
 using UnityEngine;
 
 namespace PHG
@@ -30,6 +31,11 @@ namespace PHG
         public Rigidbody2D rb { get; private set; }
         public Transform tf { get; private set; }
 
+        public float Coeff { get; private set; } = 1f;
+        public int SpawnStage { get; set; }
+
+
+
         private LayerMask groundMask;
         private LayerMask ladderMask;
 
@@ -39,6 +45,7 @@ namespace PHG
         private IState idle, patrol, chase, attack, dead;
 
         // 점프 시스템
+        #region Jump
         private JumpMove jumper;
         public bool IsGrounded() => jumper.IsGrounded();
         public bool IsMidJump => jumper.IsMidJump;
@@ -46,20 +53,23 @@ namespace PHG
         public bool PerformJump(int dir, float dy, float jumpForce, float horizontalFactor, float lockDuration) =>
             jumper.PerformJump(dir, dy, jumpForce, horizontalFactor, lockDuration);
         public void UpdateTimer(float deltaTime) => jumper.UpdateTimer(deltaTime);
+        #endregion
 
         // 사다리 시스템 (인터페이스 기반)
+        #region Ladder
         private IMonsterClimber climber;
         public IMonsterClimber Climber => climber;
 
         public AllMonsterStatData AllStatData => allMonsterStatData;
         public MonsterType MonsterType => thisMonsterType;
+        #endregion
 #if UNITY_EDITOR
         private void OnValidate()
         {
             if (allMonsterStatData != null)
                 statData = allMonsterStatData.GetStatEntry(thisMonsterType);
         }
-#endif
+        #endif
 
         private void Awake()
         {
@@ -152,6 +162,15 @@ namespace PHG
                 return;
 
             sm.ChangeState(id);
+        }
+
+
+        public void InitializeStats(int stage)
+        {
+            SpawnStage = stage;
+            float T = DangerIndexManager.Instance.GetDangerIndex();
+            float S = SpawnStage;
+            Coeff = (1.0f + 0.1012f * T) * Mathf.Pow(1.15f, S);
         }
     }
 }

@@ -153,7 +153,7 @@ MonoBehaviour:
     damage: 10
     moveSpeed: 2
     rushMultiplier: 2
-    maxClimbableHeight: 4
+    maxClimbableHeight: 3
     patrolRange: 3
     chaseRange: 6
     attackRange: 0.32
@@ -181,9 +181,9 @@ MonoBehaviour:
     isRanged: 0
     isCharging: 1
     enableLadderClimb: 1
-    climbYThreshold: 4
+    climbYThreshold: 3
     ladderForwardOffset: {x: 0, y: 0}
-    ladderDetectRadius: 0.7
+    ladderDetectRadius: 1
     climbSpeed: 3
   - monsterType: 4
     groundMask:

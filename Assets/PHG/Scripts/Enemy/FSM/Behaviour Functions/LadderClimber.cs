@@ -72,7 +72,6 @@ namespace PHG
             if (col == null) return;
 
             float yDiff = playerPos.y - tf.position.y;
-            Debug.Log($"[LadderClimber] yDiff={yDiff}, climbYThreshold={climbYThreshold}");
 
             // 예외 처리: 플레이어가 아래에 있고 yDiff가 작지만 여전히 bottom에 가까울 때는 내려가야 함
             if (Mathf.Abs(yDiff) < climbYThreshold)

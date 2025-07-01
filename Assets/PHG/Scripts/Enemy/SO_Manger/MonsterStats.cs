@@ -41,5 +41,17 @@ namespace PHG
 
             }
         }
+
+#if UNITY_EDITOR
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.K))
+            {
+                Debug.Log("[gameObject.name}에게 100데미지");
+                TakeDamage(100);
+            }
+        }
     }
+
+#endif
 }

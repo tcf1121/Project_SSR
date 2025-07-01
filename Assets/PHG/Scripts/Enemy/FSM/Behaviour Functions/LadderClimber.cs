@@ -112,38 +112,101 @@ namespace PHG
             tf.position = new Vector3(xMid, tf.position.y, tf.position.z);
             yield return null;
 
-            if (goUp)
+            float tolerance = 0.05f;
+            Transform playerTf = GameObject.FindWithTag("Player")?.transform;
+
+            while (true)
             {
-                while (tf.position.y < lb.top.position.y - 0.05f)
+                if (playerTf == null) break;
+
+                float targetY = playerTf.position.y;
+
+                // --- 1단계: 목표에 도달할 때까지 이동 ---
+                while (Mathf.Abs(tf.position.y - targetY) > tolerance)
                 {
-                    float newY = Mathf.MoveTowards(tf.position.y, lb.top.position.y, climbSpeed * Time.deltaTime);
+                    if (playerTf == null) break;
+
+                    float yDiff = playerTf.position.y - tf.position.y;
+                    float xDiff = Mathf.Abs(playerTf.position.x - tf.position.x);
+
+                    if (xDiff > 1.5f)
+                    {
+                        Debug.Log("[ClimbRoutine] 플레이어 이탈 → 점프 추격");
+                        goto Exit;
+                    }
+
+                    // 방향 바뀌면 다시 바깥 루프로
+                    if ((goUp && yDiff < -0.5f) || (!goUp && yDiff > 0.5f))
+                    {
+                        goUp = yDiff > 0;
+                        Debug.Log("[ClimbRoutine] 방향 반전 → 재진입");
+                        break;
+                    }
+
+                    targetY = playerTf.position.y;
+                    float newY = Mathf.MoveTowards(tf.position.y, targetY, climbSpeed * Time.deltaTime);
                     tf.position = new Vector3(tf.position.x, newY, tf.position.z);
                     yield return null;
+                }
+
+                // --- 2단계: 도달 후 플레이어 상태 대기 ---
+                while (true)
+                {
+                    if (playerTf == null) break;
+
+                    float yDiff = playerTf.position.y - tf.position.y;
+                    float xDiff = Mathf.Abs(playerTf.position.x - tf.position.x);
+
+                    if (xDiff > 1.5f || Mathf.Abs(yDiff) > 1.5f)
+                    {
+                        Debug.Log("[ClimbRoutine] 플레이어 멀어짐 → 점프 추격");
+                        goto Exit;
+                    }
+
+                    // 방향 바뀌면 1단계로 다시 이동
+                    if ((goUp && yDiff < -0.5f) || (!goUp && yDiff > 0.5f))
+                    {
+                        goUp = yDiff > 0;
+                        Debug.Log("[ClimbRoutine] 방향 반전 (정지 후) → 재진입");
+                        break;
+                    }
+
+                    bool playerGrounded = Physics2D.OverlapCircle(
+                        playerTf.position + Vector3.down * 0.1f,
+                        0.1f,
+                        LayerMask.GetMask("Ground", "Platform"));
+
+                    if (playerGrounded)
+                    {
+                        Debug.Log("[ClimbRoutine] 플레이어 착지 → 사다리 이탈");
+                        goto Exit;
+                    }
+
+                    yield return null;
+                }
+            }
+
+        Exit:
+            rb.simulated = true;
+            brain.gameObject.layer = originalLayer;
+            IsClimbing = false;
+            cooldownTimer = 0.5f;
+
+            if (playerTf != null && Mathf.Abs(playerTf.position.x - tf.position.x) > 1.5f)
+            {
+                int hDir = playerTf.position.x > tf.position.x ? 1 : -1;
+                float yGap = playerTf.position.y - tf.position.y;
+                if (brain.CanJump)
+                {
+                    brain.PerformJump(hDir, Mathf.Abs(yGap), brain.statData.jumpForce,
+                                      brain.statData.jumpHorizontalFactor,
+                                      brain.statData.jumpCooldown);
                 }
             }
             else
             {
-                while (tf.position.y > lb.bottom.position.y + 0.05f)
-                {
-                    float newY = Mathf.MoveTowards(tf.position.y, lb.bottom.position.y, climbSpeed * Time.deltaTime);
-                    tf.position = new Vector3(tf.position.x, newY, tf.position.z);
-                    yield return null;
-                }
+                brain.ChangeState(StateID.Chase);
             }
-
-            rb.simulated = true;
-            brain.gameObject.layer = originalLayer;
-            IsClimbing = false;
-            cooldownTimer = CLIMB_COOLDOWN;
-
-            if (playerPos.HasValue)
-            {
-                int hDir = playerPos.Value.x > tf.position.x ? 1 : -1;
-                Vector2 imp = new(hDir * jumpAwayForce, jumpAwayForce * 0.5f);
-                rb.AddForce(imp, ForceMode2D.Impulse);
-            }
-
-            brain.ChangeState(StateID.Chase);
         }
     }
 }

@@ -52,7 +52,7 @@ namespace HCW
                 }
             }
 
-            if (isEventStart && !isTeleporterActivated)
+            if (isEventStart && !isTeleporterActivated) // 
             {
                 CheckEventCompletion();
             }

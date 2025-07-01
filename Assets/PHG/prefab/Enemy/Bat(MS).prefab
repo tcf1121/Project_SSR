@@ -40,10 +40,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3196415804881322359}
     m_Modifications:
-    - target: {fileID: -8480110139499212012, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2542669624320578075, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -87,10 +83,6 @@ PrefabInstance:
     - target: {fileID: 3028759376588362661, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
       propertyPath: m_Name
       value: Bat
-      objectReference: {fileID: 0}
-    - target: {fileID: 5956522131150013274, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8879609475013827189, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
       propertyPath: statData.monsterType

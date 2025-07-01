@@ -72,10 +72,11 @@ namespace PHG
             bool wallAhead = wallCheck.collider != null;
             bool stuck = grounded && Mathf.Abs(rb.velocity.x) < STUCK_VEL_TOL;
             bool targetAbove = toPl.y > 0.5f;
+            bool targetNear = dist < 8f;
 
             if (brain.CanJump &&
-                grounded && !midJump && jumper.ReadyToJump() &&
-                wallAhead && stuck && targetAbove)
+      grounded && !midJump && jumper.ReadyToJump() &&
+      wallAhead && (stuck || targetAbove || targetNear))
             {
                 float dy = Mathf.Abs(toPl.y);
                 jumper.PerformJump(dir, dy,

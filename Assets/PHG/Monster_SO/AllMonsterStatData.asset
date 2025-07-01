@@ -56,6 +56,9 @@ MonoBehaviour:
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 0.35
     climbSpeed: 3
+    expReward: 10
+    goldReward: 5
+    rewardCoefficient: 1
   - monsterType: 1
     groundMask:
       serializedVersion: 2
@@ -99,6 +102,9 @@ MonoBehaviour:
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 1
     climbSpeed: 3
+    expReward: 10
+    goldReward: 5
+    rewardCoefficient: 1
   - monsterType: 2
     groundMask:
       serializedVersion: 2
@@ -142,6 +148,9 @@ MonoBehaviour:
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 0.35
     climbSpeed: 3
+    expReward: 10
+    goldReward: 5
+    rewardCoefficient: 1
   - monsterType: 3
     groundMask:
       serializedVersion: 2
@@ -151,9 +160,9 @@ MonoBehaviour:
       m_Bits: 2048
     maxHP: 100
     damage: 10
-    moveSpeed: 2
-    rushMultiplier: 2
-    maxClimbableHeight: 4
+    moveSpeed: 1
+    rushMultiplier: 0.5
+    maxClimbableHeight: 3
     patrolRange: 3
     chaseRange: 6
     attackRange: 0.32
@@ -164,7 +173,7 @@ MonoBehaviour:
     jumpCooldown: 1
     maxJumpYDiffForAdjustment: 4
     groundCheckOffset: {x: 0, y: -0.05}
-    groundCheckRadius: 1
+    groundCheckRadius: 2.31
     usePatrol: 1
     idleMode: 0
     rangedCooldown: 2
@@ -181,10 +190,13 @@ MonoBehaviour:
     isRanged: 0
     isCharging: 1
     enableLadderClimb: 1
-    climbYThreshold: 4
+    climbYThreshold: 1
     ladderForwardOffset: {x: 0, y: 0}
-    ladderDetectRadius: 0.7
+    ladderDetectRadius: 1
     climbSpeed: 3
+    expReward: 20
+    goldReward: 20
+    rewardCoefficient: 1
   - monsterType: 4
     groundMask:
       serializedVersion: 2
@@ -228,6 +240,9 @@ MonoBehaviour:
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 0.35
     climbSpeed: 3
+    expReward: 10
+    goldReward: 5
+    rewardCoefficient: 1
   - monsterType: 5
     groundMask:
       serializedVersion: 2
@@ -271,6 +286,9 @@ MonoBehaviour:
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 0.35
     climbSpeed: 3
+    expReward: 10
+    goldReward: 5
+    rewardCoefficient: 1
   - monsterType: 6
     groundMask:
       serializedVersion: 2
@@ -314,6 +332,9 @@ MonoBehaviour:
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 0.35
     climbSpeed: 3
+    expReward: 10
+    goldReward: 5
+    rewardCoefficient: 1
   - monsterType: 7
     groundMask:
       serializedVersion: 2
@@ -357,3 +378,6 @@ MonoBehaviour:
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 0.35
     climbSpeed: 3
+    expReward: 10
+    goldReward: 5
+    rewardCoefficient: 1

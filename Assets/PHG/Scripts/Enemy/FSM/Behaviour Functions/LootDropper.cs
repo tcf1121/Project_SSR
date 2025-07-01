@@ -2,22 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LootDropper : MonoBehaviour
+namespace PHG
 {
-    [SerializeField] List<GameObject> dropTable;
-    [Range(0f, 1f)] public float dropChance = 1f;
-    [SerializeField] Vector2 popImpulse = new Vector2(0f, 2f);
-    public void Drop()
+    public class LootDropper : MonoBehaviour
     {
-        if(Random.value > dropChance || dropTable.Count == 0)
+        [SerializeField] List<GameObject> dropTable;
+        [Range(0f, 1f)] public float dropChance = 1f;
+        [SerializeField] Vector2 popImpulse = new Vector2(0f, 2f);
+        public void Drop()
         {
-            return;
-        }
-        var prefab = dropTable[Random.Range(0, dropTable.Count)];
-        var loot = Instantiate(prefab, transform.position + Vector3.up * 0.2f, Quaternion.identity);
+            if (Random.value > dropChance || dropTable.Count == 0)
+            {
+                return;
+            }
+            var prefab = dropTable[Random.Range(0, dropTable.Count)];
+            var loot = Instantiate(prefab, transform.position + Vector3.up * 0.2f, Quaternion.identity);
 
-        if (loot.TryGetComponent(out Rigidbody2D rb))
-            rb.AddForce(popImpulse, ForceMode2D.Impulse);
+            if (loot.TryGetComponent(out Rigidbody2D rb))
+                rb.AddForce(popImpulse, ForceMode2D.Impulse);
+        }
     }
-} 
+}
 

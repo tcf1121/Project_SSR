@@ -17,6 +17,7 @@ namespace PHG
         MoveToLadder,
         FloatChase,
         meleeAttack,
+        TakeDamage,
         Dead
     }
 }

@@ -57,6 +57,10 @@ namespace SCR
                 _armCor.Add(null);
             }
             weaponObj.transform.localPosition = new Vector2(0, 0);
+            Vector3 scale = weaponObj.transform.localScale;
+            scale.x *= -1f;
+            if (!player.PlayerController.FacingRight)
+                weaponObj.transform.localScale = scale;
         }
 
         public void RemoveAtWeapon(ItemPart itemPart, int index)

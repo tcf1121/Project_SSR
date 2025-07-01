@@ -1748,6 +1748,7 @@ GameObject:
   - component: {fileID: 433587860191003032}
   - component: {fileID: 6099278725544999114}
   - component: {fileID: 6582912837466138923}
+  - component: {fileID: 1427652092391356053}
   m_Layer: 5
   m_Name: PauseMenuUI
   m_TagString: Untagged
@@ -1797,7 +1798,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!114 &433587860191003032
 MonoBehaviour:
@@ -1853,13 +1854,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseMenuKey: 27
   warningPopup: {fileID: 5886509019312584820}
-  pauseMenuPanel: {fileID: -2253911629886400664, guid: 7b6cb8e81e655a449ba5a354a5a25ac3, type: 3}
+  pauseMenuPanel: {fileID: 7187154643684077828}
   soundSlider: {fileID: 2052552439395957149}
   bgmSlider: {fileID: 7834266665035238096}
   sfxSlider: {fileID: 433350557082252480}
   resolutionDropdown: {fileID: 5348111990636714906}
   fullscreenToggle: {fileID: 7570890857359596108}
   mainAudioMixer: {fileID: 24100000, guid: 129a6183fab874648bc4f2ded9fde0c4, type: 2}
+--- !u!114 &1427652092391356053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3060999104441318619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 7ad089874cb1780468d56f63b72d5a64, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &3363232033208622483
 GameObject:
   m_ObjectHideFlags: 0

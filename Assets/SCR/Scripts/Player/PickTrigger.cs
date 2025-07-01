@@ -26,8 +26,11 @@ namespace SCR
         void OnDisable()
         {
             _collider.enabled = false;
-            _player.Equip(CheckDistance());
-            itemObject.Clear();
+            if (itemObject.Count != 0)
+            {
+                _player.Equip(CheckDistance());
+                itemObject.Clear();
+            }
         }
 
         void OnTriggerEnter2D(Collider2D collision)
@@ -36,10 +39,13 @@ namespace SCR
             // {
             //     return;
             // }
-            // if (collision.gameObject.CompareTag("Box"))
-            // {
-            //     return;
-            // }
+            if (collision.gameObject.CompareTag("Box"))
+            {
+                // 상자 가격은 시간이 지날수록 오르고 그거보다 많으면 플레이어 코인 감소하면서
+                collision.gameObject.GetComponent<Box>().BoxOpen();
+                Debug.Log("상자");
+                return;
+            }
             if (collision.gameObject.CompareTag("Item"))
             {
                 itemObject.Add(collision.gameObject);

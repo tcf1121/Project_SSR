@@ -17,7 +17,7 @@ namespace SCR
         [SerializeField] private float _strengthening;
 
         // 쿨타임
-        public float CoolTime { get { return _currentDamage; } }
+        public float CoolTime { get { return _coolTime; } }
         [SerializeField] private float _coolTime;
 
         // 공격 범위

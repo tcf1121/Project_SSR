@@ -81,22 +81,19 @@ namespace Utill
             resolutionDropdown.onValueChanged.AddListener(SetResolution);
             fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
         }
-        void Update()
-        {
-            if (Input.GetKeyDown(pauseMenuKey))
-            {
-                //if (!isGameScene) return; // 게임중 이 아니면 일시정지 안함
 
-                if (isPaused)
-                {
-                    ResumeGame();
-                }
-                else
-                {
-                    PauseGame();
-                }
+        private void OnPause()
+        {
+            if (isPaused)
+            {
+                ResumeGame();
+            }
+            else
+            {
+                PauseGame();
             }
         }
+
         public void PauseGame()
         {
             pauseMenuPanel.SetActive(true);

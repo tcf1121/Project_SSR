@@ -57,6 +57,9 @@ MonoBehaviour:
   _runtimeStats: {fileID: 444173073153757890}
   allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
   thisMonsterType: 3
+  damageTextPrefab: {fileID: 1373479669899882519, guid: 1b90f7c35b4a7bc408e4372631cfb6f7, type: 3}
+  staggerThreshold: 15
+  hpBarRoot: {fileID: 1485182302214798521, guid: c7b1cd8952107e948a6a9d06d320d44d, type: 3}
 --- !u!50 &6828745291782486677
 Rigidbody2D:
   serializedVersion: 4
@@ -154,6 +157,7 @@ MonoBehaviour:
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 2
+    staggerThreshold: 15
     patrolRange: 3
     chaseRange: 6
     attackRange: 1

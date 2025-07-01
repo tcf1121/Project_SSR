@@ -16,6 +16,10 @@ namespace PHG
         [SerializeField] private MonsterStats _runtimeStats;
         [SerializeField] private AllMonsterStatData allMonsterStatData;
         [SerializeField] private MonsterType thisMonsterType;
+        [SerializeField] private GameObject damageTextPrefab;
+        [SerializeField] private float staggerThreshold = 15f;
+        [SerializeField] public GameObject hpBarRoot;
+
 
         public MonsterStats RuntimeStats => _runtimeStats;
         public Vector2 LastGroundCheckPos => jumper.LastGroundCheckPos;
@@ -39,10 +43,11 @@ namespace PHG
         private LayerMask groundMask;
         private LayerMask ladderMask;
 
+
         private StateMachine sm;
         public StateMachine Sm => sm;
 
-        private IState idle, patrol, chase, attack, dead;
+        private IState idle, patrol, chase, attack, takeDamage, dead;
 
         // 점프 시스템
         #region Jump
@@ -98,7 +103,7 @@ namespace PHG
                     return;
                 }
             }
-
+            
             IsFlying = statData.isFlying;
             IsRanged = statData.isRanged;
             IsCharging = statData.isCharging;
@@ -133,6 +138,7 @@ namespace PHG
                 var interact = GetComponent<Interactable>() ?? gameObject.AddComponent<Interactable>();
                 idle = new GreedIdleState(this, interact);
             }
+            takeDamage = new TakeDamageState(this, new HitInfo(0, Vector2.zero));
 
             sm = new StateMachine();
             sm.Register(StateID.Idle, idle);
@@ -141,6 +147,7 @@ namespace PHG
             sm.Register(StateID.Attack, attack);
             sm.Register(StateID.Dead, dead);
             sm.ChangeState(StateID.Idle);
+            sm.Register(StateID.TakeDamage, takeDamage);
         }
 
 
@@ -172,5 +179,47 @@ namespace PHG
             float S = SpawnStage;
             Coeff = (1.0f + 0.1012f * T) * Mathf.Pow(1.15f, S);
         }
+
+        public void EnterDamageState(HitInfo hit)
+        {
+            takeDamage = new TakeDamageState(this, hit);
+            sm.Register(StateID.TakeDamage, takeDamage);  
+            sm.ChangeState(StateID.TakeDamage);
+        }
+        public void ApplyKnockback(Vector2 origin, float force)
+        {
+            Vector2 dir = ((Vector2)transform.position - origin).normalized;
+            rb.velocity = Vector2.zero;
+            rb.AddForce(dir * force, ForceMode2D.Impulse);
+        }
+       // public void ShowDamageText(int damage)
+       // {
+       //     if (damageTextPrefab == null)
+       //     {
+       //         Debug.LogWarning("[DamageText] 프리팹이 null입니다.");
+       //         return;
+       //     }
+       //
+       //     Vector3 spawnPos = transform.position + Vector3.up * 0.5f;
+       //     Debug.Log($"[DamageText] Instantiate 위치: {spawnPos}");
+       //
+       //     GameObject go = Instantiate(damageTextPrefab, spawnPos, Quaternion.identity);
+       //
+       // }
+       // public void ShowHpBarTemporarily(float duration = 1.5f)
+       // {
+       //     if (hpBarRoot == null) return;
+       //
+       //     hpBarRoot.SetActive(true);
+       //     StopCoroutine(nameof(HideHpBarRoutine)); // 중복 방지
+       //     StartCoroutine(HideHpBarRoutine(duration));
+       // }
+       //
+       // private IEnumerator HideHpBarRoutine(float delay)
+       // {
+       //     yield return new WaitForSeconds(delay);
+       //     hpBarRoot.SetActive(false);
+       // }
     }
+
 }

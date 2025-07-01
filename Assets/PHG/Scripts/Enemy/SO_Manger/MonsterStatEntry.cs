@@ -28,6 +28,10 @@ namespace PHG
         [Tooltip("돌진 가속도 배수")] public float rushMultiplier = 1.5f;// 멤버 변수
         [Tooltip("점프판단 허용 높이")] public float maxClimbableHeight = 2f; // 멤버 변수
 
+        [Header("Damage Response")]
+        [Tooltip("한 번에 이 값 이상의 데미지를 입으면 강제 경직")]
+        public float staggerThreshold = 15f;
+
         /* ───────── AI 감지 범위 ───────── */
         [Header("AI Detection Ranges")]
         [Tooltip("순찰 감지 범위")] public float patrolRange = 3f;    // 멤버 변수

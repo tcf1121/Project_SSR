@@ -19,19 +19,41 @@ namespace SCR
         public float SpecialStat { get { return _specialStat; } }
         private float _specialStat;
 
-        // 강화 비율
-        [SerializeField] private float _strengthening;
+        [Header("강화시 스탯")]
+        [SerializeField] private Stats _strengthening;
+        public Stats Strengthening { get => _strengthening; }
+
 
         override protected void Init()
         {
             base.Init();
             _itemPart = ItemPart.Leg;
+            _currentStat = _basicStat;
         }
 
         override public void ItemEnhancement()
         {
             base.ItemEnhancement();
-            _currentStat.Enhancement(_basicStat, _strengthening * _enhance);
+            _currentStat.Enhancement(_basicStat, _strengthening);
+        }
+
+        public void Clone(StatItem statItem)
+        {
+            gameObject.transform.localScale = statItem.gameObject.transform.localScale;
+            gameObject.GetComponent<BoxCollider2D>().offset = statItem.gameObject.GetComponent<BoxCollider2D>().offset;
+            gameObject.GetComponent<BoxCollider2D>().size = statItem.gameObject.GetComponent<BoxCollider2D>().size;
+            _image = statItem.Image;
+            _itemPart = statItem.ItemPart;
+            _code = statItem.Code;
+            _name = statItem.Name;
+            _description = statItem.Description;
+            _unlockDescription = statItem.Description;
+            _isUnlock = statItem.IsUnlock;
+            itemPrefab = statItem.itemPrefab;
+            _strengthening = statItem.Strengthening;
+            _basicStat = statItem.BasicStat;
+            _currentStat = statItem.CurrentStat;
+            _specialStat = statItem.SpecialStat;
         }
     }
 }

@@ -7,6 +7,7 @@ namespace SCR
     public class AttackItem : Item
     {
         // 기본 데미지
+        public float BasicDamage { get => _basicDamage; }
         [SerializeField] private float _basicDamage;
 
         // 현재 데미지
@@ -14,6 +15,7 @@ namespace SCR
         private float _currentDamage;
 
         // 강화 비율
+        public float Strengthening { get => _strengthening; }
         [SerializeField] private float _strengthening;
 
         // 쿨타임
@@ -27,7 +29,7 @@ namespace SCR
         override protected void Init()
         {
             base.Init();
-            if (_itemPart == ItemPart.Head) _coolTime = 30f;
+            if (_itemPart == ItemPart.Head) _coolTime = 10f;
             else if (_itemPart == ItemPart.Body) _coolTime = 5f;
             _currentDamage = _basicDamage;
         }
@@ -46,6 +48,25 @@ namespace SCR
         public void EndAttack()
         {
             _attackrange.SetActive(false);
+        }
+
+        public void Clone(AttackItem attackItem)
+        {
+            gameObject.transform.localScale = attackItem.gameObject.transform.localScale;
+            gameObject.GetComponent<BoxCollider2D>().offset = attackItem.gameObject.GetComponent<BoxCollider2D>().offset;
+            gameObject.GetComponent<BoxCollider2D>().size = attackItem.gameObject.GetComponent<BoxCollider2D>().size;
+            _image = attackItem.Image;
+            _itemPart = attackItem.ItemPart;
+            _code = attackItem.Code;
+            _name = attackItem.Name;
+            _description = attackItem.Description;
+            _unlockDescription = attackItem.Description;
+            _isUnlock = attackItem.IsUnlock;
+            itemPrefab = attackItem.itemPrefab;
+            _basicDamage = attackItem.BasicDamage;
+            _strengthening = attackItem.Strengthening;
+            _coolTime = attackItem.CoolTime;
+            _attackrange = attackItem.Attackrange;
         }
     }
 }

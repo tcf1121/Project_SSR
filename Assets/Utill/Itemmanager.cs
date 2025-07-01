@@ -3,21 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SHL;
-using TMPro.Examples;
+
 namespace Utill
 {
 
     public class Itemmanager : MonoBehaviour
     {
-        
+
         public static Itemmanager instance;
         [SerializeField] private List<Item> itemType;
-        
+
         [SerializeField] private List<Vector2> spawnPoints;
-        
-        public ObjectPool ObjectPool { get { return _objectPool; } set { _objectPool = value; } }
-        [SerializeField] private ObjectPool _objectPool;
-        
+
+        public PoolInfo ObjectPool { get { return _objectPool; } set { _objectPool = value; } }
+        [SerializeField] private PoolInfo _objectPool;
+
 
 
         private void Start()
@@ -26,7 +26,7 @@ namespace Utill
                 instance = this;
             else
                 Destroy(this.gameObject);
-            _objectPool = GetComponent<ObjectPool>();
+            _objectPool = GetComponent<PoolInfo>();
             //GameObject[] boxes = GameObject.FindGameObjectsWithTag("Box");
             spawnPoints = SHL.BoxSetup.instance._spawnPoints;
             //spawnPoints = new List<Vector2>();
@@ -34,14 +34,14 @@ namespace Utill
             //{
             //    spawnPoints.Add(box.transform.position);
             //}
-           
+
         }
 
         void spawn()
         {
             //itempart part = chance
             //if(itempart != itempart.leg)
-            
+
         }
         void Itemcreate(ItemPart type)//리펙토링  게임오브젝트 반환.
         {
@@ -49,23 +49,23 @@ namespace Utill
             if (typefilter.Count == 0) return;
 
             Item select = typefilter[Random.Range(0, typefilter.Count)];
-            foreach (GameObject item in _objectPool.Pool)
-            {
-                if (!item.activeSelf)
-                {
-                    if(item.GetComponent<Item>().ItemPart == type)
-                    {
-                        if (spawnPoints.Count == 0)
-                            break;
-                        item.transform.position = spawnPoints[0];
-                        _objectPool.TakeFromPool(item);
-                    }
-                    spawnPoints.RemoveAt(0);
+            // foreach (GameObject item in _objectPool.Pool)
+            // {
+            //     if (!item.activeSelf)
+            //     {
+            //         if (item.GetComponent<Item>().ItemPart == type)
+            //         {
+            //             if (spawnPoints.Count == 0)
+            //                 break;
+            //             item.transform.position = spawnPoints[0];
+            //             _objectPool.TakeFromPool(item);
+            //         }
+            //         spawnPoints.RemoveAt(0);
 
 
-                }
+            //     }
 
-            }
+            // }
         }
         //void itemcreate(ItemType type) // 길어서 버림
         //{
@@ -127,7 +127,7 @@ namespace Utill
         /// <param name="chance3"></param> 
         /// <param name="chance4"></param>
         /// // 드랍 아이템 확률 머리아이템 10% 몸통 20% 팔 30% 다리 40%
-       public  ItemPart Chance(float chance1, float chance2, float chance3, float chance4)
+        public ItemPart Chance(float chance1, float chance2, float chance3, float chance4)
         {
             float Randomnumber = Random.Range(0f, 1f); // 0부터 1 사이의 랜덤 숫자를 생성
             if (Randomnumber < chance1)
@@ -135,7 +135,7 @@ namespace Utill
                 //Debug.Log("Armitem");
                 //int randomIndex = Random.Range(0, Armitem.Length);
                 //Instantiate(Armitem[randomIndex], transform.position, Quaternion.identity);
-               //Itemcreate(ItemPart.Arm);
+                //Itemcreate(ItemPart.Arm);
                 return ItemPart.Arm;
 
             }

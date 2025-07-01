@@ -8,8 +8,8 @@ namespace SCR
     public class MonsterSpawner : MonoBehaviour
     {
 
-        public ObjectPool ObjectPool { get { return _objectPool; } set { _objectPool = value; } }
-        [SerializeField] private ObjectPool _objectPool;
+        public PoolInfo PoolInfo { get { return _poolInfo; } set { _poolInfo = value; } }
+        [SerializeField] private PoolInfo _poolInfo;
 
         [Header("스폰 설정")]
         [SerializeField] private float spawnInterval = 5f; // 스폰 간격
@@ -27,7 +27,7 @@ namespace SCR
 
         private void Init()
         {
-            _objectPool = GetComponent<ObjectPool>();
+            _poolInfo = GetComponent<PoolInfo>();
             _respwanMonsters = new();
             _spwanPoint = new();
         }
@@ -79,7 +79,7 @@ namespace SCR
             if (_respwanMonsters.Count > 0)
             {
                 SetPos();
-                foreach (GameObject mob in _objectPool.Pool)
+                foreach (GameObject mob in _poolInfo.Pool)
                 {
                     if (!mob.activeSelf)
                     {
@@ -87,7 +87,7 @@ namespace SCR
                             break;
                         mob.GetComponent<Monster>().SetMonster(_respwanMonsters[0]);
                         mob.transform.position = _spwanPoint[0];
-                        _objectPool.TakeFromPool(mob);
+                        ObjectPool.TakeFromPool(EPoolObjectType.Monster);
                         _respwanMonsters.RemoveAt(0);
                         _spwanPoint.RemoveAt(0);
                     }

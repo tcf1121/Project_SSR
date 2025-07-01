@@ -159,25 +159,26 @@ namespace SCR
         // 아이템 버리기
         public void DropItem(ItemPart itemPart, int index)
         {
+            GameManager.StageManager.ItemSpawner.SetPos(player.gameObject.transform.position);
             GameObject DropObj = new();
             switch (itemPart)
             {
                 case ItemPart.Head:
-                    DropObj = Instantiate(_head[index].itemPrefab);
+                    GameManager.StageManager.ItemSpawner.Spawn(_head[index].itemPrefab);
                     _head.RemoveAt(index);
                     Destroy(player.PlayerWeapon.HeadWeapons[index].gameObject);
                     player.PlayerWeapon.HeadWeapons.RemoveAt(index);
                     _head.Add(player.WaitItem.GetComponent<AttackItem>());
                     break;
                 case ItemPart.Body:
-                    DropObj = Instantiate(_body[index].itemPrefab);
+                    GameManager.StageManager.ItemSpawner.Spawn(_body[index].itemPrefab);
                     _body.RemoveAt(index);
                     Destroy(player.PlayerWeapon.BodyWeapons[index].gameObject);
                     player.PlayerWeapon.BodyWeapons.RemoveAt(index);
                     _body.Add(player.WaitItem.GetComponent<AttackItem>());
                     break;
                 case ItemPart.Arm:
-                    DropObj = Instantiate(_arm[index].itemPrefab);
+                    GameManager.StageManager.ItemSpawner.Spawn(_arm[index].itemPrefab);
                     _arm.RemoveAt(index);
                     Destroy(player.PlayerWeapon.ArmWeapons[index].gameObject);
                     player.PlayerWeapon.ArmWeapons.RemoveAt(index);

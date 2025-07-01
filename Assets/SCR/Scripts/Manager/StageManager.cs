@@ -10,10 +10,11 @@ namespace SCR
         [SerializeField] private List<GameObject> _mapLists;
         [SerializeField] CinemachineVirtualCamera _camera;
         [SerializeField] CinemachineConfiner _confiner;
-        //public ItemSpawner ItemSpawner {get => _itemSpawner;}
-        //[SerializeField] private ItemSpawner _itemSpawner;
+        public ItemSpawner ItemSpawner { get => _itemSpawner; }
+        [SerializeField] private ItemSpawner _itemSpawner;
         public GameObject StageMap { get => stageMap; }
         [SerializeField] private GameObject stageMap;
+
 
         void Awake()
         {

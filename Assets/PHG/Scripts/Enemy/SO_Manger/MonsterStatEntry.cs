@@ -28,6 +28,10 @@ namespace PHG
         [Tooltip("돌진 가속도 배수")] public float rushMultiplier = 1.5f;// 멤버 변수
         [Tooltip("점프판단 허용 높이")] public float maxClimbableHeight = 2f; // 멤버 변수
 
+        [Header("Damage Response")]
+        [Tooltip("한 번에 이 값 이상의 데미지를 입으면 강제 경직")]
+        public float staggerThreshold = 15f;
+
         /* ───────── AI 감지 범위 ───────── */
         [Header("AI Detection Ranges")]
         [Tooltip("순찰 감지 범위")] public float patrolRange = 3f;    // 멤버 변수
@@ -90,6 +94,13 @@ namespace PHG
 
         [Tooltip("사다리 오르내리는 속도")]
         public float climbSpeed = 3f;
+
+        /*보상 정보 필드*/
+        [Header("보상 정보")]
+        [Tooltip("몬스터 처치 시 플레이어에게 주는 경험치")] public float expReward = 10f;// 멤버 변수
+        [Tooltip("몬스터 처치 시 플레이어에게 주는 골드")] public float goldReward = 5f; // 멤버 변수
+        [Header("보상 계수")]
+        public float rewardCoefficient = 1.0f;
         /* ───────── Convenience Accessors ───────── */
         public float JumpForce => enableJump ? jumpForce : 0f;
         public float JumpCooldown => enableJump ? jumpCooldown : 0f;

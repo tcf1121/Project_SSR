@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -146,6 +146,7 @@ namespace SCR
             RequiredExp();
             CurrentExp = 0;
             _hpRegenCor = StartCoroutine(HpRegen());
+            player.Animator.SetBool("IsAlive", true);
         }
 
         private void Update()
@@ -194,7 +195,7 @@ namespace SCR
         public void Die()
         {
             audioSource.PlayOneShot(DieClip);
-
+            player.Animator.SetBool("IsAlive", false);
             StopCoroutine(_hpRegenCor);
             Time.timeScale = 0f;
         }
@@ -231,6 +232,7 @@ namespace SCR
             if (CurrentHp != oldHp)
             {
                 // OnHpChanged?.Invoke(currentHp); 현재 체력 변경 알림
+                player.Animator.SetTrigger("Hit");
             }
 
             if (CurrentHp <= 0)

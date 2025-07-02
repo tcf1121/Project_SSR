@@ -86,7 +86,7 @@ SpriteRenderer:
   m_Size: {x: 0.48, y: 0.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &7515567674294118815
@@ -127,13 +127,15 @@ MonoBehaviour:
   attackPower: 40
   moveSpeed: 4
   detectRange: 10
-  attackPrefab: {fileID: -2253911629886400664, guid: 7b6cb8e81e655a449ba5a354a5a25ac3, type: 3}
+  attackPrefab: {fileID: 5539170370296875816, guid: 544c4e3907e199a4a8da548fd278c619, type: 3}
   firePoint: {fileID: 7017956347111043565}
   bulletSpeed: 10
   attackCooldown: 3
   laserPrefab: {fileID: -2253911629886400664, guid: cab7fa4ca3dd5434684d0c46aa36799a, type: 3}
+  laserPoint: {fileID: 0}
   laserChargeTime: 2
   laserDuration: 3
+  laserYRange: 1
   hardenDuration: 3
 --- !u!50 &8415374231944094143
 Rigidbody2D:

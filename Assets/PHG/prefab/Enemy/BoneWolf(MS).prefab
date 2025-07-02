@@ -58,7 +58,7 @@ Transform:
   m_GameObject: {fileID: 2739274228741373190}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.422, y: -0.185, z: 0}
+  m_LocalPosition: {x: 0.422, y: -0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -204,7 +204,7 @@ Transform:
   m_GameObject: {fileID: 5922981448616245978}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -233,6 +233,9 @@ MonoBehaviour:
   damageTextPrefab: {fileID: 1373479669899882519, guid: 1b90f7c35b4a7bc408e4372631cfb6f7, type: 3}
   staggerThreshold: 15
   hpBarRoot: {fileID: 1485182302214798521, guid: c7b1cd8952107e948a6a9d06d320d44d, type: 3}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!50 &678977491815904805
 Rigidbody2D:
   serializedVersion: 4
@@ -369,8 +372,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afebd25277e31ad4dba41e4f7888a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statData:
-    monsterType: 6
+  localRuntimeStats:
+    monsterType: 9
     groundMask:
       serializedVersion: 2
       m_Bits: 0
@@ -383,8 +386,10 @@ MonoBehaviour:
     rushMultiplier: 1.5
     maxClimbableHeight: 2
     staggerThreshold: 15
-    patrolRange: 2
-    chaseRange: 2
+    knockbackForce: 3
+    knockbackDuration: 0.07
+    patrolRange: 3
+    chaseRange: 6
     attackRange: 1
     chargeRange: 2.5
     enableJump: 0
@@ -460,7 +465,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8544699278218749506}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: BoneWolf(MS)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

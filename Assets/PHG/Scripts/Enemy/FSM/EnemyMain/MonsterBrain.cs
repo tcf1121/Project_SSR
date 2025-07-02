@@ -12,14 +12,14 @@ namespace PHG
         public Transform wallSensor;
 
         [Header("References")]
-        [SerializeField] private Collider2D hitBox;
+        [SerializeField] private BoxCollider2D hitBox;
         [SerializeField] private MonsterStats _runtimeStats;
         [SerializeField] private AllMonsterStatData allMonsterStatData;
         [SerializeField] private MonsterType thisMonsterType;
         [SerializeField] private GameObject damageTextPrefab;
         [SerializeField] private float staggerThreshold = 15f;
         [SerializeField] public GameObject hpBarRoot;
-
+        public MonsterStats Stats { get;  set; }
 
         public MonsterStats RuntimeStats => _runtimeStats;
         public Vector2 LastGroundCheckPos => jumper.LastGroundCheckPos;
@@ -38,11 +38,8 @@ namespace PHG
         public float Coeff { get; private set; } = 1f;
         public int SpawnStage { get; set; }
 
-
-
-        private LayerMask groundMask;
+        public LayerMask groundMask;
         private LayerMask ladderMask;
-
 
         private StateMachine sm;
         public StateMachine Sm => sm;
@@ -68,18 +65,22 @@ namespace PHG
         public AllMonsterStatData AllStatData => allMonsterStatData;
         public MonsterType MonsterType => thisMonsterType;
         #endregion
+
 #if UNITY_EDITOR
         private void OnValidate()
         {
             if (allMonsterStatData != null)
                 statData = allMonsterStatData.GetStatEntry(thisMonsterType);
         }
-        #endif
+#endif
 
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            Stats = GetComponent<MonsterStats>();
             tf = transform;
+            if (_runtimeStats == null)
+                _runtimeStats = GetComponent<MonsterStats>();
 
             if (allMonsterStatData == null)
             {
@@ -103,7 +104,7 @@ namespace PHG
                     return;
                 }
             }
-            
+
             IsFlying = statData.isFlying;
             IsRanged = statData.isRanged;
             IsCharging = statData.isCharging;
@@ -149,8 +150,20 @@ namespace PHG
             sm.ChangeState(StateID.Idle);
             sm.Register(StateID.TakeDamage, takeDamage);
         }
-
-
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                int dmg = 10;
+                var player = GameObject.FindGameObjectWithTag("Player");
+                if (player != null)
+                {
+                    Vector2 origin = player.transform.position;
+                    var hit = new HitInfo(dmg, origin, true);
+                    EnterDamageState(hit);
+                }
+            }
+        }
         private void FixedUpdate()
         {
             jumper?.UpdateTimer(Time.fixedDeltaTime);
@@ -171,7 +184,6 @@ namespace PHG
             sm.ChangeState(id);
         }
 
-
         public void InitializeStats(int stage)
         {
             SpawnStage = stage;
@@ -183,43 +195,52 @@ namespace PHG
         public void EnterDamageState(HitInfo hit)
         {
             takeDamage = new TakeDamageState(this, hit);
-            sm.Register(StateID.TakeDamage, takeDamage);  
+            sm.Register(StateID.TakeDamage, takeDamage);
             sm.ChangeState(StateID.TakeDamage);
         }
+        
+        //Conflict 예상 -----------------------------------------------
         public void ApplyKnockback(Vector2 origin, float force)
         {
             Vector2 dir = ((Vector2)transform.position - origin).normalized;
-            rb.velocity = Vector2.zero;
-            rb.AddForce(dir * force, ForceMode2D.Impulse);
-        }
-       // public void ShowDamageText(int damage)
-       // {
-       //     if (damageTextPrefab == null)
-       //     {
-       //         Debug.LogWarning("[DamageText] 프리팹이 null입니다.");
-       //         return;
-       //     }
-       //
-       //     Vector3 spawnPos = transform.position + Vector3.up * 0.5f;
-       //     Debug.Log($"[DamageText] Instantiate 위치: {spawnPos}");
-       //
-       //     GameObject go = Instantiate(damageTextPrefab, spawnPos, Quaternion.identity);
-       //
-       // }
-       // public void ShowHpBarTemporarily(float duration = 1.5f)
-       // {
-       //     if (hpBarRoot == null) return;
-       //
-       //     hpBarRoot.SetActive(true);
-       //     StopCoroutine(nameof(HideHpBarRoutine)); // 중복 방지
-       //     StartCoroutine(HideHpBarRoutine(duration));
-       // }
-       //
-       // private IEnumerator HideHpBarRoutine(float delay)
-       // {
-       //     yield return new WaitForSeconds(delay);
-       //     hpBarRoot.SetActive(false);
-       // }
-    }
 
+            // "퍽!" 느낌용 넉백 속도 세팅
+            rb.velocity = dir * force;
+
+            // 아주 짧게 밀린 뒤 즉시 멈춤
+            StartCoroutine(StopVelocityAfter(statData.knockbackDuration));
+        }
+
+        private IEnumerator StopVelocityAfter(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            rb.velocity = Vector2.zero;
+        }
+        //--------------------------------------------------------------
+
+        public void Clone(MonsterBrain monsterBrain)
+        {
+            sensor.transform.position = monsterBrain.sensor.transform.position;
+            wallSensor.transform.position = monsterBrain.wallSensor.transform.position;
+        
+            hitBox.size = monsterBrain.hitBox.size;
+            hitBox.offset = monsterBrain.hitBox.offset;
+            _runtimeStats = monsterBrain._runtimeStats;
+            thisMonsterType = monsterBrain.MonsterType;
+            staggerThreshold = monsterBrain.staggerThreshold;
+        
+            statData = monsterBrain.statData;
+            IsFlying = monsterBrain.IsFlying;
+            IsRanged = monsterBrain.IsRanged;
+            IsCharging = monsterBrain.IsCharging;
+            CanJump = monsterBrain.CanJump;
+            CanClimbLadders = monsterBrain.CanClimbLadders;
+        
+            gameObject.transform.position = monsterBrain.gameObject.transform.position;
+            gameObject.transform.localScale = monsterBrain.gameObject.transform.localScale;
+        
+            // public float Coeff { get; private set; } = 1f;
+            // public int SpawnStage { get; set; }
+        }
+    }
 }

@@ -39,7 +39,11 @@ namespace PHG
         public void Enter()
         {
             player = GameObject.FindWithTag("Player")?.transform;
-            rb.velocity = Vector2.zero;
+
+            // 지상일 때만 정지 – 공중 점프 중이면 유지
+            if (brain.IsGrounded() && !brain.IsMidJump)
+                rb.velocity = Vector2.zero;
+
             lastShot = Time.time;
         }
 
@@ -56,23 +60,27 @@ namespace PHG
 
             FacePlayer();
 
-            /* --- 상태 전이 처리 --- */
-
+            // 추적 범위 밖 → 추적 재개
             if (dist > ChaseR)
             {
-                brain.ChangeState(StateID.Chase); // 추격 포기
+                brain.ChangeState(StateID.Chase);
                 return;
             }
 
-            if (dist > ReadyR && dist <= ChaseR)
+            // 추적 유지 범위 → Chase로 복귀 (사격 불가한 거리)
+            if (dist > AttackR && dist <= ChaseR)
             {
-                brain.ChangeState(StateID.Chase); // 다시 추격 상태로
+                brain.ChangeState(StateID.Chase);
                 return;
             }
 
+            // 사격
             if (dist <= AttackR)
             {
-                rb.velocity = Vector2.zero;
+                // ★ grounded일 때만 멈추기
+                bool grounded = brain.IsGrounded();  // jumper.IsGrounded() 내부 호출
+                if (grounded&&!brain.IsMidJump)
+                    rb.velocity = Vector2.zero;
 
                 if (Time.time - lastShot >= Cooldown)
                 {
@@ -80,25 +88,15 @@ namespace PHG
                     lastShot = Time.time;
                 }
 
-                return; // 사격 후 이동 생략
-            }
-
-            /* --- readyRange 내부일 때 거리 유지 (뒤로 물러남) --- */
-
-            Vector2 targetVel = -toPl.normalized * MoveSpd;
-
-            if (isFlying)
-            {
-                rb.velocity = Vector2.Lerp(rb.velocity, targetVel, Time.deltaTime * AirAccel);
-            }
-            else
-            {
-                rb.velocity = new Vector2(targetVel.x, rb.velocity.y);
+                return;
             }
         }
+        public void Exit()
+        {
+            if (brain.IsGrounded() && !brain.IsMidJump)
+                rb.velocity = Vector2.zero;
 
-        public void Exit() => rb.velocity = Vector2.zero;
-
+        }
         void Shoot()
         {
             if (muzzle == null) return;
@@ -109,13 +107,21 @@ namespace PHG
                 return;
             }
 
-            Vector2 baseDir = (player.position - muzzle.position).normalized;
+            // 조준 위치 보정 (Y값 내려서 상체나 머리 쪽 조준)
+            Vector2 aimTarget = player.position + Vector3.up * 0.25f;  // ← 보정값 필요 시 조절
+            Vector2 baseDir = (aimTarget - (Vector2)muzzle.position).normalized;
+
+            // 기본 투사체
             Projectile prefab = statData.projectileprefab;
 
             if (statData.firePattern == MonsterStatEntry.FirePattern.Single)
             {
                 Projectile p = pool.Get(prefab, muzzle.position);
-                p.transform.rotation = Quaternion.FromToRotation(Vector2.right, baseDir);
+
+                // 회전은 Z축 기준 2D 전용으로 적용
+                float angle = Mathf.Atan2(baseDir.y, baseDir.x) * Mathf.Rad2Deg;
+                p.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
                 p.Launch(baseDir, statData.projectileSpeed);
             }
             else
@@ -126,11 +132,14 @@ namespace PHG
 
                 for (int i = 0; i < pellets; ++i)
                 {
-                    float angle = -spread * 0.5f + step * i;
-                    Vector2 dir = Quaternion.AngleAxis(angle, Vector3.forward) * baseDir;
+                    float angleOffset = -spread * 0.5f + step * i;
+                    float baseAngle = Mathf.Atan2(baseDir.y, baseDir.x) * Mathf.Rad2Deg;
+                    float shotAngle = baseAngle + angleOffset;
+
+                    Vector2 dir = Quaternion.AngleAxis(shotAngle, Vector3.forward) * Vector2.right;
 
                     Projectile p = pool.Get(prefab, muzzle.position);
-                    p.transform.rotation = Quaternion.FromToRotation(Vector2.right, dir);
+                    p.transform.rotation = Quaternion.AngleAxis(shotAngle, Vector3.forward);
                     p.Launch(dir, statData.projectileSpeed);
                 }
             }

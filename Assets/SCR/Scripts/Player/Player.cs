@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Utill;
@@ -36,6 +36,8 @@ namespace SCR
         private Rigidbody2D _rigid;
         public Collider2D Collider { get { return _collider; } }
         private Collider2D _collider;
+        public Animator Animator { get { return _animator; } }
+        private Animator _animator;
 
 
 
@@ -50,6 +52,7 @@ namespace SCR
 
         private void Init()
         {
+            _animator = GetComponent<Animator>();
             _rigid = GetComponent<Rigidbody2D>();
             _collider = GetComponent<Collider2D>();
             _equipped = GetComponent<Equipped>();
@@ -124,8 +127,6 @@ namespace SCR
                 }
             }
         }
-
-
     }
 }
 

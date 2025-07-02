@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,19 +20,19 @@ namespace SCR
     [RequireComponent(typeof(Collider2D))]
     public class PlayerController : MonoBehaviour
     {
-        // ===== ¸µÅ© ½ºÅ©¸³Æ® =====
+        // ===== ë§í¬ ìŠ¤í¬ë¦½íŠ¸ =====
         private Player player;
 
-        // ===== ÀÔ·Â »óÅÂ =====
+        // ===== ì…ë ¥ ìƒíƒœ =====
         public Vector2 InputDirection { get { return _inputDirection; } }
         private Vector2 _inputDirection;
 
-        // ===== ÀÌµ¿ »óÅÂ =====
+        // ===== ì´ë™ ìƒíƒœ =====
         private float currentSpeed;
         public bool FacingRight { get => facingRight; }
         private bool facingRight = true;
 
-        // ===== »óÅÂ ÇÃ·¡±×µé =====
+        // ===== ìƒíƒœ í”Œë˜ê·¸ë“¤ =====
         private bool pressNormalAttack;
         private bool isGrounded;
         private bool isTouchingWall;
@@ -41,22 +41,22 @@ namespace SCR
         private bool canJump;
         private PlayerState playerState;
 
-        // ===== Å¸ÀÌ¸Óµé =====
+        // ===== íƒ€ì´ë¨¸ë“¤ =====
         private float jumpBufferCounter;
         private float wallTouchTimer;
         private float ladderActionTimer;
-        private float wallJumpInputBlockTimer = 0f; // º®Á¡ÇÁ Å¸ÀÌ¸Ó
+        private float wallJumpInputBlockTimer = 0f; // ë²½ì í”„ íƒ€ì´ë¨¸
 
-        // ===== ±âÅ¸ »óÅÂ º¯¼ö =====
+        // ===== ê¸°íƒ€ ìƒíƒœ ë³€ìˆ˜ =====
         private Vector2 dashDirection;
         private Collider2D currentLadder;
         private Coroutine pickCor;
 
-        // ===== ÄğÅ¸ÀÓ =====
+        // ===== ì¿¨íƒ€ì„ =====
         private bool[] IsCool = { false, false, false, false, false };
         private float[] CoolTimes = { 0, 0, 3f, 5f, 10f };
 
-        #region À¯´ÏÆ¼ ÁÖ±â
+        #region ìœ ë‹ˆí‹° ì£¼ê¸°
         void Awake()
         {
             player = GetComponent<Player>();
@@ -85,13 +85,13 @@ namespace SCR
         void Update()
         {
             CheckEnvironment();
-            HandleLadder();  // »ç´Ù¸® Ã³¸®
-            HandleCrouch();  // ¾É±â »óÅÂ Ã³¸®
+            HandleLadder();  // ì‚¬ë‹¤ë¦¬ ì²˜ë¦¬
+            HandleCrouch();  // ì•‰ê¸° ìƒíƒœ ì²˜ë¦¬
             UpdateTimers();
         }
         #endregion
 
-        #region ÀÔ·Â
+        #region ì…ë ¥
         private void OnMove(InputValue value)
         {
             _inputDirection = value.Get<Vector2>().normalized;
@@ -135,6 +135,9 @@ namespace SCR
             pressNormalAttack = !pressNormalAttack;
             player.AlwaysOnUI.SetAttack(pressNormalAttack);
             player.PlayerWeapon.UseNomalAttack(pressNormalAttack);
+            if (pressNormalAttack)
+                player.Animator.SetTrigger("Attack");
+
         }
 
         private void OnSkill()
@@ -156,30 +159,30 @@ namespace SCR
             }
 
         }
-        // ÀåºñÃ¢ ÄÑ±â
+        // ì¥ë¹„ì°½ ì¼œê¸°
 
 
-        // »óÈ£ÀÛ¿ë »ç¿ë
+        // ìƒí˜¸ì‘ìš© ì‚¬ìš©
         #endregion
 
-        #region È¯°æ °¨Áö
+        #region í™˜ê²½ ê°ì§€
         /// <summary>
-        /// ¶¥°ú º®, »ç´Ù¸® °¨Áö
+        /// ë•…ê³¼ ë²½, ì‚¬ë‹¤ë¦¬ ê°ì§€
         /// </summary>
         void CheckEnvironment()
         {
-            // ¶¥ °¨Áö
+            // ë•… ê°ì§€
             CheckGrounded();
 
-            // º® °¨Áö
+            // ë²½ ê°ì§€
             CheckWall();
 
-            // »ç´Ù¸® °¨Áö
+            // ì‚¬ë‹¤ë¦¬ ê°ì§€
             CheckLadder();
         }
 
         /// <summary>
-        /// ¶¥¿¡ ÀÖ´ÂÁö Ã¼Å©
+        /// ë•…ì— ìˆëŠ”ì§€ ì²´í¬
         /// </summary>
         void CheckGrounded()
         {
@@ -187,11 +190,11 @@ namespace SCR
         }
 
         /// <summary>
-        /// º® °¨Áö
+        /// ë²½ ê°ì§€
         /// </summary>
         void CheckWall()
         {
-            // ÇöÀç ¹Ù¶óº¸´Â ¹æÇâÀ¸·Î ·¹ÀÌÄ³½ºÆ®
+            // í˜„ì¬ ë°”ë¼ë³´ëŠ” ë°©í–¥ìœ¼ë¡œ ë ˆì´ìºìŠ¤íŠ¸
             Vector2 wallCheckDirection = facingRight ? Vector2.right : Vector2.left;
             RaycastHit2D wallHit = Physics2D.Raycast(transform.position, wallCheckDirection, player.PlayerPhysical.WallCheckDistance, player.PlayerPhysical.WallLayers);
 
@@ -200,17 +203,17 @@ namespace SCR
             if (currentlyTouchingWall)
             {
                 isTouchingWall = true;
-                wallTouchTimer += Time.deltaTime;  // º®¿¡ ´êÀº ½Ã°£ ´©Àû
+                wallTouchTimer += Time.deltaTime;  // ë²½ì— ë‹¿ì€ ì‹œê°„ ëˆ„ì 
             }
             else
             {
                 isTouchingWall = false;
-                wallTouchTimer = 0f;  // º®¿¡¼­ ¶³¾îÁö¸é Å¸ÀÌ¸Ó ¸®¼Â
+                wallTouchTimer = 0f;  // ë²½ì—ì„œ ë–¨ì–´ì§€ë©´ íƒ€ì´ë¨¸ ë¦¬ì…‹
             }
         }
 
         /// <summary>
-        /// »ç´Ù¸® °¨Áö
+        /// ì‚¬ë‹¤ë¦¬ ê°ì§€
         /// </summary>
         void CheckLadder()
         {
@@ -223,16 +226,16 @@ namespace SCR
 
         #endregion
 
-        #region »óÈ£ÀÛ¿ë Ã³¸®
+        #region ìƒí˜¸ì‘ìš© ì²˜ë¦¬
         /// <summary>
-        /// »ç´Ù¸® »óÈ£ÀÛ¿ë Ã³¸®
+        /// ì‚¬ë‹¤ë¦¬ ìƒí˜¸ì‘ìš© ì²˜ë¦¬
         /// </summary>
         void HandleLadder()
         {
-            // »ç´Ù¸® Å»Ãâ µô·¹ÀÌ ÁßÀÌ¸é ÁøÀÔ ºÒ°¡
+            // ì‚¬ë‹¤ë¦¬ íƒˆì¶œ ë”œë ˆì´ ì¤‘ì´ë©´ ì§„ì… ë¶ˆê°€
             if (playerState == PlayerState.Climb) return;
 
-            // »ç´Ù¸® ±ÙÃ³¿¡¼­ »óÇÏ ¹æÇâÅ°¸¦ ´©¸£¸é Å¬¶óÀÌ¹Ö ½ÃÀÛ
+            // ì‚¬ë‹¤ë¦¬ ê·¼ì²˜ì—ì„œ ìƒí•˜ ë°©í–¥í‚¤ë¥¼ ëˆ„ë¥´ë©´ í´ë¼ì´ë° ì‹œì‘
             if (currentLadder != null)
                 if (Mathf.Abs(InputDirection.y) > 0.1f)
                 {
@@ -241,7 +244,7 @@ namespace SCR
         }
 
         /// <summary>
-        /// ¾É±â »óÅÂ Ã³¸®
+        /// ì•‰ê¸° ìƒíƒœ ì²˜ë¦¬
         /// </summary>
         private void HandleCrouch()
         {
@@ -263,9 +266,9 @@ namespace SCR
         }
         #endregion
 
-        #region ÀÌµ¿
+        #region ì´ë™
         /// <summary>
-        /// ÀÌµ¿À» À§ÇÑ ¸Ş¼­µå
+        /// ì´ë™ì„ ìœ„í•œ ë©”ì„œë“œ
         /// </summary>
         private void HandleMove()
         {
@@ -277,22 +280,22 @@ namespace SCR
         }
 
         /// <summary>
-        /// ÀÌµ¿¼Óµµ ÃøÁ¤
+        /// ì´ë™ì†ë„ ì¸¡ì •
         /// </summary>
-        /// <returns>¼Óµµ ¹İÈ¯</returns>
+        /// <returns>ì†ë„ ë°˜í™˜</returns>
         private float CalculateTargetSpeed()
         {
             float speed = InputDirection.x * player.PlayerPhysical.FinalSpeed; ;//
 
-            // °øÁß¿¡¼­ ÀÌµ¿ ¼Óµµ °¨¼Ò
+            // ê³µì¤‘ì—ì„œ ì´ë™ ì†ë„ ê°ì†Œ
             if (!isGrounded)
                 speed *= player.PlayerPhysical.AirMoveSpeedMultiplier;
 
-            // ¹Ù´Ú¿¡¼­¸¸ ¾É±â »óÅÂÀÏ ¶§ ¼Óµµ °¨¼Ò
+            // ë°”ë‹¥ì—ì„œë§Œ ì•‰ê¸° ìƒíƒœì¼ ë•Œ ì†ë„ ê°ì†Œ
             if (playerState == PlayerState.Sit && isGrounded)
                 speed *= player.PlayerPhysical.CrouchSpeedMultiplier;
 
-            // º® Ãæµ¹ ½Ã ÀÌµ¿ Á¦ÇÑ
+            // ë²½ ì¶©ëŒ ì‹œ ì´ë™ ì œí•œ
             if (isTouchingWall && IsTryingToMoveIntoWall())
                 speed = 0f;
 
@@ -300,37 +303,38 @@ namespace SCR
         }
 
         /// <summary>
-        /// º®Àâ±â ÀÌµ¿ Á¦ÇÑ ÆÇº°
+        /// ë²½ì¡ê¸° ì´ë™ ì œí•œ íŒë³„
         /// </summary>
-        /// <returns>ÀÌµ¿ °¡´É ¿©ºÎ</returns>
+        /// <returns>ì´ë™ ê°€ëŠ¥ ì—¬ë¶€</returns>
         private bool IsTryingToMoveIntoWall()
         {
             return (facingRight && InputDirection.x > 0) || (!facingRight && InputDirection.x < 0);
         }
 
         /// <summary>
-        /// °¡¼Óµµ, °¨¼Óµµ¸¦ °è»êÇÏ¿© ¹°¸®·ÂÀ» °¡ÇÔ
+        /// ê°€ì†ë„, ê°ì†ë„ë¥¼ ê³„ì‚°í•˜ì—¬ ë¬¼ë¦¬ë ¥ì„ ê°€í•¨
         /// </summary>
-        /// <param name="targetSpeed">ÃÖÁ¾ ÀÌµ¿</param>
+        /// <param name="targetSpeed">ìµœì¢… ì´ë™</param>
         private void ApplyMovement(float targetSpeed)
         {
             float accelRate = Mathf.Abs(targetSpeed) > 0.01f ? player.PlayerPhysical.Acceleration : player.PlayerPhysical.Deceleration;
             currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, accelRate * Time.fixedDeltaTime);
 
-            // º®Á¡ÇÁ ÁßÀÏ ¶§´Â ¼öÆò ¼Óµµ¸¦ °Çµå¸®Áö ¾ÊÀ½
+            // ë²½ì í”„ ì¤‘ì¼ ë•ŒëŠ” ìˆ˜í‰ ì†ë„ë¥¼ ê±´ë“œë¦¬ì§€ ì•ŠìŒ
             if (player.PlayerPhysical.IsWallJumpInputBlocked)
             {
-                // YÃà ¼Óµµ¸¸ À¯ÁöÇÏ°í XÃàÀº ±×´ë·Î µÒ
+                // Yì¶• ì†ë„ë§Œ ìœ ì§€í•˜ê³  Xì¶•ì€ ê·¸ëŒ€ë¡œ ë‘ 
                 player.Rigid.velocity = new Vector2(player.Rigid.velocity.x, player.Rigid.velocity.y);
             }
             else
             {
                 player.Rigid.velocity = new Vector2(currentSpeed, player.Rigid.velocity.y);
             }
+            player.Animator.SetBool("Move", Mathf.Abs(currentSpeed) > 0.1f);
         }
 
         /// <summary>
-        /// ÄÉ¸¯ÅÍ º¸´Â ¹æÇâ ¾÷µ¥ÀÌÆ®
+        /// ì¼€ë¦­í„° ë³´ëŠ” ë°©í–¥ ì—…ë°ì´íŠ¸
         /// </summary>
         private void UpdateFacing()
         {
@@ -341,7 +345,7 @@ namespace SCR
         }
 
         /// <summary>
-        /// ÄÉ¸¯ÅÍ º¸´Â ¹æÇâ µÚÁı±â
+        /// ì¼€ë¦­í„° ë³´ëŠ” ë°©í–¥ ë’¤ì§‘ê¸°
         /// </summary>
         void Flip()
         {
@@ -352,9 +356,9 @@ namespace SCR
         }
         #endregion
 
-        #region Á¡ÇÁ
+        #region ì í”„
         /// <summary>
-        /// Á¡ÇÁ °¡´ÉÇÑ Á¶°Ç È®ÀÎ
+        /// ì í”„ ê°€ëŠ¥í•œ ì¡°ê±´ í™•ì¸
         /// </summary>
         void HandleJump()
         {
@@ -371,7 +375,7 @@ namespace SCR
         }
 
         /// <summary>
-        /// ¾Æ·¡ Á¡ÇÁ¸¦ ÇÒ °æ¿ì (¸Å´Ş¸° °æ¿ì Á¡ÇÁ, ÇÏ´ÜÁ¡ÇÁ ÆÇº°) 
+        /// ì•„ë˜ ì í”„ë¥¼ í•  ê²½ìš° (ë§¤ë‹¬ë¦° ê²½ìš° ì í”„, í•˜ë‹¨ì í”„ íŒë³„) 
         /// </summary>
         private void HandleGroundJump()
         {
@@ -382,7 +386,7 @@ namespace SCR
         }
 
         /// <summary>
-        /// Á¡ÇÁ¸¦ À§ÇÑ ¹°¸®·Â °¡ÇÔ
+        /// ì í”„ë¥¼ ìœ„í•œ ë¬¼ë¦¬ë ¥ ê°€í•¨
         /// </summary>
         private void ExecuteJump()
         {
@@ -395,11 +399,11 @@ namespace SCR
         }
 
         /// <summary>
-        /// ÇÏ´Ü Á¡ÇÁ ½Ãµµ
+        /// í•˜ë‹¨ ì í”„ ì‹œë„
         /// </summary>
         void TryDropThroughPlatform()
         {
-            // ¹ß ¹Ø¿¡ °üÅë °¡´ÉÇÑ ÇÃ·§ÆûÀÌ ÀÖ´ÂÁö È®ÀÎ
+            // ë°œ ë°‘ì— ê´€í†µ ê°€ëŠ¥í•œ í”Œë«í¼ì´ ìˆëŠ”ì§€ í™•ì¸
             Collider2D platform = Physics2D.OverlapBox(player.PlayerPhysical.GroundCheck.position, player.PlayerPhysical.GroundCheckBoxSize, 0f, player.PlayerPhysical.PlatformLayer);
 
             if (platform != null)
@@ -413,26 +417,26 @@ namespace SCR
         }
 
         /// <summary>
-        /// ÇÃ·§Æû °üÅë ÄÚ·çÆ¾
+        /// í”Œë«í¼ ê´€í†µ ì½”ë£¨í‹´
         /// </summary>
         IEnumerator DropThroughPlatform(Collider2D platform)
         {
-            // ÇÃ·¹ÀÌ¾î¿Í ÇÃ·§Æû °£ÀÇ Ãæµ¹ ¹«½Ã
+            // í”Œë ˆì´ì–´ì™€ í”Œë«í¼ ê°„ì˜ ì¶©ëŒ ë¬´ì‹œ
             Physics2D.IgnoreCollision(player.Collider, platform, true);
 
-            // °üÅë ½Ã°£ ´ë±â
+            // ê´€í†µ ì‹œê°„ ëŒ€ê¸°
             yield return new WaitForSeconds(player.PlayerPhysical.DropThroughTime);
 
-            // Ãæµ¹ º¹±¸
+            // ì¶©ëŒ ë³µêµ¬
             Physics2D.IgnoreCollision(player.Collider, platform, false);
         }
 
         #endregion
 
-        #region »ç´Ù¸®/¹åÁÙ ¸Å´Ş¸®±â
+        #region ì‚¬ë‹¤ë¦¬/ë°§ì¤„ ë§¤ë‹¬ë¦¬ê¸°
 
         /// <summary>
-        /// »ç´Ù¸® ½Ã½ºÅÛ ¸Ş¼­µå
+        /// ì‚¬ë‹¤ë¦¬ ì‹œìŠ¤í…œ ë©”ì„œë“œ
         /// </summary>
         private void EnterLadder()
         {
@@ -443,9 +447,9 @@ namespace SCR
         }
 
         /// <summary>
-        /// µî¹İ »óÅÂ ¼³Á¤ (µî¹İ ¿©ºÎ, Áß·Â ¼³Á¤)
+        /// ë“±ë°˜ ìƒíƒœ ì„¤ì • (ë“±ë°˜ ì—¬ë¶€, ì¤‘ë ¥ ì„¤ì •)
         /// </summary>
-        /// <param name="climbing">µî¹İ ¿©ºÎ</param>
+        /// <param name="climbing">ë“±ë°˜ ì—¬ë¶€</param>
         private void SetClimbingState(bool climbing)
         {
             playerState = climbing ? PlayerState.Climb : PlayerState.Idle;
@@ -454,7 +458,7 @@ namespace SCR
 
 
         /// <summary>
-        /// »ç´Ù¸®¿¡ ÇÃ·¹ÀÌ¾î À§Ä¡ ¹èÄ¡
+        /// ì‚¬ë‹¤ë¦¬ì— í”Œë ˆì´ì–´ ìœ„ì¹˜ ë°°ì¹˜
         /// </summary>
         private void PositionPlayerOnLadder()
         {
@@ -483,7 +487,7 @@ namespace SCR
         }
 
         /// <summary>
-        /// »ç´Ù¸® ÀÛµ¿ µô·¹ÀÌ (¿¬¼ÓÀÛµ¿ ¹æÁö)
+        /// ì‚¬ë‹¤ë¦¬ ì‘ë™ ë”œë ˆì´ (ì—°ì†ì‘ë™ ë°©ì§€)
         /// </summary>
         private void StartLadderDelay()
         {
@@ -491,7 +495,7 @@ namespace SCR
         }
 
         /// <summary>
-        /// »ç´Ù¸® Å¸±â Áß ÀÌµ¿ Ã³¸®
+        /// ì‚¬ë‹¤ë¦¬ íƒ€ê¸° ì¤‘ ì´ë™ ì²˜ë¦¬
         /// </summary>
         void HandleClimbing()
         {
@@ -503,21 +507,21 @@ namespace SCR
 
 
         /// <summary>
-        /// °è»ê ¹æÇâ µî¹İ ¹× µî¹İ Á¦ÇÑ
+        /// ê³„ì‚° ë°©í–¥ ë“±ë°˜ ë° ë“±ë°˜ ì œí•œ
         /// </summary>
-        /// <returns>µî¹İ ¹æÇâ ¹İÈ¯</returns>
+        /// <returns>ë“±ë°˜ ë°©í–¥ ë°˜í™˜</returns>
         private float CalculateClimbDirection()
         {
             float direction = InputDirection.y;
 
-            // ³¡¿¡¼­ ÀÌµ¿ Á¦ÇÑ
+            // ëì—ì„œ ì´ë™ ì œí•œ
             if (CheckLadderBounds())
                 return direction = 0f;
             return direction;
         }
 
         /// <summary>
-        /// »ç´Ù¸® °æ°è Ã¼Å©
+        /// ì‚¬ë‹¤ë¦¬ ê²½ê³„ ì²´í¬
         /// </summary>
         private bool CheckLadderBounds()
         {
@@ -538,7 +542,7 @@ namespace SCR
         }
 
         /// <summary>
-        /// »ç´Ù¸®¿¡¼­ ³»¸®±â
+        /// ì‚¬ë‹¤ë¦¬ì—ì„œ ë‚´ë¦¬ê¸°
         /// </summary>
         void ExitLadder()
         {
@@ -561,61 +565,61 @@ namespace SCR
         }
 
         /// <summary>
-        /// »ç´Ù¸®¿¡¼­ Á¡ÇÁ
+        /// ì‚¬ë‹¤ë¦¬ì—ì„œ ì í”„
         /// </summary>
         void LadderJump()
         {
-            ExitLadder();  // ¸ÕÀú »ç´Ù¸®¿¡¼­ ³»¸®±â
-            HalfExecuteJump(); // ¾àÁ¡ÇÁ ½ÇÇà
+            ExitLadder();  // ë¨¼ì € ì‚¬ë‹¤ë¦¬ì—ì„œ ë‚´ë¦¬ê¸°
+            HalfExecuteJump(); // ì•½ì í”„ ì‹¤í–‰
         }
 
         /// <summary>
-        /// º®½½¶óÀÌµå Áß Á¡ÇÁ
+        /// ë²½ìŠ¬ë¼ì´ë“œ ì¤‘ ì í”„
         /// </summary>
         void WallSlideJump()
         {
-            // º® ½½¶óÀÌµå »óÅÂ°¡ ¾Æ´Ï¸é ¸®ÅÏ
+            // ë²½ ìŠ¬ë¼ì´ë“œ ìƒíƒœê°€ ì•„ë‹ˆë©´ ë¦¬í„´
             if (!isWallSliding) return;
 
-            // Á¡ÇÁ ¹æÇâ °è»ê (ÇöÀç ¹Ù¶óº¸´Â ¹æÇâÀÇ ¹İ´ë·Î 10µµ °¢µµ)
+            // ì í”„ ë°©í–¥ ê³„ì‚° (í˜„ì¬ ë°”ë¼ë³´ëŠ” ë°©í–¥ì˜ ë°˜ëŒ€ë¡œ 10ë„ ê°ë„)
             Vector2 jumpDirection;
 
             if (facingRight)
             {
-                // ¿À¸¥ÂÊÀ» º¸°í ÀÖ´Ù¸é ¿ŞÂÊ À§·Î Á¡ÇÁ (170µµ)
+                // ì˜¤ë¥¸ìª½ì„ ë³´ê³  ìˆë‹¤ë©´ ì™¼ìª½ ìœ„ë¡œ ì í”„ (170ë„)
                 float angle = 150f * Mathf.Deg2Rad;
                 jumpDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 Flip();
             }
             else
             {
-                // ¿ŞÂÊÀ» º¸°í ÀÖ´Ù¸é ¿À¸¥ÂÊ À§·Î Á¡ÇÁ (10µµ)
+                // ì™¼ìª½ì„ ë³´ê³  ìˆë‹¤ë©´ ì˜¤ë¥¸ìª½ ìœ„ë¡œ ì í”„ (10ë„)
                 float angle = 30f * Mathf.Deg2Rad;
                 jumpDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 Flip();
             }
 
-            // ±âÁ¸ ¼Óµµ ÃÊ±âÈ­ ÈÄ º®Á¡ÇÁ Àû¿ë
+            // ê¸°ì¡´ ì†ë„ ì´ˆê¸°í™” í›„ ë²½ì í”„ ì ìš©
             Vector2 wallJumpVelocity = jumpDirection * player.PlayerPhysical.FinalJump;
             player.Rigid.velocity = wallJumpVelocity;
 
-            // º® ½½¶óÀÌµå »óÅÂ ÇØÁ¦
+            // ë²½ ìŠ¬ë¼ì´ë“œ ìƒíƒœ í•´ì œ
             isWallSliding = false;
             isTouchingWall = false;
             wallTouchTimer = 0f;
 
-            // ÀÔ·Â Â÷´Ü ½ÃÀÛ
+            // ì…ë ¥ ì°¨ë‹¨ ì‹œì‘
             player.PlayerPhysical.IsWallJumpInputBlocked = true;
             wallJumpInputBlockTimer = player.PlayerPhysical.WallJumpInputBlockTime;
         }
         #endregion
 
-        #region ¾É±â
+        #region ì•‰ê¸°
 
         /// <summary>
-        /// ÀÓ½Ã ¾É±â ¾Ö´Ï¸ŞÀÌ¼Ç
+        /// ì„ì‹œ ì•‰ê¸° ì• ë‹ˆë©”ì´ì…˜
         /// </summary>
-        /// <param name="yScale">½ºÄÉÀÏ º¯°æ</param>
+        /// <param name="yScale">ìŠ¤ì¼€ì¼ ë³€ê²½</param>
         private void SetScale(float yScale)
         {
             Vector3 scale = transform.localScale;
@@ -624,13 +628,13 @@ namespace SCR
         }
         #endregion
 
-        #region º® ½½¶óÀÌµå (º®Àâ±â)
+        #region ë²½ ìŠ¬ë¼ì´ë“œ (ë²½ì¡ê¸°)
         /// <summary>
-        /// º® ½½¶óÀÌµå Ã³¸®
+        /// ë²½ ìŠ¬ë¼ì´ë“œ ì²˜ë¦¬
         /// </summary>
         void HandleWallSlide()
         {
-            // º®¿¡ ´ê¾ÆÀÖ°í, °øÁß¿¡ ÀÖ°í, ¶³¾îÁö°í ÀÖÀ» ¶§, ÃæºĞÈ÷ Á¢ÃË
+            // ë²½ì— ë‹¿ì•„ìˆê³ , ê³µì¤‘ì— ìˆê³ , ë–¨ì–´ì§€ê³  ìˆì„ ë•Œ, ì¶©ë¶„íˆ ì ‘ì´‰
             bool shouldWallSlide = isTouchingWall && !isGrounded && player.Rigid.velocity.y < 0 && wallTouchTimer >= player.PlayerPhysical.WallSlideDelayTime;
 
             isWallSliding = shouldWallSlide;
@@ -644,7 +648,7 @@ namespace SCR
         }
         #endregion
 
-        #region ´ë½¬
+        #region ëŒ€ì‰¬
         private void HandleDash()
         {
             if (!IsCool[2] && playerState != PlayerState.Dash)
@@ -655,9 +659,9 @@ namespace SCR
         }
 
         /// <summary>
-        /// ´ë½¬ »ç¿ë
+        /// ëŒ€ì‰¬ ì‚¬ìš©
         /// </summary>
-        /// <param name="delay">´ë½¬ µô·¹ÀÌ</param>
+        /// <param name="delay">ëŒ€ì‰¬ ë”œë ˆì´</param>
         /// <returns></returns>
         private IEnumerator StartDash(float delay)
         {
@@ -674,9 +678,9 @@ namespace SCR
 
         #endregion
 
-        #region Å¸ÀÌ¸Ó °ü¸®
+        #region íƒ€ì´ë¨¸ ê´€ë¦¬
         /// <summary>
-        /// Å¸ÀÌ¸Ó°¡ ÇÊ¿äÇÑ º¯¼öµé ³Ö´Â ¸Ş¼­µå
+        /// íƒ€ì´ë¨¸ê°€ í•„ìš”í•œ ë³€ìˆ˜ë“¤ ë„£ëŠ” ë©”ì„œë“œ
         /// </summary>
         private void UpdateTimers()
         {
@@ -686,9 +690,9 @@ namespace SCR
         }
 
         /// <summary>
-        /// º¯¼ö¿¡ Å¸ÀÓÀ» ¾÷µ¥ÀÌÆ®
+        /// ë³€ìˆ˜ì— íƒ€ì„ì„ ì—…ë°ì´íŠ¸
         /// </summary>
-        /// <param name="timer">Å¸ÀÌ¸Ó Àû¿ëÀÌ ÇÊ¿äÇÑ º¯¼ö</param>
+        /// <param name="timer">íƒ€ì´ë¨¸ ì ìš©ì´ í•„ìš”í•œ ë³€ìˆ˜</param>
         private void UpdateTimer(ref float timer)
         {
             if (timer > 0)
@@ -696,7 +700,7 @@ namespace SCR
         }
 
         /// <summary>
-        /// º®Á¡ÇÁ ÀÔ·Â Â÷´Ü ÇØÁ¦ Ã³¸®
+        /// ë²½ì í”„ ì…ë ¥ ì°¨ë‹¨ í•´ì œ ì²˜ë¦¬
         /// </summary>
         private void UpdateWallJumpInputBlock()
         {
@@ -713,7 +717,7 @@ namespace SCR
         }
         #endregion
 
-        #region ÄğÅ¸ÀÓ °ü·Ã
+        #region ì¿¨íƒ€ì„ ê´€ë ¨
         private IEnumerator CoolTime(int index)
         {
             IsCool[index] = true;

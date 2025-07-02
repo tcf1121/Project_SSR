@@ -48,12 +48,10 @@ namespace PHG
             if (sPlayer == null) return;
 
             float dist = Vector2.Distance(sPlayer.position, brain.transform.position);
-            if (dist < statData.patrolRange)
+            if (!brain.IsRanged && dist < statData.patrolRange)
             {
-                brain.ChangeState(StateID.Chase);     // 비행 유닛이면 내부에서 FloatChase로 매핑
-#if UNITY_EDITOR
-                Debug.Log($"{brain.name} detected player → enter Chase");
-#endif
+                brain.ChangeState(StateID.Chase);
+                return;
             }
         }
 

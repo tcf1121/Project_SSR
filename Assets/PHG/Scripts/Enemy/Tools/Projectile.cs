@@ -30,11 +30,9 @@ namespace PHG
         }
         private void OnEnable()
         {
-            if (rb == null)
-            {
-                rb = GetComponent<Rigidbody2D>();
-                Debug.Log("Awake단계에서 rb받아오기 실패");
-            }
+            alive = 0f;
+            lastDir = Vector2.right; //  기본 방향으로 초기화
+            transform.rotation = Quaternion.identity; // 
         }
         public void Launch(Vector2 dir, float newSpeed)
         {

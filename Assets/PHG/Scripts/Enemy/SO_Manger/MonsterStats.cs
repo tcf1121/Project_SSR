@@ -1,65 +1,81 @@
-using SCR;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace PHG
 {
     public class MonsterStats : MonoBehaviour
     {
-        [SerializeField] private MonsterStatEntry statData;
-        public MonsterStatEntry StatData => statData;
+        [SerializeField]
+        private MonsterStatEntry localRuntimeStats;
 
-        private int currentHP;
         private MonsterBrain brain;
 
-        public int MaxHP => Mathf.RoundToInt(statData.maxHP * brain.Coeff);              // 멤버 변수
-        public int CurrentHP => currentHP;                                               // 멤버 변수
-        public int Damage => Mathf.RoundToInt(statData.damage * brain.Coeff);            // 멤버 변수
-        public float MoveSpeed => statData.moveSpeed;
-        public float PatrolRange => statData.patrolRange;
-        public float ChaseRange => statData.chaseRange;
-        public float AttackRange => statData.attackRange;
-        public float ChargeRange => statData.chargeRange;
-        public bool UsePatrol => statData.usePatrol;
+        // 런타임 내부 계산 캐시
+        private int currentHP;
+        private int maxHP;
+        private int damage;
+        private float moveSpeed;
+        private float patrolRange;
+        private float chaseRange;
+        private float attackRange;
+        private float chargeRange;
+        private bool usePatrol;
+
+        public int MaxHP => Mathf.RoundToInt(maxHP * brain.Coeff);
+        public int CurrentHP => currentHP;
+        public int Damage => Mathf.RoundToInt(damage * brain.Coeff);
+        public float MoveSpeed => moveSpeed;
+        public float PatrolRange => patrolRange;
+        public float ChaseRange => chaseRange;
+        public float AttackRange => attackRange;
+        public float ChargeRange => chargeRange;
+        public bool UsePatrol => usePatrol;
+
+        public MonsterStatEntry RuntimeData => localRuntimeStats;
 
         private void Awake()
         {
             brain = GetComponent<MonsterBrain>();
-            currentHP = statData.maxHP;
+            if (brain != null)
+            {
+                brain.Stats = this;
+                localRuntimeStats = brain.statData; // ← 복사하지 말고 MonsterBrain에서 받은 걸 그대로 씀
+            }
+
+            if (localRuntimeStats == null)
+            {
+                Debug.LogError("[MonsterStats] RuntimeStatEntry 없음!");
+                enabled = false;
+                return;
+            }
+
+            InitializeRuntimeStats();
         }
 
-        /// <summary>
-        /// TakeDamageState에서 직접 HP 수정 시 사용
-        /// </summary>
+        private void InitializeRuntimeStats()
+        {
+            maxHP = localRuntimeStats.maxHP;
+            damage = localRuntimeStats.damage;
+            moveSpeed = localRuntimeStats.moveSpeed;
+            patrolRange = localRuntimeStats.patrolRange;
+            chaseRange = localRuntimeStats.chaseRange;
+            attackRange = localRuntimeStats.attackRange;
+            chargeRange = localRuntimeStats.chargeRange;
+            usePatrol = localRuntimeStats.usePatrol;
+
+            currentHP = maxHP;
+        }
+
         public void SetHP(int newHP)
         {
             currentHP = Mathf.Clamp(newHP, 0, MaxHP);
         }
 
-        /// <summary>
-        /// 현재 HP가 0 이하일 경우 죽음 전이
-        /// </summary>
         public void KillIfDead()
         {
             if (currentHP <= 0 && brain != null)
                 brain.ChangeState(StateID.Dead);
         }
 
-#if UNITY_EDITOR
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                int dmg = 10;
-                var player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null)
-                {
-                    Vector2 origin = player.transform.position;
-                    var hit = new HitInfo(dmg, origin, true);
-                    brain.EnterDamageState(hit);
-                }
-            }
-        }
-#endif
+
     }
 }

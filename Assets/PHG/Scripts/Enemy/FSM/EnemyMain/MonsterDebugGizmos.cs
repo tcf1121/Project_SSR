@@ -89,12 +89,15 @@ namespace PHG
             if (stat.chargeRange > 0f) { Handles.color = new Color(1f, 0.2f, 1f, 0.35f); Handles.DrawWireDisc(p, Vector3.forward, stat.chargeRange); }
 
             // ─ Ranged ─
+            // ─ Ranged ─
             if (_brain.IsRanged && _muzzle != null && _player != null)
             {
                 Gizmos.color = Color.yellow;
+
                 Vector3 from = _muzzle.position;
-                Vector3 to = _player.position;
-                Vector3 dir2 = (to - from).normalized;
+                Vector3 aimTarget = _player.position + Vector3.up * 0.25f; // 사격 방향 보정
+                Vector3 dir2 = (aimTarget - from).normalized;
+
                 Gizmos.DrawLine(from, from + dir2 * stat.attackRange);
                 Gizmos.DrawWireSphere(from + dir2 * stat.attackRange, 0.1f);
             }

@@ -31,6 +31,11 @@ namespace PHG
         [Header("Damage Response")]
         [Tooltip("한 번에 이 값 이상의 데미지를 입으면 강제 경직")]
         public float staggerThreshold = 15f;
+        [Tooltip("넉백 세기")]
+        public float knockbackForce = 3f; // ← 추가
+        [Tooltip("넉백 지속 시간(초)")]
+        [Range(0f, 0.5f)]
+        public float knockbackDuration = 0.07f;
 
         /* ───────── AI 감지 범위 ───────── */
         [Header("AI Detection Ranges")]
@@ -101,6 +106,8 @@ namespace PHG
         [Tooltip("몬스터 처치 시 플레이어에게 주는 골드")] public float goldReward = 5f; // 멤버 변수
         [Header("보상 계수")]
         public float rewardCoefficient = 1.0f;
+
+
         /* ───────── Convenience Accessors ───────── */
         public float JumpForce => enableJump ? jumpForce : 0f;
         public float JumpCooldown => enableJump ? jumpCooldown : 0f;

@@ -27,7 +27,7 @@ namespace PHG
             this.hitBox = hitBox;
             this.rb = brain.GetComponent<Rigidbody2D>();
             this.tf = brain.transform;
-            this.statData = brain.statData;
+            this.statData = brain.StatData;
         }
 
         public void Enter()

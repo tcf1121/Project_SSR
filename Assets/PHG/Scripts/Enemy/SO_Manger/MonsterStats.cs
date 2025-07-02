@@ -1,65 +1,78 @@
-using SCR;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace PHG
 {
     public class MonsterStats : MonoBehaviour
     {
-        [SerializeField] private MonsterStatEntry statData;
-        public MonsterStatEntry StatData => statData;
 
-        private int currentHP;
-        private MonsterBrain brain;
+        [SerializeField] private MonsterBrain brain;
 
-        public int MaxHP => Mathf.RoundToInt(statData.maxHP * brain.Coeff);              // 멤버 변수
-        public int CurrentHP => currentHP;                                               // 멤버 변수
-        public int Damage => Mathf.RoundToInt(statData.damage * brain.Coeff);            // 멤버 변수
-        public float MoveSpeed => statData.moveSpeed;
-        public float PatrolRange => statData.patrolRange;
-        public float ChaseRange => statData.chaseRange;
-        public float AttackRange => statData.attackRange;
-        public float ChargeRange => statData.chargeRange;
-        public bool UsePatrol => statData.usePatrol;
+        // 런타임 내부 계산 캐시
+        [SerializeField] private int _currentHP;
+        [SerializeField] private int _maxHP;
+        [SerializeField] private int _damage;
+        [SerializeField] private float _moveSpeed;
+        [SerializeField] private float _patrolRange;
+        [SerializeField] private float _chaseRange;
+        [SerializeField] private float _attackRange;
+        [SerializeField] private float _chargeRange;
+        [SerializeField] private bool _usePatrol;
+
+        public int MaxHP { get => _maxHP; }
+        public int CurrentHP { get => _currentHP; }
+        public int Damage { get => _damage; }
+        public float MoveSpeed { get => _moveSpeed; }
+        public float PatrolRange { get => _patrolRange; }
+        public float ChaseRange { get => _chaseRange; }
+        public float AttackRange { get => _attackRange; }
+        public float ChargeRange { get => _chargeRange; }
+        public bool UsePatrol { get => _usePatrol; }
+
 
         private void Awake()
         {
             brain = GetComponent<MonsterBrain>();
-            currentHP = statData.maxHP;
         }
 
-        /// <summary>
-        /// TakeDamageState에서 직접 HP 수정 시 사용
-        /// </summary>
+        public void EnableStats()
+        {
+            if (brain.StatData == null)
+            {
+                Debug.LogError("[MonsterStats] MonsterStatEntry를 불러오지 못했습니다.");
+                enabled = false;
+                return;
+            }
+
+            Debug.Log(brain.StatData.monsterType);
+            InitializeRuntimeStats();
+        }
+
+        private void InitializeRuntimeStats()
+        {
+            _maxHP = Mathf.RoundToInt(brain.StatData.maxHP * brain.Coeff);
+            Debug.Log(_maxHP);
+            _damage = Mathf.RoundToInt(brain.StatData.damage * brain.Coeff);
+            Debug.Log(_damage);
+            _moveSpeed = brain.StatData.moveSpeed;
+            Debug.Log(_moveSpeed);
+            _patrolRange = brain.StatData.patrolRange;
+            _chaseRange = brain.StatData.chaseRange;
+            _attackRange = brain.StatData.attackRange;
+            _chargeRange = brain.StatData.chargeRange;
+            _usePatrol = brain.StatData.usePatrol;
+            _currentHP = _maxHP;
+        }
+
         public void SetHP(int newHP)
         {
-            currentHP = Mathf.Clamp(newHP, 0, MaxHP);
+            _currentHP = Mathf.Clamp(newHP, 0, _maxHP);
         }
 
-        /// <summary>
-        /// 현재 HP가 0 이하일 경우 죽음 전이
-        /// </summary>
         public void KillIfDead()
         {
-            if (currentHP <= 0 && brain != null)
+            if (_currentHP <= 0 && brain != null)
                 brain.ChangeState(StateID.Dead);
         }
 
-#if UNITY_EDITOR
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                int dmg = 10;
-                var player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null)
-                {
-                    Vector2 origin = player.transform.position;
-                    var hit = new HitInfo(dmg, origin, true);
-                    brain.EnterDamageState(hit);
-                }
-            }
-        }
-#endif
     }
 }

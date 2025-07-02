@@ -22,7 +22,7 @@ namespace PHG
             this.brain = brain;
             rb = brain.GetComponent<Rigidbody2D>();
             tf = brain.transform;
-            stat = brain.statData;
+            stat = brain.StatData;
 
             /* 계산 캐싱 */
             sqReady = stat.readyRange * stat.readyRange;

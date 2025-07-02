@@ -12,7 +12,7 @@ namespace PHG
         public IdleState(MonsterBrain brain)
         {
             this.brain = brain;
-            this.statData = brain.statData;
+            this.statData = brain.StatData;
             this.rb = brain.GetComponent<Rigidbody2D>();
         }
 

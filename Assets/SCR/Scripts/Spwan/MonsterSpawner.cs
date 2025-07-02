@@ -8,14 +8,14 @@ namespace SCR
     public class MonsterSpawner : MonoBehaviour
     {
 
-        public PoolInfo PoolInfo { get { return _poolInfo; } set { _poolInfo = value; } }
-        [SerializeField] private PoolInfo _poolInfo;
-
         [Header("스폰 설정")]
-        [SerializeField] private float spawnInterval = 5f; // 스폰 간격
+        [SerializeField] private float minSpawnInterval = 7f; // 최소 스폰 간격
+        [SerializeField] private float maxSpawnInterval = 13f; // 최대 스폰 간격
         [SerializeField] private int maxAlive = 10;
         [SerializeField] private int Alive = 0;
-        [SerializeField] private int _creadit = 3;
+        public float Credit { get => _creadit; }
+        [SerializeField] private float _creadit = 3;
+
         private Vector2 min;
         private Vector2 max;
 
@@ -23,18 +23,21 @@ namespace SCR
         private List<Vector2> _spwanPoint;
         private List<Monster> _respwanMonsters;
 
+        private Coroutine _spawnCor;
+        private Coroutine _creditCor;
+
         void Awake() => Init();
 
         private void Init()
         {
-            _poolInfo = GetComponent<PoolInfo>();
             _respwanMonsters = new();
             _spwanPoint = new();
         }
 
         void Start()
         {
-            StartCoroutine(SpawnRoutine());
+            _spawnCor = StartCoroutine(SpawnRoutine());
+            _creditCor = StartCoroutine(GetCredit());
         }
 
 
@@ -45,7 +48,7 @@ namespace SCR
         {
             while (true)
             {
-                List<Monster> FulfillConMon = monsters.FindAll(n => n.Credit <= _creadit);
+                List<Monster> FulfillConMon = monsters.FindAll(n => n.Credit <= _creadit /*&&n.Credit >= 최소 크레딧 */);
                 if (FulfillConMon.Count > 0)
                 {
                     Monster setMonster = FulfillConMon[Random.Range(0, FulfillConMon.Count)];
@@ -79,22 +82,34 @@ namespace SCR
             if (_respwanMonsters.Count > 0)
             {
                 SetPos();
-                foreach (GameObject mob in _poolInfo.Pool)
+                GameObject monster;
+                for (int i = 0; i < _respwanMonsters.Count; i++)
                 {
-                    if (!mob.activeSelf)
-                    {
-                        if (_respwanMonsters.Count == 0)
-                            break;
-                        mob.GetComponent<Monster>().SetMonster(_respwanMonsters[0]);
-                        mob.transform.position = _spwanPoint[0];
-                        ObjectPool.TakeFromPool(EPoolObjectType.Monster);
-                        _respwanMonsters.RemoveAt(0);
-                        _spwanPoint.RemoveAt(0);
-                    }
+                    monster = ObjectPool.TakeFromPool(EPoolObjectType.Monster);
+                    monster.GetComponent<Monster>().Clone(_respwanMonsters[0]);
+                    monster.transform.position = _spwanPoint[0];
+                    _respwanMonsters.RemoveAt(0);
+                    _spwanPoint.RemoveAt(0);
+
                 }
             }
             _respwanMonsters.Clear();
             _spwanPoint.Clear();
+        }
+
+        private IEnumerator GetCredit()
+        {
+            float currentTime;
+            while (true)
+            {
+                currentTime = 1f;
+                while (currentTime > 0.0f)
+                {
+                    currentTime -= Time.deltaTime;
+                    yield return new WaitForFixedUpdate();
+                }
+                _creadit += 0.21f * (1f + 0.4f * GameManager.StageManager.DangerIndexManager.GetDangerIndex());
+            }
         }
 
 
@@ -103,14 +118,14 @@ namespace SCR
             float currentSpawnInterval;
             while (true)
             {
-                currentSpawnInterval = spawnInterval;
-                if (CanSpwan())
-                    Spawn();
+                currentSpawnInterval = Random.Range(minSpawnInterval, maxSpawnInterval);
                 while (currentSpawnInterval > 0.0f)
                 {
                     currentSpawnInterval -= Time.deltaTime;
                     yield return new WaitForFixedUpdate();
                 }
+                if (CanSpwan())
+                    Spawn();
             }
         }
     }

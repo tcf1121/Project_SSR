@@ -27,7 +27,7 @@ namespace PHG
             this.brain = brain;
             rb = brain.rb;
             tf = brain.tf;
-            statData = brain.statData;
+            statData = brain.StatData;
             wallSensor = brain.wallSensor;
             jumper = brain;                // IMonsterJumper 구현체
             isRanged = brain.IsRanged;

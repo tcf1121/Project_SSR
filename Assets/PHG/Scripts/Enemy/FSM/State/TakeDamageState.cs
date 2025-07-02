@@ -25,27 +25,24 @@ namespace PHG
 
         public void Enter()
         {
-            Debug.Log("[TakeDamageState] Enter");
-
-            var stats = brain.RuntimeStats;
-           // brain.ShowHpBarTemporarily();
+            var stats = brain.MonsterStats;
+            Debug.Log($"현재 hp :{stats.CurrentHP}");
 
             // 체력 감소
             int newHP = stats.CurrentHP - hit.damage;
             stats.SetHP(newHP);
 
-            Debug.Log($"[TakeDamageState] CurrentHP: {stats.CurrentHP}, MaxHP: {stats.MaxHP}");
+            //Debug.Log($"[TakeDamageState] CurrentHP: {stats.CurrentHP}, MaxHP: {stats.MaxHP}");
 
             // 체력바 갱신
-            if (brain.hpBarRoot != null)
+            if (brain.HpBarFill != null)
             {
-                var slider = brain.hpBarRoot.GetComponentInChildren<Slider>();
-                if (slider != null)
-                    slider.value = (float)stats.CurrentHP / stats.MaxHP;
+                brain.HpBar.gameObject.SetActive(true);
+                brain.HpBarFill.fillAmount = (float)stats.CurrentHP / stats.MaxHP;
             }
 
             // 데미지 텍스트 출력
-          //  brain.ShowDamageText(hit.damage);
+            //  brain.ShowDamageText(hit.damage);
 
             // 사망 처리
             stats.KillIfDead();
@@ -53,7 +50,7 @@ namespace PHG
                 return;
 
             // 경직 조건 판단
-            stagger = hit.causesStagger || hit.damage >= brain.statData.staggerThreshold;
+            stagger = hit.causesStagger || hit.damage >= brain.StatData.staggerThreshold;
 
             if (stagger)
             {

@@ -31,7 +31,7 @@ namespace PHG
             this.brain = brain;
             rb = brain.rb;
             tf = brain.tf;
-            statData = brain.statData;
+            statData = brain.StatData;
             muzzle = tf.Find("MuzzlePoint");
             isFlying = brain.IsFlying;
         }

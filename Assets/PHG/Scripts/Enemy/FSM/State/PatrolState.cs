@@ -25,7 +25,7 @@ namespace PHG
             this.tf = brain.tf;
             this.groundSensor = brain.sensor;
             this.wallSensor = brain.wallSensor;
-            this.statData = brain.statData;
+            this.statData = brain.StatData;
         }
 
         public void Enter() => dir = tf.localScale.x >= 0f ? 1 : -1;

@@ -84,7 +84,6 @@ namespace PHG
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
-            Stats = GetComponent<MonsterStats>();
             tf = transform;
         }
 

@@ -54,7 +54,7 @@ namespace PHG
 
             if (stagger)
             {
-                float knockback = brain.statData.knockbackForce; // ← SO에서 읽음
+                float knockback = brain.StatData.knockbackForce; // ← SO에서 읽음
                 brain.ApplyKnockback(hit.origin, knockback);
                 timer = 0.35f;
             }

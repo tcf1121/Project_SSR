@@ -11,6 +11,7 @@ namespace PHG
        GiantSpider,
        Mimik,
        NightBorne,
+       Hexblade,
        //Range Attack
        Snake,
        Fire_Worm,
@@ -21,7 +22,9 @@ namespace PHG
         FloatingEye,
 
         None,
-        Default // 기본값
+        Default, // 기본값
+        CursingWitch,
+        FlyingEye
 
     }
 }

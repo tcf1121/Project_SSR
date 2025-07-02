@@ -48,7 +48,7 @@ namespace PHG
             climbYThreshold = stat.climbYThreshold;
             ladderMask = stat.ladderMask;
 
-            Debug.Log($"[LadderClimber] Init 완료: offset={forwardOffset}, radius={detectRadius}, threshold={climbYThreshold}");
+           // Debug.Log($"[LadderClimber] Init 완료: offset={forwardOffset}, radius={detectRadius}, threshold={climbYThreshold}");
         }
 
         public void UpdateClimbTimer(float dt)
@@ -91,7 +91,7 @@ namespace PHG
             LadderBounds lb = col.GetComponentInParent<LadderBounds>();
             if (lb == null)
             {
-                Debug.LogWarning("[LadderClimber] LadderBounds 없음");
+              //  Debug.LogWarning("[LadderClimber] LadderBounds 없음");
                 return;
             }
 
@@ -131,7 +131,7 @@ namespace PHG
 
                     if (xDiff > 1.5f)
                     {
-                        Debug.Log("[ClimbRoutine] 플레이어 이탈 → 점프 추격");
+                        //Debug.Log("[ClimbRoutine] 플레이어 이탈 → 점프 추격");
                         goto Exit;
                     }
 
@@ -139,7 +139,7 @@ namespace PHG
                     if ((goUp && yDiff < -0.5f) || (!goUp && yDiff > 0.5f))
                     {
                         goUp = yDiff > 0;
-                        Debug.Log("[ClimbRoutine] 방향 반전 → 재진입");
+                       // Debug.Log("[ClimbRoutine] 방향 반전 → 재진입");
                         break;
                     }
 

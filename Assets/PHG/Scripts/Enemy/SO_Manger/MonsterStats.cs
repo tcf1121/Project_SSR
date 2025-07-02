@@ -7,7 +7,7 @@ namespace PHG
 
         [SerializeField] private MonsterBrain brain;
 
-        // ·±Å¸ÀÓ ³»ºÎ °è»ê Ä³½Ã
+        // ëŸ°íƒ€ìž„ ë‚´ë¶€ ê³„ì‚° ìºì‹œ
         [SerializeField] private int _currentHP;
         [SerializeField] private int _maxHP;
         [SerializeField] private int _damage;
@@ -28,7 +28,6 @@ namespace PHG
         public float ChargeRange { get => _chargeRange; }
         public bool UsePatrol { get => _usePatrol; }
 
-
         private void Awake()
         {
             brain = GetComponent<MonsterBrain>();
@@ -38,7 +37,7 @@ namespace PHG
         {
             if (brain.StatData == null)
             {
-                Debug.LogError("[MonsterStats] MonsterStatEntry¸¦ ºÒ·¯¿ÀÁö ¸øÇß½À´Ï´Ù.");
+                Debug.LogError("[MonsterStats] MonsterStatEntryë¥¼ ë¶ˆëŸ¬ì˜¤ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
                 enabled = false;
                 return;
             }

@@ -1,9 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace PHG
 {
     /// <summary>
-    /// ��� �պ� ���� �� �÷��̾� ���� �� Chase / Attack ��ȯ
+    /// ←→ 왕복 순찰 → 플레이어 감지 시 Chase / Attack 전환
     /// </summary>
     public class PatrolState : IState
     {
@@ -49,28 +49,30 @@ namespace PHG
                 scale.x = Mathf.Abs(scale.x) * dir;
                 tf.localScale = scale;
             }
-
-            if (PlayerInRange(statData.attackRange))
-            {
-                rb.velocity = Vector2.zero;
-                brain.ChangeState(StateID.Attack);
-                return;
-            }
-
+            // 1. 추적 우선
+            // 1순위: 추적 조건 — 모든 유닛 공통
             if (PlayerInRange(statData.patrolRange))
             {
                 brain.ChangeState(StateID.Chase);
                 return;
             }
 
-            if (brain.IsRanged && PlayerInRange(statData.readyRange))
+            // 2순위: 공격 조건
+            if (PlayerInRange(statData.attackRange))
             {
-                FacePlayer();
-                rb.velocity = Vector2.zero;
                 brain.ChangeState(StateID.Attack);
                 return;
             }
 
+            // 3순위: readyRange는 상태 전이 없음 (조준만)
+            if (brain.IsRanged &&
+                brain.Sm.CurrentStateID != StateID.Chase &&
+                PlayerInRange(statData.readyRange))
+            {
+                FacePlayer();
+                rb.velocity = Vector2.zero;
+                return;
+            }
             if (brain.CanClimbLadders && PlayerInRange(statData.patrolRange))
             {
                 var pl = GameObject.FindWithTag("Player")?.transform;

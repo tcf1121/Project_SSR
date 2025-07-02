@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 569585956112932472}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.261, y: 0.518, z: 0}
+  m_LocalPosition: {x: 0.3, y: -0.074, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -47,7 +47,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5964935803072975748
 Transform:
   m_ObjectHideFlags: 0
@@ -57,7 +57,7 @@ Transform:
   m_GameObject: {fileID: 869018003963426110}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.123, y: 0.427, z: 0}
+  m_LocalPosition: {x: -0.15, y: -0.12, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -133,7 +133,7 @@ Transform:
   m_GameObject: {fileID: 1099943667115921570}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0036000013, y: 0.003, z: 0}
+  m_LocalPosition: {x: -0.078, y: -0.19, z: 0}
   m_LocalScale: {x: 0.15, y: 0.15, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -148,7 +148,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7758521028548933899}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Mimik(MS)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ Transform:
   m_GameObject: {fileID: 8347105465038313892}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -266,6 +266,9 @@ MonoBehaviour:
   damageTextPrefab: {fileID: 1373479669899882519, guid: 1b90f7c35b4a7bc408e4372631cfb6f7, type: 3}
   staggerThreshold: 15
   hpBarRoot: {fileID: 1485182302214798521, guid: c7b1cd8952107e948a6a9d06d320d44d, type: 3}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &3982818213670164493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,19 +341,19 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.4}
+  m_Offset: {x: 0, y: -0.029}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
-    oldSize: {x: 0.35, y: 0.77}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.47, y: 0.35}
     newSize: {x: 0.35, y: 0.77}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.4, y: 0.8}
-  m_EdgeRadius: 0.013
+  m_Size: {x: 0.25, y: 0.25}
+  m_EdgeRadius: 0.015
 --- !u!114 &8099416909487291660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,8 +366,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afebd25277e31ad4dba41e4f7888a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statData:
-    monsterType: 2
+  localRuntimeStats:
+    monsterType: 9
     groundMask:
       serializedVersion: 2
       m_Bits: 0
@@ -377,6 +380,8 @@ MonoBehaviour:
     rushMultiplier: 1.5
     maxClimbableHeight: 2
     staggerThreshold: 15
+    knockbackForce: 3
+    knockbackDuration: 0.07
     patrolRange: 3
     chaseRange: 6
     attackRange: 1
@@ -489,9 +494,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: e22f315dff37d0f48b1e356f1b67cc92, type: 2}
+  m_Sprite: {fileID: 21300000, guid: 74f0dc512e87b2047b4c8796202a9d34, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 0.35, y: 0.77}

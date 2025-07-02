@@ -25,6 +25,9 @@ MonoBehaviour:
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 4
+    staggerThreshold: 15
+    knockbackForce: 3
+    knockbackDuration: 0.07
     patrolRange: 2
     chaseRange: 5
     attackRange: 0.5
@@ -68,12 +71,15 @@ MonoBehaviour:
       m_Bits: 2048
     maxHP: 100
     damage: 10
-    moveSpeed: 2
-    rushMultiplier: 3
+    moveSpeed: 0.5
+    rushMultiplier: 2
     maxClimbableHeight: 2
+    staggerThreshold: 15
+    knockbackForce: 3
+    knockbackDuration: 0.07
     patrolRange: 4
     chaseRange: 5
-    attackRange: 1
+    attackRange: 0.4
     chargeRange: 2.5
     enableJump: 0
     jumpHorizontalFactor: 0.6
@@ -115,14 +121,17 @@ MonoBehaviour:
     maxHP: 100
     damage: 10
     moveSpeed: 2
-    rushMultiplier: 1.5
+    rushMultiplier: 2
     maxClimbableHeight: 2
+    staggerThreshold: 15
+    knockbackForce: 3
+    knockbackDuration: 0.07
     patrolRange: 2
     chaseRange: 4
-    attackRange: 1
+    attackRange: 0.5
     chargeRange: 0
-    enableJump: 0
-    jumpHorizontalFactor: 0.6
+    enableJump: 1
+    jumpHorizontalFactor: 1
     jumpForce: 4
     jumpCooldown: 0.45
     maxJumpYDiffForAdjustment: 4
@@ -161,8 +170,11 @@ MonoBehaviour:
     maxHP: 100
     damage: 10
     moveSpeed: 1
-    rushMultiplier: 0.5
+    rushMultiplier: 3
     maxClimbableHeight: 3
+    staggerThreshold: 15
+    knockbackForce: 1
+    knockbackDuration: 0.07
     patrolRange: 3
     chaseRange: 6
     attackRange: 0.32
@@ -209,11 +221,14 @@ MonoBehaviour:
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 2
-    patrolRange: 8
-    chaseRange: 10
-    attackRange: 7
-    chargeRange: 2.5
-    enableJump: 0
+    staggerThreshold: 15
+    knockbackForce: 1
+    knockbackDuration: 0.07
+    patrolRange: 4
+    chaseRange: 6
+    attackRange: 0.7
+    chargeRange: 0
+    enableJump: 1
     jumpHorizontalFactor: 0.6
     jumpForce: 4
     jumpCooldown: 0.45
@@ -224,7 +239,7 @@ MonoBehaviour:
     idleMode: 0
     rangedCooldown: 1
     projectileprefab: {fileID: -4595588588518355158, guid: 6d727b2ffdf049d40b7b74472effffbf, type: 3}
-    readyRange: 7
+    readyRange: 0
     projectileSpeed: 5
     projectileLife: 3
     firePattern: 0
@@ -233,9 +248,9 @@ MonoBehaviour:
     meleeCooldown: 0.6
     meleeRadius: 1
     isFlying: 0
-    isRanged: 1
+    isRanged: 0
     isCharging: 0
-    enableLadderClimb: 0
+    enableLadderClimb: 1
     climbYThreshold: 0.7
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 0.35
@@ -255,6 +270,9 @@ MonoBehaviour:
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 2
+    staggerThreshold: 15
+    knockbackForce: 3
+    knockbackDuration: 0.07
     patrolRange: 5
     chaseRange: 7
     attackRange: 6
@@ -271,7 +289,7 @@ MonoBehaviour:
     rangedCooldown: 2
     projectileprefab: {fileID: 1941247834333990247, guid: c7d6d6b83b9fcf34bb19b50bd379aa35, type: 3}
     readyRange: 8
-    projectileSpeed: 10
+    projectileSpeed: 3
     projectileLife: 3
     firePattern: 0
     pelletCount: 5
@@ -301,6 +319,9 @@ MonoBehaviour:
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 2
+    staggerThreshold: 15
+    knockbackForce: 3
+    knockbackDuration: 0.07
     patrolRange: 4
     chaseRange: 6
     attackRange: 2
@@ -347,6 +368,9 @@ MonoBehaviour:
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 2
+    staggerThreshold: 15
+    knockbackForce: 3
+    knockbackDuration: 0.07
     patrolRange: 9
     chaseRange: 11
     attackRange: 10
@@ -360,14 +384,14 @@ MonoBehaviour:
     groundCheckRadius: 0.12
     usePatrol: 0
     idleMode: 0
-    rangedCooldown: 2
+    rangedCooldown: 5
     projectileprefab: {fileID: 1416540945678065302, guid: 8fdde677c1ef25f489d5e48941140ea2, type: 3}
     readyRange: 8
-    projectileSpeed: 10
+    projectileSpeed: 2
     projectileLife: 3
     firePattern: 1
-    pelletCount: 5
-    spreadAngle: 60
+    pelletCount: 30
+    spreadAngle: 360
     meleeCooldown: 0.6
     meleeRadius: 1
     isFlying: 1
@@ -377,6 +401,153 @@ MonoBehaviour:
     climbYThreshold: 0.7
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 0.35
+    climbSpeed: 3
+    expReward: 10
+    goldReward: 5
+    rewardCoefficient: 1
+  - monsterType: 8
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 1536
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 2048
+    maxHP: 100
+    damage: 10
+    moveSpeed: 2
+    rushMultiplier: 1.5
+    maxClimbableHeight: 2
+    staggerThreshold: 15
+    knockbackForce: 3
+    knockbackDuration: 0.07
+    patrolRange: 9
+    chaseRange: 11
+    attackRange: 10
+    chargeRange: 2.5
+    enableJump: 0
+    jumpHorizontalFactor: 0.6
+    jumpForce: 4
+    jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
+    usePatrol: 0
+    idleMode: 0
+    rangedCooldown: 5
+    projectileprefab: {fileID: 1416540945678065302, guid: 8fdde677c1ef25f489d5e48941140ea2, type: 3}
+    readyRange: 8
+    projectileSpeed: 2
+    projectileLife: 3
+    firePattern: 1
+    pelletCount: 30
+    spreadAngle: 360
+    meleeCooldown: 0.6
+    meleeRadius: 1
+    isFlying: 1
+    isRanged: 1
+    isCharging: 0
+    enableLadderClimb: 0
+    climbYThreshold: 0.7
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 0.35
+    climbSpeed: 3
+    expReward: 10
+    goldReward: 5
+    rewardCoefficient: 1
+  - monsterType: 11
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 1536
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 2048
+    maxHP: 100
+    damage: 10
+    moveSpeed: 2
+    rushMultiplier: 4
+    maxClimbableHeight: 2
+    staggerThreshold: 15
+    knockbackForce: 3
+    knockbackDuration: 0.07
+    patrolRange: 8
+    chaseRange: 9
+    attackRange: 7
+    chargeRange: 0
+    enableJump: 1
+    jumpHorizontalFactor: 0.777
+    jumpForce: 4
+    jumpCooldown: 1
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.34
+    usePatrol: 1
+    idleMode: 0
+    rangedCooldown: 2
+    projectileprefab: {fileID: 5756601596482412224, guid: 914b883013a6c6a49a499a2a69aee692, type: 3}
+    readyRange: 10
+    projectileSpeed: 5
+    projectileLife: 3
+    firePattern: 0
+    pelletCount: 30
+    spreadAngle: 360
+    meleeCooldown: 0.6
+    meleeRadius: 1
+    isFlying: 0
+    isRanged: 1
+    isCharging: 0
+    enableLadderClimb: 1
+    climbYThreshold: 1
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 1
+    climbSpeed: 3
+    expReward: 10
+    goldReward: 5
+    rewardCoefficient: 1
+  - monsterType: 12
+    groundMask:
+      serializedVersion: 2
+      m_Bits: 1536
+    ladderMask:
+      serializedVersion: 2
+      m_Bits: 2048
+    maxHP: 100
+    damage: 10
+    moveSpeed: 1
+    rushMultiplier: 2
+    maxClimbableHeight: 2
+    staggerThreshold: 15
+    knockbackForce: 3
+    knockbackDuration: 0.07
+    patrolRange: 5
+    chaseRange: 6
+    attackRange: 0.4
+    chargeRange: 3
+    enableJump: 0
+    jumpHorizontalFactor: 0.6
+    jumpForce: 4
+    jumpCooldown: 0.45
+    maxJumpYDiffForAdjustment: 4
+    groundCheckOffset: {x: 0, y: -0.05}
+    groundCheckRadius: 0.12
+    usePatrol: 0
+    idleMode: 0
+    rangedCooldown: 2
+    projectileprefab: {fileID: 5756601596482412224, guid: 914b883013a6c6a49a499a2a69aee692, type: 3}
+    readyRange: 10
+    projectileSpeed: 5
+    projectileLife: 3
+    firePattern: 0
+    pelletCount: 30
+    spreadAngle: 360
+    meleeCooldown: 0.6
+    meleeRadius: 1
+    isFlying: 1
+    isRanged: 0
+    isCharging: 0
+    enableLadderClimb: 0
+    climbYThreshold: 1
+    ladderForwardOffset: {x: 0.15, y: 0}
+    ladderDetectRadius: 1
     climbSpeed: 3
     expReward: 10
     goldReward: 5

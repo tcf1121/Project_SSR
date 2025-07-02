@@ -44,7 +44,7 @@ namespace PHG
         public float Coeff { get; private set; } = 1f;
         public int SpawnStage { get; set; }
 
-        private LayerMask groundMask;
+        public LayerMask groundMask;
         private LayerMask ladderMask;
 
         private StateMachine sm;
@@ -84,6 +84,7 @@ namespace PHG
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            Stats = GetComponent<MonsterStats>();
             tf = transform;
         }
 
@@ -239,6 +240,7 @@ namespace PHG
             gameObject.transform.localScale = monsterBrain.gameObject.transform.localScale;
             hpBar.sizeDelta = monsterBrain.hpBar.sizeDelta;
             hpBar.position = monsterBrain.hpBar.position;
+
             // public float Coeff { get; private set; } = 1f;
             // public int SpawnStage { get; set; }
         }

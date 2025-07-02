@@ -28,11 +28,12 @@ namespace PHG
             sqReady = stat.readyRange * stat.readyRange;
             sqAttack = stat.attackRange * stat.attackRange;
         }
-
         public void Enter()
         {
             player = GameObject.FindWithTag("Player")?.transform;
-            rb.velocity = Vector2.zero;
+
+            if (brain.IsGrounded() && !brain.IsMidJump)
+                rb.velocity = Vector2.zero;
         }
 
         public void Tick()
@@ -59,8 +60,10 @@ namespace PHG
                 return;
             }
 
+
             /* 정지‧방향 전환만 수행 */
-            rb.velocity = Vector2.zero;
+            if (brain.IsGrounded() && !brain.IsMidJump)
+                rb.velocity = Vector2.zero;
             int dir = player.position.x > tf.position.x ? 1 : -1;
             tf.localScale = new Vector3(Mathf.Abs(tf.localScale.x) * dir, 1, 1);
         }

@@ -14,7 +14,11 @@ namespace PHG
         public void Exit() => interact.OnInteract -= HandleInteract;
         public void Tick() { /* ´ë±â */ }
 
-        void HandleInteract() => brain.ChangeState(StateID.Chase);
+        void HandleInteract()
+        {
+            Debug.Log("[GreedIdleState] OnInteract triggered ¡æ Change to Chase");
+            brain.ChangeState(StateID.Chase);
+        }
     }
 
 }

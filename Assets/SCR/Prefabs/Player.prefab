@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 2104126271600015248}
   - component: {fileID: 6410687041269717717}
   - component: {fileID: 5349406287190802432}
+  - component: {fileID: 4240260973874929764}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -86,15 +87,15 @@ SpriteRenderer:
   m_SortingLayerID: -1372975407
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1110688933, guid: 586577b2d88093a4dadf4d5a21b8d9f9, type: 3}
+  m_Sprite: {fileID: -5106514740344756947, guid: 2f86a373f4c1d764db4a4335696d347b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.64, y: 0.64}
+  m_Size: {x: 0.33, y: 0.33}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &4652185408082642723
@@ -129,18 +130,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.05, y: 0.2}
+  m_Offset: {x: -0.0149843395, y: 0.16861565}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.25}
-    oldSize: {x: 0.64, y: 0.64}
-    newSize: {x: 0.64, y: 0.64}
+    pivot: {x: 0.5, y: 0}
+    oldSize: {x: 0.33, y: 0.33}
+    newSize: {x: 0.33, y: 0.33}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3, y: 0.4}
+  m_Size: {x: 0.37003136, y: 0.33237967}
   m_EdgeRadius: 0
 --- !u!50 &5872778294612810967
 Rigidbody2D:
@@ -339,6 +340,27 @@ MonoBehaviour:
   _headWeapons: []
   _bodyWeapons: []
   _armWeapons: []
+--- !u!95 &4240260973874929764
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2342589716786910624}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c96d6372be96fde42b1bb4afbc9d1fd7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2673296198027976750
 GameObject:
   m_ObjectHideFlags: 0

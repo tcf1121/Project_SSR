@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -78,6 +78,7 @@ namespace SCR
     public class PlayerStats : MonoBehaviour
     {
         private Player player;
+        private AudioSource audioSource;
 
         [Header("케릭터 기본 정보")] // 후에 프라이빗으로 변경
         [SerializeField] private int _level = 1;
@@ -95,6 +96,8 @@ namespace SCR
 
         [Header("현재 상태")]
         [SerializeField] private Stats _finalStats;
+
+        public AudioClip DieClip;
 
         // 체력 재생 타이머
         private float regenTimer = 0f;
@@ -129,6 +132,12 @@ namespace SCR
             _changeLevel += SetLevel;
             _isDead += Die;
             Money = 0;
+
+            Transform child = transform.Find("AudioSource");
+            if (child != null)
+            {
+                audioSource = child.GetComponent<AudioSource>();
+            }
         }
 
         void Start()
@@ -137,6 +146,7 @@ namespace SCR
             RequiredExp();
             CurrentExp = 0;
             _hpRegenCor = StartCoroutine(HpRegen());
+            player.Animator.SetBool("IsAlive", true);
         }
 
         private void Update()
@@ -184,6 +194,8 @@ namespace SCR
         #region 생명 관리
         public void Die()
         {
+            audioSource.PlayOneShot(DieClip);
+            player.Animator.SetBool("IsAlive", false);
             StopCoroutine(_hpRegenCor);
             Time.timeScale = 0f;
         }
@@ -220,6 +232,7 @@ namespace SCR
             if (CurrentHp != oldHp)
             {
                 // OnHpChanged?.Invoke(currentHp); 현재 체력 변경 알림
+                player.Animator.SetTrigger("Hit");
             }
 
             if (CurrentHp <= 0)

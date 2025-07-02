@@ -32,7 +32,6 @@ namespace SCR
 
         public void GetItem()
         {
-            Debug.Log("아이템 뽑는 중");
             GameManager.StageManager.ItemSpawner.SetPos(gameObject.transform.position);
             GameManager.StageManager.ItemSpawner.Spawn();
         }

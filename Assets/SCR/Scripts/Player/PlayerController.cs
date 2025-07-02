@@ -60,7 +60,7 @@ namespace SCR
         // ===== ��Ÿ�� =====
         // ===== 쿨타임 =====
         private bool[] IsCool = { false, false, false, false, false };
-        private float[] CoolTimes = { 0, 0, 3f, 5f, 10f };
+        private float[] CoolTimes = { 0, 0, 3f, 5f, 30f };
 
         #region 유니티 주기
         void Awake()

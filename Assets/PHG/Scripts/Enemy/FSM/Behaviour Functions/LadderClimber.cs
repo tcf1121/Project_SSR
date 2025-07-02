@@ -41,7 +41,7 @@ namespace PHG
             this.rb = brain.rb;
             this.tf = brain.tf;
 
-            var stat = brain.statData;
+            var stat = brain.StatData;
             climbSpeed = stat.climbSpeed;
             forwardOffset = stat.ladderForwardOffset;
             detectRadius = stat.ladderDetectRadius;
@@ -198,9 +198,9 @@ namespace PHG
                 float yGap = playerTf.position.y - tf.position.y;
                 if (brain.CanJump)
                 {
-                    brain.PerformJump(hDir, Mathf.Abs(yGap), brain.statData.jumpForce,
-                                      brain.statData.jumpHorizontalFactor,
-                                      brain.statData.jumpCooldown);
+                    brain.PerformJump(hDir, Mathf.Abs(yGap), brain.StatData.jumpForce,
+                                      brain.StatData.jumpHorizontalFactor,
+                                      brain.StatData.jumpCooldown);
                 }
             }
             else

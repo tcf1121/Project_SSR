@@ -32,7 +32,7 @@ namespace PHG
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            if (!showGizmos || _brain == null || _brain.statData == null) return;
+            if (!showGizmos || _brain == null || _brain.StatData == null) return;
 
             float dir = Mathf.Sign(transform.localScale.x);
             Vector3 p = transform.position;
@@ -81,7 +81,7 @@ namespace PHG
             }
 
             // ─ Ranges ─
-            var stat = _brain.statData;
+            var stat = _brain.StatData;
             if (stat.readyRange > 0f) { Handles.color = new Color(0f, 1f, 0f, 0.35f); Handles.DrawWireDisc(p, Vector3.forward, stat.readyRange); }
             if (stat.patrolRange > 0f) { Handles.color = new Color(0f, 0.6f, 1f, 0.35f); Handles.DrawWireDisc(p, Vector3.forward, stat.patrolRange); }
             if (stat.chaseRange > 0f) { Handles.color = new Color(1f, 0.85f, 0f, 0.35f); Handles.DrawWireDisc(p, Vector3.forward, stat.chaseRange); }

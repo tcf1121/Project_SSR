@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using LHE;
 using UnityEngine;
 
 namespace SCR
@@ -14,7 +15,8 @@ namespace SCR
         [SerializeField] private ItemSpawner _itemSpawner;
         public GameObject StageMap { get => stageMap; }
         [SerializeField] private GameObject stageMap;
-
+        public DangerIndexManager DangerIndexManager { get => dangerIndexManager; }
+        [SerializeField] private DangerIndexManager dangerIndexManager;
 
         void Awake()
         {

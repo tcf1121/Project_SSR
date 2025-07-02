@@ -56,6 +56,7 @@ namespace SCR
             gameObject.GetComponent<BoxCollider2D>().offset = attackItem.gameObject.GetComponent<BoxCollider2D>().offset;
             gameObject.GetComponent<BoxCollider2D>().size = attackItem.gameObject.GetComponent<BoxCollider2D>().size;
             _image = attackItem.Image;
+            gameObject.GetComponent<SpriteRenderer>().sprite = _image;
             _itemPart = attackItem.ItemPart;
             _code = attackItem.Code;
             _name = attackItem.Name;

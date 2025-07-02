@@ -21,7 +21,7 @@ namespace PHG
             this.brain = brain;
             rb = brain.rb;
             tf = brain.tf;
-            statData = brain.statData;
+            statData = brain.StatData;
 
             /* Tag 의존 제거 —> Ability Flag 사용 */
             isRanged = brain.IsRanged;

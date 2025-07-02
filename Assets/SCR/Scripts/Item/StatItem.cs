@@ -43,6 +43,7 @@ namespace SCR
             gameObject.GetComponent<BoxCollider2D>().offset = statItem.gameObject.GetComponent<BoxCollider2D>().offset;
             gameObject.GetComponent<BoxCollider2D>().size = statItem.gameObject.GetComponent<BoxCollider2D>().size;
             _image = statItem.Image;
+            gameObject.GetComponent<SpriteRenderer>().sprite = _image;
             _itemPart = statItem.ItemPart;
             _code = statItem.Code;
             _name = statItem.Name;

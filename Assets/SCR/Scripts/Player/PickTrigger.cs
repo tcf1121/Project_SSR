@@ -35,19 +35,22 @@ namespace SCR
 
         void OnTriggerEnter2D(Collider2D collision)
         {
+
             if (collision.gameObject.CompareTag("Teleport"))
             {
+                _collider.enabled = false;
                 return;
             }
-            if (collision.gameObject.CompareTag("Box"))
+            else if (collision.gameObject.CompareTag("Box"))
             {
+                _collider.enabled = false;
                 // 상자 가격은 시간이 지날수록 오르고 그거보다 많으면 플레이어 코인 감소하면서
                 collision.gameObject.GetComponent<Box>().BoxOpen();
-                Debug.Log("상자");
                 return;
             }
-            if (collision.gameObject.CompareTag("Item"))
+            else if (collision.gameObject.CompareTag("Item"))
             {
+                _collider.enabled = false;
                 itemObject.Add(collision.gameObject);
                 return;
             }

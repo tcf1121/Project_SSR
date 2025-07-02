@@ -22,6 +22,7 @@ namespace SCR
     {
         // ===== 링크 스크립트 =====
         private Player player;
+        private AudioSource audioSource;
 
         // ===== 입력 상태 =====
         public Vector2 InputDirection { get { return _inputDirection; } }
@@ -52,6 +53,10 @@ namespace SCR
         private Collider2D currentLadder;
         private Coroutine pickCor;
 
+        // ===== 오디오 효과음 =====
+        public AudioClip jumpClip; 
+        public AudioClip dashClip; 
+
         // ===== 쿨타임 =====
         private bool[] IsCool = { false, false, false, false, false };
         private float[] CoolTimes = { 0, 0, 3f, 5f, 10f };
@@ -64,6 +69,12 @@ namespace SCR
             canClimb = true;
             canJump = true;
             pressNormalAttack = false;
+
+            Transform child = transform.Find("AudioSource");
+            if (child != null)
+            {
+                audioSource = child.GetComponent<AudioSource>();
+            }
         }
 
         void FixedUpdate()
@@ -386,11 +397,17 @@ namespace SCR
         /// </summary>
         private void ExecuteJump()
         {
+            // 점프 효과음 실행
+            audioSource.PlayOneShot(jumpClip);
+
             player.Rigid.velocity = new Vector2(player.Rigid.velocity.x, player.PlayerPhysical.FinalJump);
         }
 
         private void HalfExecuteJump()
         {
+            // 점프 효과음 실행
+            audioSource.PlayOneShot(jumpClip);
+
             player.Rigid.velocity = new Vector2(player.Rigid.velocity.x, player.PlayerPhysical.FinalJump * 0.6f);
         }
 
@@ -399,6 +416,9 @@ namespace SCR
         /// </summary>
         void TryDropThroughPlatform()
         {
+            // 점프 효과음 실행
+            audioSource.PlayOneShot(jumpClip);
+
             // 발 밑에 관통 가능한 플랫폼이 있는지 확인
             Collider2D platform = Physics2D.OverlapBox(player.PlayerPhysical.GroundCheck.position, player.PlayerPhysical.GroundCheckBoxSize, 0f, player.PlayerPhysical.PlatformLayer);
 
@@ -604,6 +624,9 @@ namespace SCR
             isTouchingWall = false;
             wallTouchTimer = 0f;
 
+            // 점프 효과음 실행
+            audioSource.PlayOneShot(jumpClip);
+
             // 입력 차단 시작
             player.PlayerPhysical.IsWallJumpInputBlocked = true;
             wallJumpInputBlockTimer = player.PlayerPhysical.WallJumpInputBlockTime;
@@ -662,6 +685,10 @@ namespace SCR
         private IEnumerator StartDash(float delay)
         {
             playerState = PlayerState.Dash;
+
+            // 대쉬 효과음 실행
+            audioSource.PlayOneShot(dashClip);
+
             dashDirection = new Vector2(facingRight ? 1 : -1, 0);
             player.Rigid.AddForce(dashDirection * 5f, ForceMode2D.Impulse);
             while (delay > 0.0f)

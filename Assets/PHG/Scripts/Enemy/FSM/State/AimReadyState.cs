@@ -32,6 +32,8 @@ namespace PHG
         {
             player = GameObject.FindWithTag("Player")?.transform;
 
+            if (stat.hasIdleAnim)
+                brain.PlayAnim(AnimNames.Idle);
             if (brain.IsGrounded() && !brain.IsMidJump)
                 rb.velocity = Vector2.zero;
         }
@@ -65,7 +67,7 @@ namespace PHG
             if (brain.IsGrounded() && !brain.IsMidJump)
                 rb.velocity = Vector2.zero;
             int dir = player.position.x > tf.position.x ? 1 : -1;
-            tf.localScale = new Vector3(Mathf.Abs(tf.localScale.x) * dir, 1, 1);
+            tf.localScale = new Vector3(Mathf.Abs(tf.localScale.x) * dir, tf.localScale.y, tf.localScale.z);
         }
 
         public void Exit() => rb.velocity = Vector2.zero;

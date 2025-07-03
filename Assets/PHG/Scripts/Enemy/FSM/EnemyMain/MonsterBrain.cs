@@ -22,6 +22,7 @@ namespace PHG
         [SerializeField] private RectTransform hpBar;
         [SerializeField] private Image hpBarFill;
         [SerializeField] private MonsterStats monsterStats;
+        [SerializeField] public Animator animator;
 
         public RectTransform HpBar { get => hpBar; }
         public Image HpBarFill { get => hpBarFill; }
@@ -43,14 +44,19 @@ namespace PHG
 
         public float Coeff { get; private set; } = 1f;
         public int SpawnStage { get; set; }
+        public Transform Target { get; set; } //애니메이션용 위치
 
         public LayerMask groundMask;
         private LayerMask ladderMask;
+        public IAttackBehavior attackBehavior;
+        private Transform muzzle;
+        public Transform Muzzle => muzzle;
+      
 
         private StateMachine sm;
         public StateMachine Sm => sm;
 
-        private IState idle, patrol, chase, attack, takeDamage, dead;
+        private IState idle, patrol, chase, attack, takeDamage, dead, aimReady;
 
         // 점프 시스템
         #region Jump
@@ -89,6 +95,7 @@ namespace PHG
 
         private void OnEnable()
         {
+        
             StatData = allMonsterStatData.GetStatEntry(thisMonsterType);
             if (allMonsterStatData == null)
             {
@@ -97,6 +104,10 @@ namespace PHG
 #endif
                 enabled = false;
                 return;
+            }
+            else
+            {
+                Debug.Log($"[MonsterBrain] Loaded StatData: {StatData.monsterType}, Prefab: {StatData.projectileprefab}");
             }
 
             if (StatData == null)
@@ -120,6 +131,8 @@ namespace PHG
             groundMask = StatData.groundMask;
             ladderMask = StatData.ladderMask;
 
+            if (IsRanged)
+                attackBehavior = new RangedAttackBehavior();
             // 점프 시스템 초기화
             jumper = new JumpMove();
             jumper.Init(rb, tf, StatData, groundMask);
@@ -139,13 +152,39 @@ namespace PHG
             attack = (IsRanged || hitBox == null)
                         ? new RangeAttackState(this)
                         : new MeleeAttackState(this, hitBox);
-
+            aimReady = new AimReadyState(this);
             if (StatData.idleMode == MonsterStatEntry.IdleMode.GreedInteract)
             {
                 var interact = GetComponent<Interactable>() ?? gameObject.AddComponent<Interactable>();
                 idle = new GreedIdleState(this, interact);
             }
             takeDamage = new TakeDamageState(this, new HitInfo(0, Vector2.zero));
+
+
+            muzzle = tf.Find("MuzzlePoint");
+            // if (muzzle == null)
+            // {
+            //     Debug.LogError($"[MonsterBrain.OnEnable] MuzzlePoint를 찾지 못했습니다. tf.name: {tf.name}");
+            //
+            //     // 여기에 추가하여 MuzzlePoint GameObject의 활성화 상태와 tf 자체의 활성화 상태를 확인합니다.
+            //     GameObject muzzleObjectInScene = GameObject.Find("MuzzlePoint"); // 씬 전체에서 MuzzlePoint를 찾아봅니다.
+            //     if (muzzleObjectInScene != null)
+            //     {
+            //         Debug.LogError($"하지만 씬에서 'MuzzlePoint'를 찾았습니다. 활성화 상태: {muzzleObjectInScene.activeInHierarchy} (Hierarchy), {muzzleObjectInScene.activeSelf} (Self)");
+            //         if (!muzzleObjectInScene.activeInHierarchy)
+            //         {
+            //             Debug.LogError("MuzzlePoint가 현재 비활성화 상태이므로 Find로 찾을 수 없습니다.");
+            //         }
+            //     }
+            //     else
+            //     {
+            //         Debug.LogError("씬 전체에서도 'MuzzlePoint' 게임 오브젝트를 찾을 수 없습니다. 이름 철자나 존재 여부를 확인하세요.");
+            //     }
+            // }
+            // else
+            // {
+            //     Debug.Log($"[MonsterBrain.OnEnable] MuzzlePoint 찾음: {muzzle.name}");
+            // }
 
             sm = new StateMachine();
             sm.Register(StateID.Idle, idle);
@@ -155,8 +194,11 @@ namespace PHG
             sm.Register(StateID.Dead, dead);
             sm.ChangeState(StateID.Idle);
             sm.Register(StateID.TakeDamage, takeDamage);
+            sm.Register(StateID.AimReady, aimReady);
             InitializeStats(GameManager.Stage);
             monsterStats.EnableStats();
+
+
         }
 
         private void FixedUpdate()
@@ -203,6 +245,9 @@ namespace PHG
         {
             Vector2 dir = ((Vector2)transform.position - origin).normalized;
 
+            if (StatData.hasIdleAnim)
+                PlayAnim(AnimNames.Stagger);
+
             // "퍽!" 느낌용 넉백 속도 세팅
             rb.velocity = dir * force;
 
@@ -246,6 +291,25 @@ namespace PHG
 
             // public float Coeff { get; private set; } = 1f;
             // public int SpawnStage { get; set; }
+        }
+
+        public void PlayAnim(string animName)
+        {
+            if (animator == null) animator = GetComponent<Animator>();
+            animator.Play(animName);
+        }
+
+        public void FireProjectile()
+        {
+           // Debug.Log("애니메이션 이벤트: FireProjectile() 호출됨");
+            if (attackBehavior != null)
+            {
+                attackBehavior.Execute(this);
+            }
+            else
+            {
+               // Debug.LogWarning(" attackBehavior is null");
+            }
         }
     }
 }

@@ -56,6 +56,7 @@ namespace PHG
             _gold = Mathf.RoundToInt(brain.StatData.goldReward * brain.Coeff);
             _exp = Mathf.RoundToInt(brain.StatData.expReward * brain.Coeff);
             _moveSpeed = 1f + brain.StatData.moveSpeed * 0.1f;
+            _moveSpeed = 1f + brain.StatData.moveSpeed * 0.1f;
             _patrolRange = brain.StatData.patrolRange * 0.25f;
             _chaseRange = brain.StatData.chaseRange * 0.25f;
             _attackRange = brain.StatData.attackRange * 0.25f;

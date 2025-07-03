@@ -31,8 +31,10 @@ namespace PHG
         private IEnumerator DieCoroutine()
         {
             var anim = brain.GetComponent<Animator>();
-            if (anim != null)
-                anim.SetTrigger("Die");
+
+            if (brain.StatData.hasIdleAnim)
+                brain.PlayAnim(AnimNames.Dead);
+
 
             yield return new WaitForSeconds(1.5f); // 사망 연출 대기
 

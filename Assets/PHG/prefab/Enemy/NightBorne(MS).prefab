@@ -62,9 +62,10 @@ MonoBehaviour:
   hpBar: {fileID: 0}
   hpBarFill: {fileID: 0}
   monsterStats: {fileID: 0}
+  animator: {fileID: 0}
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1536
 --- !u!50 &6828745291782486677
 Rigidbody2D:
   serializedVersion: 4

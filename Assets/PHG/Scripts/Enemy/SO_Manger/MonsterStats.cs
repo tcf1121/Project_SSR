@@ -52,12 +52,12 @@ namespace PHG
             Debug.Log(_maxHP);
             _damage = Mathf.RoundToInt(brain.StatData.damage * brain.Coeff);
             Debug.Log(_damage);
-            _moveSpeed = brain.StatData.moveSpeed;
+            _moveSpeed = 1f + brain.StatData.moveSpeed * 0.1f;
             Debug.Log(_moveSpeed);
-            _patrolRange = brain.StatData.patrolRange;
-            _chaseRange = brain.StatData.chaseRange;
-            _attackRange = brain.StatData.attackRange;
-            _chargeRange = brain.StatData.chargeRange;
+            _patrolRange = brain.StatData.patrolRange * 0.25f;
+            _chaseRange = brain.StatData.chaseRange * 0.25f;
+            _attackRange = brain.StatData.attackRange * 0.25f;
+            _chargeRange = brain.StatData.chargeRange * 0.25f;
             _usePatrol = brain.StatData.usePatrol;
             _currentHP = _maxHP;
         }

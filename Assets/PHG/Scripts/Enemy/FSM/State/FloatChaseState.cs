@@ -39,6 +39,9 @@ namespace PHG
             if (sPlayer == null)
                 sPlayer = GameObject.FindWithTag("Player")?.transform;
 
+            if (brain.StatData.hasIdleAnim)
+                brain.PlayAnim(AnimNames.Walk);
+
             lastShot = Time.time;      // 쿨타임 초기화
         }
 

@@ -62,6 +62,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 1
     groundMask:
       serializedVersion: 2
@@ -111,6 +116,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 2
     groundMask:
       serializedVersion: 2
@@ -160,6 +170,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 3
     groundMask:
       serializedVersion: 2
@@ -209,6 +224,11 @@ MonoBehaviour:
     expReward: 20
     goldReward: 20
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 4
     groundMask:
       serializedVersion: 2
@@ -258,6 +278,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 5
     groundMask:
       serializedVersion: 2
@@ -287,7 +312,7 @@ MonoBehaviour:
     usePatrol: 1
     idleMode: 0
     rangedCooldown: 2
-    projectileprefab: {fileID: 1941247834333990247, guid: c7d6d6b83b9fcf34bb19b50bd379aa35, type: 3}
+    projectileprefab: {fileID: -4595588588518355158, guid: 6d727b2ffdf049d40b7b74472effffbf, type: 3}
     readyRange: 8
     projectileSpeed: 3
     projectileLife: 3
@@ -307,6 +332,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 6
     groundMask:
       serializedVersion: 2
@@ -333,10 +363,10 @@ MonoBehaviour:
     maxJumpYDiffForAdjustment: 4
     groundCheckOffset: {x: 0, y: -0.05}
     groundCheckRadius: 0.12
-    usePatrol: 0
+    usePatrol: 1
     idleMode: 0
     rangedCooldown: 2
-    projectileprefab: {fileID: 0}
+    projectileprefab: {fileID: 1941247834333990247, guid: c7d6d6b83b9fcf34bb19b50bd379aa35, type: 3}
     readyRange: 0
     projectileSpeed: 10
     projectileLife: 3
@@ -345,8 +375,8 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
-    isFlying: 1
-    isRanged: 0
+    isFlying: 0
+    isRanged: 1
     isCharging: 0
     enableLadderClimb: 0
     climbYThreshold: 0.7
@@ -356,6 +386,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 7
     groundMask:
       serializedVersion: 2
@@ -395,7 +430,7 @@ MonoBehaviour:
     meleeCooldown: 0.6
     meleeRadius: 1
     isFlying: 1
-    isRanged: 1
+    isRanged: 0
     isCharging: 0
     enableLadderClimb: 0
     climbYThreshold: 0.7
@@ -405,6 +440,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 8
     groundMask:
       serializedVersion: 2
@@ -454,6 +494,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 11
     groundMask:
       serializedVersion: 2
@@ -503,6 +548,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 12
     groundMask:
       serializedVersion: 2
@@ -552,3 +602,8 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1

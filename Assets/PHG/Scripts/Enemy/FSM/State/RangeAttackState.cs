@@ -15,7 +15,7 @@ namespace PHG
         readonly bool isFlying;
 
         Transform player;
-        Transform muzzle;
+        public Transform muzzle;
         float lastShot;
 
         /* ───────── cached values ───────── */
@@ -32,7 +32,7 @@ namespace PHG
             rb = brain.rb;
             tf = brain.tf;
             statData = brain.StatData;
-            muzzle = tf.Find("MuzzlePoint");
+            muzzle = brain.Muzzle;
             isFlying = brain.IsFlying;
         }
 
@@ -40,57 +40,46 @@ namespace PHG
         {
             player = GameObject.FindWithTag("Player")?.transform;
 
-            // 지상일 때만 정지 – 공중 점프 중이면 유지
-            if (brain.IsGrounded() && !brain.IsMidJump)
-                rb.velocity = Vector2.zero;
+            if (brain.StatData.hasIdleAnim)
+                brain.PlayAnim(AnimNames.Attack);
+
 
             lastShot = Time.time;
         }
 
         public void Tick()
         {
-            if (player == null)
-            {
-                player = GameObject.FindWithTag("Player")?.transform;
-                if (player == null) return;
-            }
+            // 1. 쿨타임 확인
+            if (Time.time - lastShot < Cooldown)
+                return;
 
-            Vector2 toPl = (Vector2)player.position - (Vector2)tf.position;
-            float dist = toPl.magnitude;
+            // 2. 플레이어 유효성 및 거리 체크
+            if (player == null) return;
+            float dist = Vector2.Distance(tf.position, player.position);
 
-            FacePlayer();
-
-            // 추적 범위 밖 → 추적 재개
             if (dist > ChaseR)
             {
                 brain.ChangeState(StateID.Chase);
                 return;
             }
 
-            // 추적 유지 범위 → Chase로 복귀 (사격 불가한 거리)
-            if (dist > AttackR && dist <= ChaseR)
+            if (dist > AttackR)
             {
                 brain.ChangeState(StateID.Chase);
                 return;
             }
 
-            // 사격
-            if (dist <= AttackR)
-            {
-                // ★ grounded일 때만 멈추기
-                bool grounded = brain.IsGrounded();  // jumper.IsGrounded() 내부 호출
-                if (grounded&&!brain.IsMidJump)
-                    rb.velocity = Vector2.zero;
+            // 3. 공격 범위 안이면 정지 후 애니메이션만 재생
+            if (brain.IsGrounded() && !brain.IsMidJump)
+                rb.velocity = Vector2.zero;
 
-                if (Time.time - lastShot >= Cooldown)
-                {
-                    Shoot();
-                    lastShot = Time.time;
-                }
+            // Execute() 직접 호출 삭제!
+            brain.animator.Play(AnimNames.Attack, 0, 0f);
 
-                return;
-            }
+            // 4. 쿨타임 초기화
+            lastShot = Time.time;
         }
+
         public void Exit()
         {
             if (brain.IsGrounded() && !brain.IsMidJump)
@@ -144,6 +133,7 @@ namespace PHG
                 }
             }
         }
+
 
         void FacePlayer()
         {

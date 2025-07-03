@@ -28,7 +28,14 @@ namespace PHG
             this.statData = brain.StatData;
         }
 
-        public void Enter() => dir = tf.localScale.x >= 0f ? 1 : -1;
+        public void Enter()
+        {
+        
+            if (brain.StatData.hasIdleAnim)
+                brain.PlayAnim(AnimNames.Walk);
+        
+        dir = tf.localScale.x >= 0f ? 1 : -1;
+        }
 
         public void Tick()
         {

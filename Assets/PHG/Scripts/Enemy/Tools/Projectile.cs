@@ -25,14 +25,15 @@ namespace PHG
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
-       
-     
+            Debug.Log($"[Projectile] Awake: name={gameObject.name}, rb={rb}, active={gameObject.activeSelf}");
+
         }
         private void OnEnable()
         {
             alive = 0f;
             lastDir = Vector2.right; //  기본 방향으로 초기화
             transform.rotation = Quaternion.identity; // 
+            Debug.Log($"[Projectile] OnEnable 호출됨, lifeTime={lifeTime}");
         }
         public void Launch(Vector2 dir, float newSpeed)
         {
@@ -50,7 +51,7 @@ namespace PHG
             lastDir = dir.normalized;
             this.speed = newSpeed;
             rb.velocity = dir.normalized * this.speed;
-
+            Debug.Log($"[Projectile] Launch! dir={dir}, speed={speed}, rb.vel={rb.velocity}, lifeTime={lifeTime}");
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 

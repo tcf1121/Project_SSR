@@ -227,15 +227,17 @@ MonoBehaviour:
   sensor: {fileID: 1058828418819733304}
   wallSensor: {fileID: 2333341878802303036}
   hitBox: {fileID: 584065671993578245}
-  _runtimeStats: {fileID: 5873433650609217138}
   allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
   thisMonsterType: 0
   damageTextPrefab: {fileID: 1373479669899882519, guid: 1b90f7c35b4a7bc408e4372631cfb6f7, type: 3}
   staggerThreshold: 15
-  hpBarRoot: {fileID: 1485182302214798521, guid: c7b1cd8952107e948a6a9d06d320d44d, type: 3}
+  hpBar: {fileID: 0}
+  hpBarFill: {fileID: 0}
+  monsterStats: {fileID: 0}
+  animator: {fileID: 0}
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1536
 --- !u!50 &678977491815904805
 Rigidbody2D:
   serializedVersion: 4
@@ -372,56 +374,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afebd25277e31ad4dba41e4f7888a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localRuntimeStats:
-    monsterType: 9
-    groundMask:
-      serializedVersion: 2
-      m_Bits: 0
-    ladderMask:
-      serializedVersion: 2
-      m_Bits: 0
-    maxHP: 100
-    damage: 10
-    moveSpeed: 2
-    rushMultiplier: 1.5
-    maxClimbableHeight: 2
-    staggerThreshold: 15
-    knockbackForce: 3
-    knockbackDuration: 0.07
-    patrolRange: 3
-    chaseRange: 6
-    attackRange: 1
-    chargeRange: 2.5
-    enableJump: 0
-    jumpHorizontalFactor: 0.6
-    jumpForce: 4
-    jumpCooldown: 0.45
-    maxJumpYDiffForAdjustment: 4
-    groundCheckOffset: {x: 0, y: -0.05}
-    groundCheckRadius: 0.12
-    usePatrol: 1
-    idleMode: 0
-    rangedCooldown: 2
-    projectileprefab: {fileID: 0}
-    readyRange: 10
-    projectileSpeed: 10
-    projectileLife: 3
-    firePattern: 0
-    pelletCount: 5
-    spreadAngle: 60
-    meleeCooldown: 0.6
-    meleeRadius: 1
-    isFlying: 0
-    isRanged: 0
-    isCharging: 0
-    enableLadderClimb: 0
-    climbYThreshold: 0.7
-    ladderForwardOffset: {x: 0.15, y: 0}
-    ladderDetectRadius: 0.35
-    climbSpeed: 3
-    expReward: 10
-    goldReward: 5
-    rewardCoefficient: 1
+  brain: {fileID: 0}
+  _currentHP: 0
+  _maxHP: 0
+  _damage: 0
+  _moveSpeed: 0
+  _patrolRange: 0
+  _chaseRange: 0
+  _attackRange: 0
+  _chargeRange: 0
+  _usePatrol: 0
 --- !u!95 &5532302851133918666
 Animator:
   serializedVersion: 5

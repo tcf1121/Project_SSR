@@ -32,10 +32,17 @@ namespace PHG
         /// <param name="spawnPos">생성 위치</param>
         public Projectile Get(Projectile prefab, Vector2 spawnPos)
         {
-            int key = prefab.GetInstanceID();
+            if (prefab == null)
+            {
+                Debug.LogError("ProjectilePool.Get() 호출됨, BUT prefab == NULL!!");
+                return null;
+            }
 
+            int key = prefab.GetInstanceID();
+            Debug.Log($"[ProjectilePool] Instantiating projectile: {prefab.name}, activeSelf={prefab.gameObject.activeSelf}");
             if (!pools.TryGetValue(key, out Queue<Projectile> q))
             {
+                Debug.Log("!pools");
                 q = new Queue<Projectile>();
                 pools[key] = q;
             }

@@ -72,6 +72,8 @@ namespace PHG
             if (!ReadyToJump())
                 return false;
 
+
+
             isMidJump = true;
             jumpTimer = lockDuration > 0 ? lockDuration : stat.jumpCooldown;
 

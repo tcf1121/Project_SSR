@@ -107,6 +107,12 @@ namespace PHG
         [Header("보상 계수")]
         public float rewardCoefficient = 1.0f;
 
+        [Header("Animation Flags")]
+        [Tooltip("대기 애니메이션")] public bool hasIdleAnim = true;
+        [Tooltip("이동 애니메이션")] public bool hasWalkAnim = true;
+        [Tooltip("공격 애니메이션")] public bool hasAttackAnim = true;
+        [Tooltip("경직 애니메이션")] public bool hasStaggerAnim = true;
+        [Tooltip("사망 애니메이션")] public bool hasDeadAnim = true;
 
         /* ───────── Convenience Accessors ───────── */
         public float JumpForce => enableJump ? jumpForce : 0f;

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 609172626995306968}
   - component: {fileID: 1706399164655164626}
   - component: {fileID: 4693576698208188126}
+  - component: {fileID: 1578725833988089323}
   m_Layer: 12
   m_Name: CursingWitch
   m_TagString: Untagged
@@ -134,12 +135,13 @@ MonoBehaviour:
   sensor: {fileID: 7944132196212776376}
   wallSensor: {fileID: 4641968383178793456}
   hitBox: {fileID: 4055489867119391630}
-  _runtimeStats: {fileID: 1706399164655164626}
   allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
   thisMonsterType: 11
   damageTextPrefab: {fileID: 0}
   staggerThreshold: 15
-  hpBarRoot: {fileID: 0}
+  hpBar: {fileID: 0}
+  hpBarFill: {fileID: 0}
+  monsterStats: {fileID: 0}
   groundMask:
     serializedVersion: 2
     m_Bits: 0
@@ -200,56 +202,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afebd25277e31ad4dba41e4f7888a6d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localRuntimeStats:
-    monsterType: 9
-    groundMask:
-      serializedVersion: 2
-      m_Bits: 0
-    ladderMask:
-      serializedVersion: 2
-      m_Bits: 0
-    maxHP: 100
-    damage: 10
-    moveSpeed: 2
-    rushMultiplier: 1.5
-    maxClimbableHeight: 2
-    staggerThreshold: 15
-    knockbackForce: 3
-    knockbackDuration: 0.07
-    patrolRange: 3
-    chaseRange: 6
-    attackRange: 1
-    chargeRange: 2.5
-    enableJump: 0
-    jumpHorizontalFactor: 0.6
-    jumpForce: 4
-    jumpCooldown: 0.45
-    maxJumpYDiffForAdjustment: 4
-    groundCheckOffset: {x: 0, y: -0.05}
-    groundCheckRadius: 0.12
-    usePatrol: 1
-    idleMode: 0
-    rangedCooldown: 2
-    projectileprefab: {fileID: 0}
-    readyRange: 10
-    projectileSpeed: 10
-    projectileLife: 3
-    firePattern: 0
-    pelletCount: 5
-    spreadAngle: 60
-    meleeCooldown: 0.6
-    meleeRadius: 1
-    isFlying: 0
-    isRanged: 0
-    isCharging: 0
-    enableLadderClimb: 0
-    climbYThreshold: 0.7
-    ladderForwardOffset: {x: 0.15, y: 0}
-    ladderDetectRadius: 0.35
-    climbSpeed: 3
-    expReward: 10
-    goldReward: 5
-    rewardCoefficient: 1
+  brain: {fileID: 0}
+  _currentHP: 0
+  _maxHP: 0
+  _damage: 0
+  _moveSpeed: 0
+  _patrolRange: 0
+  _chaseRange: 0
+  _attackRange: 0
+  _chargeRange: 0
+  _usePatrol: 0
 --- !u!114 &4693576698208188126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,6 +225,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showGizmos: 1
+--- !u!95 &1578725833988089323
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277137760898443516}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0be592810cbaa54419e21456f9ca5ba6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2140674129110057170
 GameObject:
   m_ObjectHideFlags: 0

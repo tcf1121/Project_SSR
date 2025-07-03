@@ -395,7 +395,7 @@ MonoBehaviour:
     meleeCooldown: 0.6
     meleeRadius: 1
     isFlying: 1
-    isRanged: 1
+    isRanged: 0
     isCharging: 0
     enableLadderClimb: 0
     climbYThreshold: 0.7

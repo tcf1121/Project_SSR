@@ -87,7 +87,7 @@ SpriteRenderer:
   m_SortingLayerID: -1372975407
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5106514740344756947, guid: 2f86a373f4c1d764db4a4335696d347b, type: 3}
+  m_Sprite: {fileID: -5106514740344756947, guid: 48f1e26fe5b31644799e366a9af5fa7d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -95,7 +95,7 @@ SpriteRenderer:
   m_Size: {x: 0.33, y: 0.33}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &4652185408082642723
@@ -196,6 +196,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78086174806aae439d0095266c9bbe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpClip: {fileID: 0}
+  dashClip: {fileID: 0}
 --- !u!114 &2574776307639979087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,6 +324,7 @@ MonoBehaviour:
     HpRegen: 0
     Speed: 0
     Jump: 0
+  DieClip: {fileID: 0}
 --- !u!114 &5349406287190802432
 MonoBehaviour:
   m_ObjectHideFlags: 0

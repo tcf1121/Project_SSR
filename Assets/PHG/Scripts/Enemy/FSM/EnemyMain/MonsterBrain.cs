@@ -56,7 +56,7 @@ namespace PHG
         private StateMachine sm;
         public StateMachine Sm => sm;
 
-        private IState idle, patrol, chase, attack, takeDamage, dead;
+        private IState idle, patrol, chase, attack, takeDamage, dead, aimReady;
 
         // 점프 시스템
         #region Jump
@@ -152,7 +152,7 @@ namespace PHG
             attack = (IsRanged || hitBox == null)
                         ? new RangeAttackState(this)
                         : new MeleeAttackState(this, hitBox);
-
+            aimReady = new AimReadyState(this);
             if (StatData.idleMode == MonsterStatEntry.IdleMode.GreedInteract)
             {
                 var interact = GetComponent<Interactable>() ?? gameObject.AddComponent<Interactable>();
@@ -160,30 +160,31 @@ namespace PHG
             }
             takeDamage = new TakeDamageState(this, new HitInfo(0, Vector2.zero));
 
+
             muzzle = tf.Find("MuzzlePoint");
-           // if (muzzle == null)
-           // {
-           //     Debug.LogError($"[MonsterBrain.OnEnable] MuzzlePoint를 찾지 못했습니다. tf.name: {tf.name}");
-           //
-           //     // 여기에 추가하여 MuzzlePoint GameObject의 활성화 상태와 tf 자체의 활성화 상태를 확인합니다.
-           //     GameObject muzzleObjectInScene = GameObject.Find("MuzzlePoint"); // 씬 전체에서 MuzzlePoint를 찾아봅니다.
-           //     if (muzzleObjectInScene != null)
-           //     {
-           //         Debug.LogError($"하지만 씬에서 'MuzzlePoint'를 찾았습니다. 활성화 상태: {muzzleObjectInScene.activeInHierarchy} (Hierarchy), {muzzleObjectInScene.activeSelf} (Self)");
-           //         if (!muzzleObjectInScene.activeInHierarchy)
-           //         {
-           //             Debug.LogError("MuzzlePoint가 현재 비활성화 상태이므로 Find로 찾을 수 없습니다.");
-           //         }
-           //     }
-           //     else
-           //     {
-           //         Debug.LogError("씬 전체에서도 'MuzzlePoint' 게임 오브젝트를 찾을 수 없습니다. 이름 철자나 존재 여부를 확인하세요.");
-           //     }
-           // }
-           // else
-           // {
-           //     Debug.Log($"[MonsterBrain.OnEnable] MuzzlePoint 찾음: {muzzle.name}");
-           // }
+            // if (muzzle == null)
+            // {
+            //     Debug.LogError($"[MonsterBrain.OnEnable] MuzzlePoint를 찾지 못했습니다. tf.name: {tf.name}");
+            //
+            //     // 여기에 추가하여 MuzzlePoint GameObject의 활성화 상태와 tf 자체의 활성화 상태를 확인합니다.
+            //     GameObject muzzleObjectInScene = GameObject.Find("MuzzlePoint"); // 씬 전체에서 MuzzlePoint를 찾아봅니다.
+            //     if (muzzleObjectInScene != null)
+            //     {
+            //         Debug.LogError($"하지만 씬에서 'MuzzlePoint'를 찾았습니다. 활성화 상태: {muzzleObjectInScene.activeInHierarchy} (Hierarchy), {muzzleObjectInScene.activeSelf} (Self)");
+            //         if (!muzzleObjectInScene.activeInHierarchy)
+            //         {
+            //             Debug.LogError("MuzzlePoint가 현재 비활성화 상태이므로 Find로 찾을 수 없습니다.");
+            //         }
+            //     }
+            //     else
+            //     {
+            //         Debug.LogError("씬 전체에서도 'MuzzlePoint' 게임 오브젝트를 찾을 수 없습니다. 이름 철자나 존재 여부를 확인하세요.");
+            //     }
+            // }
+            // else
+            // {
+            //     Debug.Log($"[MonsterBrain.OnEnable] MuzzlePoint 찾음: {muzzle.name}");
+            // }
 
             sm = new StateMachine();
             sm.Register(StateID.Idle, idle);
@@ -193,10 +194,11 @@ namespace PHG
             sm.Register(StateID.Dead, dead);
             sm.ChangeState(StateID.Idle);
             sm.Register(StateID.TakeDamage, takeDamage);
+            sm.Register(StateID.AimReady, aimReady);
             InitializeStats(GameManager.Stage);
             monsterStats.EnableStats();
 
-         
+
         }
 
         private void FixedUpdate()

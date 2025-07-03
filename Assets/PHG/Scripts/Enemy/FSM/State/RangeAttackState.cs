@@ -69,6 +69,7 @@ namespace PHG
                 return;
             }
 
+            FacePlayer();
             // 3. 공격 범위 안이면 정지 후 애니메이션만 재생
             if (brain.IsGrounded() && !brain.IsMidJump)
                 rb.velocity = Vector2.zero;
@@ -111,7 +112,7 @@ namespace PHG
                 float angle = Mathf.Atan2(baseDir.y, baseDir.x) * Mathf.Rad2Deg;
                 p.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-                p.Launch(baseDir, statData.projectileSpeed);
+                p.Launch(baseDir, statData.projectileSpeed, brain);
             }
             else
             {
@@ -129,7 +130,7 @@ namespace PHG
 
                     Projectile p = pool.Get(prefab, muzzle.position);
                     p.transform.rotation = Quaternion.AngleAxis(shotAngle, Vector3.forward);
-                    p.Launch(dir, statData.projectileSpeed);
+                    p.Launch(dir, statData.projectileSpeed, brain);
                 }
             }
         }

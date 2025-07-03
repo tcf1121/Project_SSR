@@ -12,7 +12,7 @@ namespace PHG
     {
         //멤버변수
         [SerializeField] private float speed = 10f; //이동속도
-        [SerializeField] private float lifeTime = 5f; //최대 생존 시간
+        [SerializeField] private float lifeTime;//최대 생존 시간
         private MonsterBrain brain;
         
         private Rigidbody2D rb;
@@ -26,7 +26,7 @@ namespace PHG
         {
             rb = GetComponent<Rigidbody2D>();
             Debug.Log($"[Projectile] Awake: name={gameObject.name}, rb={rb}, active={gameObject.activeSelf}");
-
+        
         }
         private void OnEnable()
         {
@@ -35,13 +35,28 @@ namespace PHG
             transform.rotation = Quaternion.identity; // 
             Debug.Log($"[Projectile] OnEnable 호출됨, lifeTime={lifeTime}");
         }
-        public void Launch(Vector2 dir, float newSpeed)
+        public void Launch(Vector2 dir, float newSpeed, MonsterBrain monsterBrain)
         {
-            if(rb == null)
+            this.brain = monsterBrain;
+
+            // brain 또는 StatData가 유효한지 확인
+            if (this.brain == null || this.brain.StatData == null)
+            {
+                Debug.LogError($"[Projectile {gameObject.name}] Launch() 호출 시 MonsterBrain 또는 StatData가 NULL입니다. 발사 중단.", this);
+                ReturnToPool(); // 필수 데이터가 없으면 풀로 즉시 반환
+                return;
+            }
+
+            // lifeTime과 speed를 monsterBrain.StatData에서 가져와 설정
+            lifeTime = this.brain.StatData.projectileLife;
+            this.speed = newSpeed; // newSpeed는 monsterBrain.StatData.projectileSpeed에서 가져와야 함.
+
+            // Rigidbody2D 초기화 (기존 로직 유지)
+            if (rb == null)
             {
                 rb = GetComponent<Rigidbody2D>();
                 Debug.Log("Awake, OnEnable단계에서 rb받아오기 실패");
-                if (rb == null) // 재시도 후에도 null이면 더 이상 진행할 수 없으므로 종료
+                if (rb == null)
                 {
                     Debug.LogError($"[Projectile {gameObject.name}] Launch() 재시도 후에도 Rigidbody2D가 여전히 NULL입니다. 발사 중단.", this);
                     return;

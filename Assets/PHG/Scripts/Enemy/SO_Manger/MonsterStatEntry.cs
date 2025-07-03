@@ -24,7 +24,7 @@ namespace PHG
         [Header("Base Stats")]
         [Tooltip("체력")] public int maxHP = 100;    // 멤버 변수
         [Tooltip("공격력")] public int damage = 10;     // 멤버 변수
-        [Tooltip("이동속도")] public float moveSpeed = 2f;     // 멤버 변수
+        [Tooltip("이동속도")] public float moveSpeed = 1.5f;       // 멤버 변수
         [Tooltip("돌진 가속도 배수")] public float rushMultiplier = 1.5f;// 멤버 변수
         [Tooltip("점프판단 허용 높이")] public float maxClimbableHeight = 2f; // 멤버 변수
 

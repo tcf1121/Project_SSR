@@ -8,13 +8,12 @@ namespace PHG
         private readonly MonsterBrain brain;
         private readonly Rigidbody2D rb;
         private readonly Transform tf;
-        private static Transform sPlayer;       // 플레이어 캐싱
+        private static Transform sPlayer;        // 플레이어 캐싱
         private readonly MonsterStatEntry statData;
 
         /* 원거리 전용 */
         private readonly bool isRanged;
         private readonly Transform muzzle;
-        private float lastShot;
 
         public FloatChaseState(MonsterBrain brain)
         {
@@ -41,8 +40,6 @@ namespace PHG
 
             if (brain.StatData.hasIdleAnim)
                 brain.PlayAnim(AnimNames.Walk);
-
-            lastShot = Time.time;      // 쿨타임 초기화
         }
 
         public void Tick()
@@ -50,7 +47,7 @@ namespace PHG
             if (sPlayer == null)
             {
                 sPlayer = GameObject.FindWithTag("Player")?.transform;
-                if (sPlayer == null) return;       // 플레이어 못 찾음
+                if (sPlayer == null) return;        // 플레이어 못 찾음
             }
 
             Vector2 currentPos = tf.position;
@@ -67,12 +64,11 @@ namespace PHG
             /* ───── 원거리형 로직 ───── */
             if (isRanged)
             {
-                /* 사정거리 내 → Shoot */
-                if (dist <= statData.attackRange &&
-                    Time.time - lastShot >= statData.rangedCooldown)
+                /* 사정거리 내 → Shoot (RangedAttackBehavior 사용) */
+                if (dist <= statData.attackRange) // Cooldown is handled by RangedAttackBehavior
                 {
-                    Shoot();
-                    lastShot = Time.time;
+                    // RangedAttackBehavior를 통해 발사 로직 실행
+                    brain.attackBehavior.Execute(brain);
                 }
 
                 /* readyRange 바깥이면 추격, 안이면 멈춤 */
@@ -111,40 +107,7 @@ namespace PHG
 
         /* -------------------------------------------------------------- */
         #region helpers
-        void Shoot()
-        {
-            if (muzzle == null) return;
-
-            ProjectilePool pool = ProjectilePool.Instance;
-            if (pool == null) { Debug.LogError("ProjectilePool null"); return; }
-
-            Vector2 baseDir = (sPlayer.position - muzzle.position).normalized;
-            Projectile prefab = statData.projectileprefab;
-
-            if (statData.firePattern == MonsterStatEntry.FirePattern.Single)
-            {
-                Projectile p = pool.Get(prefab, muzzle.position);
-                p.transform.rotation = Quaternion.FromToRotation(Vector2.right, baseDir);
-                p.Launch(baseDir, statData.projectileSpeed);
-            }
-            else // Spread
-            {
-                int pellets = Mathf.Max(1, statData.pelletCount);
-                float spread = statData.spreadAngle;
-                float step = pellets > 1 ? spread / (pellets - 1) : 0f;
-
-                for (int i = 0; i < pellets; ++i)
-                {
-                    float angle = -spread * 0.5f + step * i;
-                    Vector2 dir = Quaternion.AngleAxis(angle, Vector3.forward) * baseDir;
-
-                    Projectile p = pool.Get(prefab, muzzle.position);
-                    p.transform.rotation = Quaternion.FromToRotation(Vector2.right, dir);
-                    p.Launch(dir, statData.projectileSpeed);
-                }
-            }
-        }
-
+        // Shoot() 메서드는 RangedAttackBehavior.Execute()로 대체되어 제거되었습니다.
         void Orient(Vector2 dir)
         {
             if (Mathf.Abs(dir.x) > 0.05f)

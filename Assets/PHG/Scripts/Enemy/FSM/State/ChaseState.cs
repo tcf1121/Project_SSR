@@ -41,6 +41,10 @@ namespace PHG
             if (sPlayer == null)
                 sPlayer = GameObject.FindWithTag("Player")?.transform;
 
+            if (brain.StatData.hasIdleAnim)
+                brain.PlayAnim(AnimNames.Walk);
+
+
             lastShot = Time.time;
         }
 
@@ -147,6 +151,9 @@ namespace PHG
                 brain.ChangeState(StateID.Attack);
                 return;
             }
+            // 2b. 사격 대기 범위(readyRange) 진입 시 AimReady State로 전환
+            // (공격 사거리 밖이지만 조준 준비 상태로 돌입)
+            // statData.readyRange는 statData.attackRange보다 크고 statData.chaseRange보다 큼
 
             /* --- 추적 유지 구간: 수평 이동만 계속 --- */
             if (grounded && !midJump)
@@ -234,7 +241,7 @@ namespace PHG
             {
                 Projectile p = pool.Get(prefab, muzzle.position);
                 p.transform.rotation = Quaternion.FromToRotation(Vector2.right, baseDir);
-                p.Launch(baseDir, statData.projectileSpeed);
+                p.Launch(baseDir, statData.projectileSpeed, brain);
             }
             else
             {
@@ -249,7 +256,7 @@ namespace PHG
 
                     Projectile p = pool.Get(prefab, muzzle.position);
                     p.transform.rotation = Quaternion.FromToRotation(Vector2.right, dirVec);
-                    p.Launch(dirVec, statData.projectileSpeed);
+                    p.Launch(dirVec, statData.projectileSpeed, brain);
                 }
             }
         }

@@ -72,10 +72,12 @@ namespace PHG
             if (!ReadyToJump())
                 return false;
 
+
+
             isMidJump = true;
             jumpTimer = lockDuration > 0 ? lockDuration : stat.jumpCooldown;
 
-            float yForce = jumpForce;
+            float yForce = jumpForce * 0.6f;
             float xImpulse = 0.35f;  // 고정된 벽 넘기 힘
             rb.velocity = Vector2.zero;
 

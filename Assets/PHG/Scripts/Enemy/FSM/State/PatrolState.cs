@@ -28,7 +28,14 @@ namespace PHG
             this.statData = brain.StatData;
         }
 
-        public void Enter() => dir = tf.localScale.x >= 0f ? 1 : -1;
+        public void Enter()
+        {
+
+            if (brain.StatData.hasIdleAnim)
+                brain.PlayAnim(AnimNames.Walk);
+
+            dir = tf.localScale.x >= 0f ? 1 : -1;
+        }
 
         public void Tick()
         {
@@ -49,7 +56,15 @@ namespace PHG
                 scale.x = Mathf.Abs(scale.x) * dir;
                 tf.localScale = scale;
             }
-            // 1. 추적 우선
+
+            // 0순위: 비행 원거리형 유닛 전용 추적 (FloatChase)
+            // patrolRange와 readyRange를 모두 만족할 때 (patrolRange는 가장 넓은 범위, readyRange는 공격 준비 범위)
+            if (brain.IsRanged && brain.IsFlying && PlayerInRange(statData.readyRange) && PlayerInRange(statData.patrolRange))
+            {
+                brain.ChangeState(StateID.FloatChase);
+                return;
+            }
+
             // 1순위: 추적 조건 — 모든 유닛 공통
             if (PlayerInRange(statData.patrolRange))
             {
@@ -71,6 +86,7 @@ namespace PHG
             {
                 FacePlayer();
                 rb.velocity = Vector2.zero;
+                brain.ChangeState(StateID.AimReady);
                 return;
             }
             if (brain.CanClimbLadders && PlayerInRange(statData.patrolRange))

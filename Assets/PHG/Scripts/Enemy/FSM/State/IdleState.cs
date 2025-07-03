@@ -16,11 +16,17 @@ namespace PHG
             this.rb = brain.GetComponent<Rigidbody2D>();
         }
 
-        public void Enter() => rb.velocity = Vector2.zero;
+        public void Enter()
+        {
+            rb.velocity = Vector2.zero;
 
+            if (statData.hasIdleAnim)
+                brain.PlayAnim(AnimNames.Idle);
+        }
         public void Tick()
         {
             if (statData == null) return;             // 안전 방어
+
 
             /* ── 순찰 플래그가 켜져 있으면 즉시 Patrol ── */
             if (statData.usePatrol)

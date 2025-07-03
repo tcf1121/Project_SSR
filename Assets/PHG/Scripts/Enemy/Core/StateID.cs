@@ -18,6 +18,7 @@ namespace PHG
         FloatChase,
         meleeAttack,
         TakeDamage,
+        AimReady,
         Dead
     }
 }

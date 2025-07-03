@@ -62,6 +62,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 1
     groundMask:
       serializedVersion: 2
@@ -111,6 +116,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 2
     groundMask:
       serializedVersion: 2
@@ -160,6 +170,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 3
     groundMask:
       serializedVersion: 2
@@ -209,6 +224,11 @@ MonoBehaviour:
     expReward: 20
     goldReward: 20
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 4
     groundMask:
       serializedVersion: 2
@@ -258,6 +278,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 5
     groundMask:
       serializedVersion: 2
@@ -273,25 +298,25 @@ MonoBehaviour:
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 5
+    patrolRange: 1
     chaseRange: 7
     attackRange: 6
-    chargeRange: 2.5
+    chargeRange: 4
     enableJump: 0
     jumpHorizontalFactor: 0.6
-    jumpForce: 4
+    jumpForce: 2
     jumpCooldown: 0.45
     maxJumpYDiffForAdjustment: 4
     groundCheckOffset: {x: 0, y: -0.05}
     groundCheckRadius: 0.12
     usePatrol: 1
     idleMode: 0
-    rangedCooldown: 2
-    projectileprefab: {fileID: 1941247834333990247, guid: c7d6d6b83b9fcf34bb19b50bd379aa35, type: 3}
-    readyRange: 8
+    rangedCooldown: 1
+    projectileprefab: {fileID: -4595588588518355158, guid: 6d727b2ffdf049d40b7b74472effffbf, type: 3}
+    readyRange: 10
     projectileSpeed: 3
     projectileLife: 3
-    firePattern: 0
+    firePattern: 1
     pelletCount: 5
     spreadAngle: 60
     meleeCooldown: 0.6
@@ -307,6 +332,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 6
     groundMask:
       serializedVersion: 2
@@ -333,10 +363,10 @@ MonoBehaviour:
     maxJumpYDiffForAdjustment: 4
     groundCheckOffset: {x: 0, y: -0.05}
     groundCheckRadius: 0.12
-    usePatrol: 0
+    usePatrol: 1
     idleMode: 0
     rangedCooldown: 2
-    projectileprefab: {fileID: 0}
+    projectileprefab: {fileID: 1941247834333990247, guid: c7d6d6b83b9fcf34bb19b50bd379aa35, type: 3}
     readyRange: 0
     projectileSpeed: 10
     projectileLife: 3
@@ -345,8 +375,8 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
-    isFlying: 1
-    isRanged: 0
+    isFlying: 0
+    isRanged: 1
     isCharging: 0
     enableLadderClimb: 0
     climbYThreshold: 0.7
@@ -356,6 +386,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 7
     groundMask:
       serializedVersion: 2
@@ -371,10 +406,10 @@ MonoBehaviour:
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 9
-    chaseRange: 11
-    attackRange: 10
-    chargeRange: 2.5
+    patrolRange: 50
+    chaseRange: 70
+    attackRange: 0.3
+    chargeRange: 5
     enableJump: 0
     jumpHorizontalFactor: 0.6
     jumpForce: 4
@@ -386,7 +421,7 @@ MonoBehaviour:
     idleMode: 0
     rangedCooldown: 5
     projectileprefab: {fileID: 1416540945678065302, guid: 8fdde677c1ef25f489d5e48941140ea2, type: 3}
-    readyRange: 8
+    readyRange: 0
     projectileSpeed: 2
     projectileLife: 3
     firePattern: 1
@@ -395,7 +430,7 @@ MonoBehaviour:
     meleeCooldown: 0.6
     meleeRadius: 1
     isFlying: 1
-    isRanged: 1
+    isRanged: 0
     isCharging: 0
     enableLadderClimb: 0
     climbYThreshold: 0.7
@@ -405,6 +440,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 8
     groundMask:
       serializedVersion: 2
@@ -420,9 +460,9 @@ MonoBehaviour:
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 9
+    patrolRange: 10
     chaseRange: 11
-    attackRange: 10
+    attackRange: 8
     chargeRange: 2.5
     enableJump: 0
     jumpHorizontalFactor: 0.6
@@ -435,7 +475,7 @@ MonoBehaviour:
     idleMode: 0
     rangedCooldown: 5
     projectileprefab: {fileID: 1416540945678065302, guid: 8fdde677c1ef25f489d5e48941140ea2, type: 3}
-    readyRange: 8
+    readyRange: 15
     projectileSpeed: 2
     projectileLife: 3
     firePattern: 1
@@ -454,6 +494,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 0
+    hasDeadAnim: 1
   - monsterType: 11
     groundMask:
       serializedVersion: 2
@@ -503,6 +548,11 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1
   - monsterType: 12
     groundMask:
       serializedVersion: 2
@@ -552,3 +602,8 @@ MonoBehaviour:
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
+    hasIdleAnim: 1
+    hasWalkAnim: 1
+    hasAttackAnim: 1
+    hasStaggerAnim: 1
+    hasDeadAnim: 1

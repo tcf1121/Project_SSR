@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6358297965551723835}
   - component: {fileID: 2398978262259095590}
   m_Layer: 0
-  m_Name: Bringer-of-Death
+  m_Name: BringerOfDeath
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 449457163, guid: 0b77354247273924d9f47584336a4e56, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1.4, y: 0.93}
@@ -100,6 +100,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f874662a938a95c41a019a8835b56b43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 0
+  maxHP: 3000
+  attackPower: 60
+  moveSpeed: 7
+  detectionRange: 15
+  normalAttackRange: 3
+  skillMinRange: 4
+  skillMaxRange: 7
+  attackCooldown: 2
+  blackLightningPrefab: {fileID: 500359041725965736, guid: b8d20abc0f042c4439efc3383f3ad14b, type: 3}
+  singleCastTime: 1
+  multiCastTime: 1
+  multiLightningCount: 3
+  multiLightningInterval: 0.5
+  multiLightningArea: 2
 --- !u!61 &-7096614236042888529
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -129,7 +144,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.012700498, y: 0.28620407}
@@ -171,7 +186,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!95 &2398978262259095590
 Animator:
   serializedVersion: 5

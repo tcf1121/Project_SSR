@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 444173073153757890}
   - component: {fileID: 952224032755846538}
   - component: {fileID: 6797231421379167958}
+  - component: {fileID: 7944800253814315084}
   m_Layer: 12
   m_Name: NightBorne(MS)
   m_TagString: Untagged
@@ -224,6 +225,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &7944800253814315084
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403650479021831786}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3ab24f49f62c6b2449060263cb4f3244, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4240138059057784789
 GameObject:
   m_ObjectHideFlags: 0

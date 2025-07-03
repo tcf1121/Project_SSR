@@ -45,7 +45,7 @@ namespace SCR
             {
                 _collider.enabled = false;
                 // 상자 가격은 시간이 지날수록 오르고 그거보다 많으면 플레이어 코인 감소하면서
-                collision.gameObject.GetComponent<Box>().BoxOpen();
+                collision.gameObject.GetComponent<InteractionObject>().Interaction();
                 return;
             }
             else if (collision.gameObject.CompareTag("Item"))

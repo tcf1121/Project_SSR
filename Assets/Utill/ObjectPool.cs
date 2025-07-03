@@ -7,10 +7,14 @@ namespace Utill
 {
     public enum EPoolObjectType
     {
-        Box,
+        Object,
         AttackItem,
         StatItem,
-        Monster
+        CDMonster,
+        LDMonster,
+        FlyMonster,
+        EquipAItem,
+        EquipSItem
     }
 
     // 오브젝트 풀
@@ -59,7 +63,15 @@ namespace Utill
             GameObject poolGO = Instantiate(poolInfo.overlappingPrefab);
             poolGO.transform.parent = poolInfo.container.transform;
             poolGO.SetActive(false);
-            poolGO.transform.parent = transform;
+            poolInfo.Pool.Enqueue(poolGO);
+        }
+
+        // 생성
+        private void CreatePoolObject(PoolInfo poolInfo, GameObject Prefab)
+        {
+            GameObject poolGO = Instantiate(Prefab);
+            poolGO.transform.parent = poolInfo.container.transform;
+            poolGO.SetActive(false);
             poolInfo.Pool.Enqueue(poolGO);
         }
 
@@ -98,6 +110,12 @@ namespace Utill
             }
             objInstance.SetActive(true);
             return objInstance;
+        }
+
+        public static void PushPool(EPoolObjectType type, GameObject Prefab)
+        {
+            PoolInfo poolInfo = instance.GetPoolByType(type);
+            instance.CreatePoolObject(poolInfo, Prefab);
         }
 
         // 반환

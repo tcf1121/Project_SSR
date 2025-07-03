@@ -1,39 +1,34 @@
 using UnityEngine;
+using Utill;
 
 namespace SCR
 {
-    public class Box : MonoBehaviour
+    public class Box : InteractionObject
     {
+        [SerializeField] GameObject MimicPrefab;
 
-        private Animator _animator; // 애니메이터 컴포넌트를 참조하기 위한 변수
-        private bool _isOpen = false; //상자가 열려있는지 여부
-
-        private void Start()
-        {
-            _animator = GetComponent<Animator>(); // 애니메이터 컴포넌트를 가져옴
-            _isOpen = false;
-        }
-        /// <summary>
-        /// 상자를 여는 메서드
-        /// </summary>
-        #region 
-        public void BoxOpen()
+        public override void Interaction()
         {
             if (!_isOpen)
             {
-                _animator.SetTrigger("Open");
+                if (Random.Range(0, 2) == 0)
+                    _animator.SetTrigger("Open");
+                else
+                {
+                    ObjectPool.ReturnPool(this.gameObject, EPoolObjectType.Object);
+                    GameObject monster = ObjectPool.TakeFromPool(EPoolObjectType.CDMonster);
+                    monster.GetComponent<Monster>().Clone(MimicPrefab.GetComponent<Monster>());
+                    monster.transform.position = gameObject.transform.position;
+                }
                 _isOpen = true;
-
             }
-
         }
-        #endregion
 
-
-        public void GetItem()
+        public override void Use()
         {
             GameManager.StageManager.ItemSpawner.SetPos(gameObject.transform.position);
             GameManager.StageManager.ItemSpawner.Spawn();
+            ObjectPool.ReturnPool(this.gameObject, EPoolObjectType.Object);
         }
     }
 }

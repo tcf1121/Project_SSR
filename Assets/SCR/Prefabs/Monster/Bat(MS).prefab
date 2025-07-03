@@ -45,13 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84758eacbfb3d8b40bb5f5703bf46253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isGround: 0
+  _monsterType: 2
   _creadit: 2
   _monsterBrain: {fileID: 2096395763343778824}
   _monsterStats: {fileID: 9028915891981742497}
   _hitBox: {fileID: 2588376446133644770}
   _sprite: {fileID: 9209124588696411465}
   _animator: {fileID: 1735429793110847752}
+  _muzzlePoint: {fileID: 0}
 --- !u!1001 &466002645242817492
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -72,6 +73,10 @@ PrefabInstance:
       propertyPath: monsterStats
       value: 
       objectReference: {fileID: 9028915891981742497}
+    - target: {fileID: 1972706624924176348, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
+      propertyPath: thisMonsterType
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 2542669624320578075, guid: dfc74c4576b9593479054fe7eeb8a2ab, type: 3}
       propertyPath: m_LocalScale.x
       value: 1

@@ -5,10 +5,16 @@ using UnityEngine.UI;
 
 namespace SCR
 {
+    public enum MonsterType
+    {
+        CDMonster,
+        LDMonster,
+        FlyMonster
+    }
     public class Monster : MonoBehaviour
     {
-        public bool IsGround { get => _isGround; }
-        [SerializeField] private bool _isGround;
+        public MonsterType MonsterType { get => _monsterType; }
+        [SerializeField] private MonsterType _monsterType;
         public int Credit { get => _creadit; }
         [SerializeField] private int _creadit;
 
@@ -23,6 +29,8 @@ namespace SCR
         [SerializeField] private SpriteRenderer _sprite;
         public Animator Animator { get => _animator; }
         [SerializeField] private Animator _animator;
+        public GameObject MuzzlePoint { get => _muzzlePoint; }
+        [SerializeField] private GameObject _muzzlePoint;
 
 
         public void Clone(Monster monster)
@@ -32,12 +40,17 @@ namespace SCR
             _hitBox.size = monster.HitBox.size;
             _hitBox.edgeRadius = monster.HitBox.edgeRadius;
             _sprite.sprite = monster.Sprite.sprite;
+            _sprite.flipX = monster.Sprite.flipX;
             _animator.runtimeAnimatorController = monster.Animator.runtimeAnimatorController;
             _monsterBrain.Clone(monster.MonsterBrain);
             _monsterBrain.enabled = true;
             _monsterStats.enabled = true;
-            _isGround = monster.IsGround;
+            _monsterType = monster.MonsterType;
             _creadit = monster.Credit;
+            if (MonsterType == MonsterType.LDMonster)
+            {
+                _muzzlePoint.transform.position = monster.MuzzlePoint.transform.position;
+            }
         }
     }
 }

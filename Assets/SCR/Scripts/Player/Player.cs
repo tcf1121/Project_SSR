@@ -47,6 +47,7 @@ namespace SCR
         private float _originalGravityScale;
         public float OriginalPlayerHeight { get { return _originalPlayerHeight; } }
         private float _originalPlayerHeight;
+        private int _useObelisk;
 
         private void Awake() => Init();
 
@@ -64,6 +65,7 @@ namespace SCR
             _conditionalUI.LinkedPlayer(this);
             _originalGravityScale = _rigid.gravityScale;
             _originalPlayerHeight = _collider.bounds.size.y;
+            _useObelisk = 0;
         }
 
         private void Start()
@@ -110,9 +112,11 @@ namespace SCR
                     _conditionalUI.ItemInfoUI.SetItem(item);
                     _conditionalUI.ItemInfoUI.GetItem();
                     if (item.GetComponent<AttackItem>())
-                        _playerWeapon.AddWeapon(item.GetComponent<AttackItem>());
-                    else
-                        _playerStats.BonusStats.AddStats(item.GetComponent<StatItem>().CurrentStat);
+                    {
+                        AttackItem attackItem = item.GetComponent<AttackItem>();
+                        _playerWeapon.AddWeapon(attackItem);
+                    }
+
                 }
                 else
                 {
@@ -126,6 +130,36 @@ namespace SCR
 
                 }
             }
+        }
+
+
+        public void GetReward(int money, int exp)
+        {
+            _playerStats.GetMoney(money);
+            _playerStats.GetExp(exp);
+        }
+
+        public bool UseMoney(int money)
+        {
+            return _playerStats.SpendMoney(money);
+        }
+
+        public int UseCurrentHpRatio(float Ratio)
+        {
+            int hp = _playerStats.GetCurrentHpRatio(Ratio);
+            _playerStats.UseHp(hp);
+            return hp;
+        }
+
+        public bool UseObelisk()
+        {
+            if (_playerStats.SpendMoney(40 * _useObelisk + 1))
+            {
+                _useObelisk++;
+                return true;
+            }
+            else
+                return false;
         }
     }
 }

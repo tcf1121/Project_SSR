@@ -56,8 +56,8 @@ namespace Utill
                 time++;
                 if (hit.collider != null)
                 {
-                    groundPos.y = hit.point.y + 1;
-                    RaycastHit2D hitdouble = Physics2D.Raycast(groundPos, Vector2.down, yLength, layerMask);
+                    groundPos.y = hit.point.y + 0.5f;
+                    RaycastHit2D hitdouble = Physics2D.Raycast(groundPos, Vector2.down, 0.5f, layerMask);
                     if (hitdouble.collider != null)
                         groundPos.y = hit.point.y;
                     hitGround = true;

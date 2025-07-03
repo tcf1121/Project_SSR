@@ -12,8 +12,8 @@ namespace SCR
         private static GameManager instance;
         public static GameManager Instance { get { return instance; } }
         public static UnityAction<ItemPart, int> SelectEvent;
-        public static GameObject Player { get { return _player; } }
-        private static GameObject _player;
+        public static Player Player { get { return _player; } }
+        private static Player _player;
         public static int Stage { get => _stage; }
         private static int _stage;
         public static StageManager StageManager { get => _stageManager; }
@@ -68,8 +68,10 @@ namespace SCR
         public void StartGame()
         {
             NextStage();
-            _player = Instantiate(_playerPrefab);
-            _player.transform.parent = this.transform;
+            GameObject PlayerGO = Instantiate(_playerPrefab);
+            PlayerGO.transform.parent = this.transform;
+            _player = PlayerGO.GetComponent<Player>();
+
         }
 
         public static void StageClear()
@@ -86,7 +88,7 @@ namespace SCR
 
         public static void NextStage()
         {
-            LoadingSceneManager.LoadScene(2);
+            LoadingSceneManager.LoadScene(3);
         }
     }
 

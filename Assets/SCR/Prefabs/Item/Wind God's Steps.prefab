@@ -59,8 +59,8 @@ MonoBehaviour:
     MaxHp: 0
     Atk: 0
     HpRegen: 0
-    Speed: 0.4
-    Jump: 0.1
+    Speed: 4
+    Jump: 1
   _currentStat:
     MaxHp: 0
     Atk: 0

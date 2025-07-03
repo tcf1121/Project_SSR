@@ -83,7 +83,7 @@ namespace PHG
             bool targetAbove = toPl.y > 0.5f;
             bool targetNear = dist < 8f;
             bool cliffAhead = IsCliffAhead(dir);
-                Debug.Log($"[{brain.name}] 낭떠러지 감지: {cliffAhead} / 방향: {dir}");
+            Debug.Log($"[{brain.name}] 낭떠러지 감지: {cliffAhead} / 방향: {dir}");
 
             bool shouldJumpByWall = wallAhead && (stuck || targetAbove || targetNear);
             bool shouldJumpByCliff = cliffAhead && (targetAbove || targetNear);

@@ -224,7 +224,11 @@ namespace PHG
         public void InitializeStats(int stage)
         {
             SpawnStage = stage - 1;
-            float T = GameManager.StageManager.DangerIndexManager.GetDangerIndex();
+            float T;
+            if (GameManager.StageManager == null)
+                T = 1;
+            else
+                T = GameManager.StageManager.DangerIndexManager.GetDangerIndex();
             float S = SpawnStage;
             Coeff = (1.0f + 0.1012f * T) * Mathf.Pow(1.15f, S);
         }

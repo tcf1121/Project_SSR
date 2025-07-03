@@ -33,7 +33,7 @@ namespace Utill
 
         private void Spawn()
         {
-            GameObject spwanGO = ObjectPool.TakeFromPool(EPoolObjectType.Box);
+            GameObject spwanGO = ObjectPool.TakeFromPool(EPoolObjectType.Object);
             int randIndex = Random.Range(0, _spwanPoint.Count);
             spwanGO.transform.position = _spwanPoint[randIndex];
             _spwanPoint.RemoveAt(randIndex);

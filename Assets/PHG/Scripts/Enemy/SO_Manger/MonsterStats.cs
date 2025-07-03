@@ -17,6 +17,8 @@ namespace PHG
         [SerializeField] private float _attackRange;
         [SerializeField] private float _chargeRange;
         [SerializeField] private bool _usePatrol;
+        [SerializeField] private int _gold;
+        [SerializeField] private int _exp;
 
         public int MaxHP { get => _maxHP; }
         public int CurrentHP { get => _currentHP; }
@@ -27,6 +29,8 @@ namespace PHG
         public float AttackRange { get => _attackRange; }
         public float ChargeRange { get => _chargeRange; }
         public bool UsePatrol { get => _usePatrol; }
+        public int Gold { get => _gold; }
+        public int Exp { get => _exp; }
 
         private void Awake()
         {
@@ -37,27 +41,25 @@ namespace PHG
         {
             if (brain.StatData == null)
             {
-                Debug.LogError("[MonsterStats] MonsterStatEntry를 불러오지 못했습니다.");
+                //Debug.LogError("[MonsterStats] MonsterStatEntry를 불러오지 못했습니다.");
                 enabled = false;
                 return;
             }
 
-            Debug.Log(brain.StatData.monsterType);
             InitializeRuntimeStats();
         }
 
         private void InitializeRuntimeStats()
         {
             _maxHP = Mathf.RoundToInt(brain.StatData.maxHP * brain.Coeff);
-            Debug.Log(_maxHP);
             _damage = Mathf.RoundToInt(brain.StatData.damage * brain.Coeff);
-            Debug.Log(_damage);
-            _moveSpeed = brain.StatData.moveSpeed;
-            Debug.Log(_moveSpeed);
-            _patrolRange = brain.StatData.patrolRange;
-            _chaseRange = brain.StatData.chaseRange;
-            _attackRange = brain.StatData.attackRange;
-            _chargeRange = brain.StatData.chargeRange;
+            _gold = Mathf.RoundToInt(brain.StatData.goldReward * brain.Coeff);
+            _exp = Mathf.RoundToInt(brain.StatData.expReward * brain.Coeff);
+            _moveSpeed = 1f + brain.StatData.moveSpeed * 0.1f;
+            _patrolRange = brain.StatData.patrolRange * 0.25f;
+            _chaseRange = brain.StatData.chaseRange * 0.25f;
+            _attackRange = brain.StatData.attackRange * 0.25f;
+            _chargeRange = brain.StatData.chargeRange * 0.25f;
             _usePatrol = brain.StatData.usePatrol;
             _currentHP = _maxHP;
         }

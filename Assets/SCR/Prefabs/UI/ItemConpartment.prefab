@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Icon: {fileID: 1564443795426735237}
-  ItemImage: {fileID: 0}
+  ItemImage: {fileID: 8117788328387630944}
   at: 0
   InfoUI: {fileID: 0}
   Info: {fileID: 0}

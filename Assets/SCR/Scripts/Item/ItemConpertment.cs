@@ -39,6 +39,8 @@ namespace SCR
         public void SetItem(Item item)
         {
             _item = item;
+            if (item == null) ItemImage.sprite = null;
+            else ItemImage.sprite = _item.Image;
         }
 
         public void SetChange(bool isChange)

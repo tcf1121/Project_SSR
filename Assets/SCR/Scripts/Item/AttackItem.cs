@@ -50,13 +50,9 @@ namespace SCR
             _attackrange.SetActive(false);
         }
 
-        public void Clone(AttackItem attackItem)
+        public void Clone(AttackItem attackItem, bool isGameobject = true)
         {
-            gameObject.transform.localScale = attackItem.gameObject.transform.localScale;
-            gameObject.GetComponent<BoxCollider2D>().offset = attackItem.gameObject.GetComponent<BoxCollider2D>().offset;
-            gameObject.GetComponent<BoxCollider2D>().size = attackItem.gameObject.GetComponent<BoxCollider2D>().size;
             _image = attackItem.Image;
-            gameObject.GetComponent<SpriteRenderer>().sprite = _image;
             _itemPart = attackItem.ItemPart;
             _code = attackItem.Code;
             _name = attackItem.Name;
@@ -68,6 +64,13 @@ namespace SCR
             _strengthening = attackItem.Strengthening;
             _coolTime = attackItem.CoolTime;
             _attackrange = attackItem.Attackrange;
+            if (isGameobject)
+            {
+                gameObject.transform.localScale = attackItem.gameObject.transform.localScale;
+                gameObject.GetComponent<BoxCollider2D>().offset = attackItem.gameObject.GetComponent<BoxCollider2D>().offset;
+                gameObject.GetComponent<BoxCollider2D>().size = attackItem.gameObject.GetComponent<BoxCollider2D>().size;
+                gameObject.GetComponent<SpriteRenderer>().sprite = _image;
+            }
         }
     }
 }

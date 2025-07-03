@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using Utill;
 
 namespace SCR
 {
@@ -9,10 +10,13 @@ namespace SCR
         private Player player;
         public int HeadMaxNum { get { return _headMaxNum; } }
         private int _headMaxNum;
+        private int _headFullMaxNum;
         public int BodyMaxNum { get { return _bodyMaxNum; } }
         private int _bodyMaxNum;
+        private int _bodyFullMaxNum;
         public int ArmMaxNum { get { return _armMaxNum; } }
         private int _armMaxNum;
+        private int _armFullMaxNum;
 
         public List<AttackItem> Head { get { return _head; } }
         [SerializeField] private List<AttackItem> _head;
@@ -39,6 +43,9 @@ namespace SCR
             _headMaxNum = 1;
             _bodyMaxNum = 3;
             _armMaxNum = 5;
+            _headFullMaxNum = 3;
+            _bodyFullMaxNum = 5;
+            _armFullMaxNum = 7;
             GameManager.SelectEvent += DropItem;
         }
 
@@ -114,20 +121,28 @@ namespace SCR
         // 아이템 장착하기
         public void EquipItem(GameObject item)
         {
-            Item ObjItem = item.GetComponent<Item>();
-            switch (ObjItem.ItemPart)
+            ItemPart itemPart = item.GetComponent<Item>().ItemPart;
+            switch (item.GetComponent<Item>().ItemPart)
             {
                 case ItemPart.Head:
-                    _head.Add(item.GetComponent<AttackItem>());
-                    break;
                 case ItemPart.Body:
-                    _body.Add(item.GetComponent<AttackItem>());
-                    break;
                 case ItemPart.Arm:
-                    _arm.Add(item.GetComponent<AttackItem>());
+                    GameObject attackItem = ObjectPool.TakeFromPool(EPoolObjectType.EquipAItem);
+                    attackItem.GetComponent<AttackItem>().Clone(item.GetComponent<AttackItem>());
+                    attackItem.SetActive(false);
+                    if (itemPart == ItemPart.Head)
+                        _head.Add(attackItem.GetComponent<AttackItem>());
+                    else if (itemPart == ItemPart.Body)
+                        _body.Add(attackItem.GetComponent<AttackItem>());
+                    else
+                        _arm.Add(attackItem.GetComponent<AttackItem>());
                     break;
                 case ItemPart.Leg:
-                    _leg.Add(item.GetComponent<StatItem>());
+                    GameObject statItem = ObjectPool.TakeFromPool(EPoolObjectType.EquipSItem);
+                    statItem.GetComponent<StatItem>().Clone(item.GetComponent<StatItem>());
+                    statItem.SetActive(false);
+                    _leg.Add(statItem.GetComponent<StatItem>());
+                    GetStat();
                     break;
 
             }
@@ -152,6 +167,7 @@ namespace SCR
                     break;
                 case ItemPart.Leg:
                     _leg[index].ItemEnhancement();
+                    GetStat();
                     break;
             }
         }
@@ -165,6 +181,7 @@ namespace SCR
             {
                 case ItemPart.Head:
                     GameManager.StageManager.ItemSpawner.Spawn(_head[index].itemPrefab);
+                    ObjectPool.ReturnPool(_head[index].gameObject, EPoolObjectType.EquipAItem);
                     _head.RemoveAt(index);
                     Destroy(player.PlayerWeapon.HeadWeapons[index].gameObject);
                     player.PlayerWeapon.HeadWeapons.RemoveAt(index);
@@ -172,6 +189,7 @@ namespace SCR
                     break;
                 case ItemPart.Body:
                     GameManager.StageManager.ItemSpawner.Spawn(_body[index].itemPrefab);
+                    ObjectPool.ReturnPool(_body[index].gameObject, EPoolObjectType.EquipAItem);
                     _body.RemoveAt(index);
                     Destroy(player.PlayerWeapon.BodyWeapons[index].gameObject);
                     player.PlayerWeapon.BodyWeapons.RemoveAt(index);
@@ -179,16 +197,71 @@ namespace SCR
                     break;
                 case ItemPart.Arm:
                     GameManager.StageManager.ItemSpawner.Spawn(_arm[index].itemPrefab);
+                    ObjectPool.ReturnPool(_arm[index].gameObject, EPoolObjectType.EquipAItem);
                     _arm.RemoveAt(index);
                     Destroy(player.PlayerWeapon.ArmWeapons[index].gameObject);
                     player.PlayerWeapon.ArmWeapons.RemoveAt(index);
                     _arm.Add(player.WaitItem.GetComponent<AttackItem>());
                     break;
                 case ItemPart.Leg:
+                    //ObjectPool.ReturnPool(_leg[index].gameObject, EPoolObjectType.EquipSItem);
                     break;
             }
             DropObj.transform.position = player.transform.position;
             player.ConditionalUI.EquipUI.gameObject.SetActive(false);
+        }
+
+        public void GetStat()
+        {
+            Stats stats = new();
+            stats.ResetStats();
+            foreach (StatItem statItem in _leg)
+                stats.AddStats(statItem.CurrentStat);
+            player.PlayerStats.EquipItem(stats);
+        }
+
+        public bool CheckSlot()
+        {
+            // 모두 최대치로 해금했으면 취소
+            if (_headMaxNum == _headFullMaxNum &&
+            _bodyMaxNum == _bodyFullMaxNum &&
+            _armMaxNum == _armFullMaxNum)
+                return false;
+            else return true;
+        }
+
+        public void ExpansionSlot()
+        {
+            int random;
+            while (true)
+            {
+                random = Random.Range(0, 100);
+                if (random < 25)
+                {
+                    if (_headMaxNum < _headFullMaxNum)
+                    {
+                        _headMaxNum++;
+                        break;
+                    }
+                }
+                else if (random < 55)
+                {
+                    if (_bodyMaxNum < _bodyFullMaxNum)
+                    {
+                        _bodyMaxNum++;
+                        break;
+                    }
+                }
+                else
+                {
+                    if (_armMaxNum < _armFullMaxNum)
+                    {
+                        _armMaxNum++;
+                        break;
+                    }
+                }
+
+            }
         }
     }
 }

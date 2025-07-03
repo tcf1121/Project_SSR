@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace SCR
 {
@@ -18,7 +19,7 @@ namespace SCR
             MaxHp = 100f;
             Atk = 10f;
             HpRegen = 0.2f;
-            Speed = 1.5f;
+            Speed = 7f;
             Jump = 1f;
         }
 
@@ -65,13 +66,13 @@ namespace SCR
             Jump = baseStats.Jump + bonusStats.Jump;
         }
 
-        public void Enhancement(Stats baseStats, Stats Strengthening)
+        public void Enhancement(Stats Strengthening)
         {
-            MaxHp += baseStats.MaxHp + Strengthening.MaxHp;
-            Atk += baseStats.Atk + Strengthening.Atk;
-            HpRegen += baseStats.HpRegen + Strengthening.HpRegen;
-            Speed += baseStats.Speed + Strengthening.Speed;
-            Jump += baseStats.Jump + Strengthening.Jump;
+            MaxHp += Strengthening.MaxHp;
+            Atk += Strengthening.Atk;
+            HpRegen += Strengthening.HpRegen;
+            Speed += Strengthening.Speed;
+            Jump += Strengthening.Jump;
         }
     }
 
@@ -242,6 +243,11 @@ namespace SCR
             }
         }
 
+        public void UseHp(int hp)
+        {
+            CurrentHp -= hp;
+        }
+
         /// <summary>
         /// 체력 재생
         /// </summary>
@@ -277,6 +283,11 @@ namespace SCR
                 return 0f;
             return _currentHp / _finalStats.MaxHp;
         }
+
+        public int GetCurrentHpRatio(float Ratio)
+        {
+            return (int)(_currentHp * Ratio);
+        }
         #endregion
 
         #region 장비 또는 버프 외부 요소에 의한 스탯 증감
@@ -285,17 +296,40 @@ namespace SCR
         /// 장비 장착/해제, 버프 등 외부 요소에 의한 스탯 증감
         /// </summary>
         /// <param name="addstats">전달할 스탯 정보</param>
-        /// <param name="equip">증가 = true, 감소 = false</param>
-        public void EquipItem(Stats addstats, bool equip = true)
+        /// <param name="equip">장비 장착 = true, 버프는 =false</param>
+        public void EquipItem(Stats addstats, bool equip = true, float bufftime = 0f)
         {
-            if (equip) _bonusStats.AddStats(addstats);
-            else _bonusStats.SubStats(addstats);
+            if (equip)
+            {
+                _bonusStats = addstats;
+                _changeStats?.Invoke();
+            }
+            else
+            {
+                StartCoroutine(Buff(addstats, bufftime));
+            }
+
+        }
+
+        private IEnumerator Buff(Stats buffStats, float bufftime)
+        {
+            _bonusStats.AddStats(buffStats);
+            _changeStats?.Invoke();
+            float currentTime = bufftime;
+            while (currentTime > 0.0f)
+            {
+                currentTime -= Time.deltaTime;
+                yield return new WaitForFixedUpdate();
+            }
+            _bonusStats.SubStats(buffStats);
             _changeStats?.Invoke();
         }
 
         private void SetFinalStats()
         {
             _finalStats.FinalStats(_baseStats, _bonusStats);
+            player.PlayerPhysical.SetSpeed();
+            player.PlayerPhysical.SetJump();
         }
 
         #endregion
@@ -316,6 +350,11 @@ namespace SCR
 
 
         #region 돈 관리
+        public void GetMoney(int gold)
+        {
+            Money += gold;
+        }
+
         /// <summary>
         /// 돈 소모 및 사용
         /// </summary>

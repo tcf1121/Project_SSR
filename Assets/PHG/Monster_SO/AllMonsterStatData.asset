@@ -20,45 +20,45 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    maxHP: 100
-    damage: 10
+    maxHP: 80
+    damage: 12
     moveSpeed: 2
-    rushMultiplier: 1.5
+    rushMultiplier: 0
     maxClimbableHeight: 4
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 2
-    chaseRange: 5
+    patrolRange: 1
+    chaseRange: 3
     attackRange: 0.5
     chargeRange: 0
     enableJump: 1
     jumpHorizontalFactor: 0.499
-    jumpForce: 4
+    jumpForce: 2
     jumpCooldown: 1
     maxJumpYDiffForAdjustment: 4
     groundCheckOffset: {x: 0, y: -0.05}
     groundCheckRadius: 1
     usePatrol: 0
     idleMode: 0
-    rangedCooldown: 2
+    rangedCooldown: 0
     projectileprefab: {fileID: 0}
     readyRange: 0
-    projectileSpeed: 10
-    projectileLife: 3
+    projectileSpeed: 0
+    projectileLife: 0
     firePattern: 0
-    pelletCount: 5
-    spreadAngle: 60
-    meleeCooldown: 0.6
+    pelletCount: 0
+    spreadAngle: 30
+    meleeCooldown: 2
     meleeRadius: 1
     isFlying: 0
     isRanged: 0
     isCharging: 0
     enableLadderClimb: 0
-    climbYThreshold: 0.7
-    ladderForwardOffset: {x: 0.15, y: 0}
-    ladderDetectRadius: 0.35
-    climbSpeed: 3
+    climbYThreshold: 0
+    ladderForwardOffset: {x: 0, y: 0}
+    ladderDetectRadius: 0
+    climbSpeed: 0
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
@@ -69,7 +69,7 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    maxHP: 100
+    maxHP: 60
     damage: 10
     moveSpeed: 0.5
     rushMultiplier: 2
@@ -77,13 +77,13 @@ MonoBehaviour:
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 4
-    chaseRange: 5
+    patrolRange: 6
+    chaseRange: 12
     attackRange: 0.4
     chargeRange: 2.5
     enableJump: 0
     jumpHorizontalFactor: 0.6
-    jumpForce: 4
+    jumpForce: 2
     jumpCooldown: 0.45
     maxJumpYDiffForAdjustment: 4
     groundCheckOffset: {x: 0, y: -0.05}
@@ -273,8 +273,8 @@ MonoBehaviour:
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 5
-    chaseRange: 7
+    patrolRange: 10
+    chaseRange: 8
     attackRange: 6
     chargeRange: 2.5
     enableJump: 0
@@ -287,7 +287,7 @@ MonoBehaviour:
     usePatrol: 1
     idleMode: 0
     rangedCooldown: 2
-    projectileprefab: {fileID: 1941247834333990247, guid: c7d6d6b83b9fcf34bb19b50bd379aa35, type: 3}
+    projectileprefab: {fileID: -4595588588518355158, guid: 6d727b2ffdf049d40b7b74472effffbf, type: 3}
     readyRange: 8
     projectileSpeed: 3
     projectileLife: 3
@@ -322,9 +322,9 @@ MonoBehaviour:
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 4
+    patrolRange: 10
     chaseRange: 6
-    attackRange: 2
+    attackRange: 6
     chargeRange: 2.5
     enableJump: 0
     jumpHorizontalFactor: 0.6
@@ -336,7 +336,7 @@ MonoBehaviour:
     usePatrol: 0
     idleMode: 0
     rangedCooldown: 2
-    projectileprefab: {fileID: 0}
+    projectileprefab: {fileID: 1941247834333990247, guid: c7d6d6b83b9fcf34bb19b50bd379aa35, type: 3}
     readyRange: 0
     projectileSpeed: 10
     projectileLife: 3
@@ -345,8 +345,8 @@ MonoBehaviour:
     spreadAngle: 60
     meleeCooldown: 0.6
     meleeRadius: 1
-    isFlying: 1
-    isRanged: 0
+    isFlying: 0
+    isRanged: 1
     isCharging: 0
     enableLadderClimb: 0
     climbYThreshold: 0.7
@@ -371,9 +371,9 @@ MonoBehaviour:
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 9
-    chaseRange: 11
-    attackRange: 10
+    patrolRange: 10
+    chaseRange: 10
+    attackRange: 1
     chargeRange: 2.5
     enableJump: 0
     jumpHorizontalFactor: 0.6
@@ -395,7 +395,7 @@ MonoBehaviour:
     meleeCooldown: 0.6
     meleeRadius: 1
     isFlying: 1
-    isRanged: 1
+    isRanged: 0
     isCharging: 0
     enableLadderClimb: 0
     climbYThreshold: 0.7

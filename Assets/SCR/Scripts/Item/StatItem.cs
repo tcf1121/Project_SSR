@@ -34,16 +34,12 @@ namespace SCR
         override public void ItemEnhancement()
         {
             base.ItemEnhancement();
-            _currentStat.Enhancement(_basicStat, _strengthening);
+            _currentStat.Enhancement(_strengthening);
         }
 
-        public void Clone(StatItem statItem)
+        public void Clone(StatItem statItem, bool isGameobject = true)
         {
-            gameObject.transform.localScale = statItem.gameObject.transform.localScale;
-            gameObject.GetComponent<BoxCollider2D>().offset = statItem.gameObject.GetComponent<BoxCollider2D>().offset;
-            gameObject.GetComponent<BoxCollider2D>().size = statItem.gameObject.GetComponent<BoxCollider2D>().size;
             _image = statItem.Image;
-            gameObject.GetComponent<SpriteRenderer>().sprite = _image;
             _itemPart = statItem.ItemPart;
             _code = statItem.Code;
             _name = statItem.Name;
@@ -53,8 +49,15 @@ namespace SCR
             itemPrefab = statItem.itemPrefab;
             _strengthening = statItem.Strengthening;
             _basicStat = statItem.BasicStat;
-            _currentStat = statItem.CurrentStat;
+            _currentStat = statItem.BasicStat;
             _specialStat = statItem.SpecialStat;
+            if (isGameobject)
+            {
+                gameObject.transform.localScale = statItem.gameObject.transform.localScale;
+                gameObject.GetComponent<BoxCollider2D>().offset = statItem.gameObject.GetComponent<BoxCollider2D>().offset;
+                gameObject.GetComponent<BoxCollider2D>().size = statItem.gameObject.GetComponent<BoxCollider2D>().size;
+                gameObject.GetComponent<SpriteRenderer>().sprite = _image;
+            }
         }
     }
 }

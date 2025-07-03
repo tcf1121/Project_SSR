@@ -45,13 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84758eacbfb3d8b40bb5f5703bf46253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isGround: 1
+  _monsterType: 1
   _creadit: 2
   _monsterBrain: {fileID: 3603445170090530680}
   _monsterStats: {fileID: 5097396924745819558}
   _hitBox: {fileID: 5825808447296339899}
   _sprite: {fileID: 5384166462546733573}
   _animator: {fileID: 3551096052580062833}
+  _muzzlePoint: {fileID: 5506930267896220514}
 --- !u!1 &2876050918549160998
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,12 +221,15 @@ MonoBehaviour:
   wallSensor: {fileID: 4278791886059678213}
   hitBox: {fileID: 0}
   allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
-  thisMonsterType: 5
+  thisMonsterType: 6
   damageTextPrefab: {fileID: 1373479669899882519, guid: 1b90f7c35b4a7bc408e4372631cfb6f7, type: 3}
   staggerThreshold: 15
   hpBar: {fileID: 1729549170161331204}
   hpBarFill: {fileID: 6094609153261161682}
   monsterStats: {fileID: 5097396924745819558}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 1536
 --- !u!114 &5097396924745819558
 MonoBehaviour:
   m_ObjectHideFlags: 0

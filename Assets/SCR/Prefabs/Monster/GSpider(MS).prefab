@@ -174,6 +174,9 @@ MonoBehaviour:
   hpBar: {fileID: 7480108619216151303}
   hpBarFill: {fileID: 3123913045400028113}
   monsterStats: {fileID: 7997283964140830346}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 1536
 --- !u!114 &7997283964140830346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,13 +449,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84758eacbfb3d8b40bb5f5703bf46253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isGround: 1
+  _monsterType: 0
   _creadit: 3
   _monsterBrain: {fileID: 1993132094884426052}
   _monsterStats: {fileID: 7997283964140830346}
   _hitBox: {fileID: 4883287734238660199}
   _sprite: {fileID: 6593784598302446104}
   _animator: {fileID: 3022777314383077176}
+  _muzzlePoint: {fileID: 0}
 --- !u!1001 &522234838897637995
 PrefabInstance:
   m_ObjectHideFlags: 0

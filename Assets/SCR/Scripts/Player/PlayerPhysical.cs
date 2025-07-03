@@ -104,7 +104,7 @@ namespace SCR
 
         public void SetSpeed()
         {
-            _finalSpeed = 1f + player.PlayerStats.FinalStats.Speed * 0.5f;
+            _finalSpeed = 1f + player.PlayerStats.FinalStats.Speed * 0.1f;
         }
 
         public void SetJump()

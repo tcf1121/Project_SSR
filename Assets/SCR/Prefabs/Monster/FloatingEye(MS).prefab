@@ -121,6 +121,7 @@ MonoBehaviour:
   hpBar: {fileID: 8497292524045512661}
   hpBarFill: {fileID: 4141204936222363395}
   monsterStats: {fileID: 9116802438190421207}
+  animator: {fileID: 0}
   groundMask:
     serializedVersion: 2
     m_Bits: 0
@@ -146,6 +147,8 @@ MonoBehaviour:
   _attackRange: 0
   _chargeRange: 0
   _usePatrol: 0
+  _gold: 0
+  _exp: 0
 --- !u!114 &1148222772792729014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,7 +427,7 @@ MonoBehaviour:
   _hitBox: {fileID: 2652950325134627383}
   _sprite: {fileID: 1083529268766017869}
   _animator: {fileID: 1939140561507743941}
-  _muzzlePoint: {fileID: 0}
+  _muzzlePoint: {fileID: 4166140581358597005}
 --- !u!1001 &1521517927771436729
 PrefabInstance:
   m_ObjectHideFlags: 0

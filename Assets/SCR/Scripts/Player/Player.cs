@@ -122,10 +122,7 @@ namespace SCR
                 {
                     //교체하기
                     ObjectPool.ReturnPool(item, IsAttackItem ? EPoolObjectType.AttackItem : EPoolObjectType.StatItem);
-                    _waitItem = item;
-                    _conditionalUI.EquipUI.gameObject.SetActive(true);
-                    _conditionalUI.EquipUI.IsChangeEquip(true);
-                    _conditionalUI.EquipUI.OpenEquip((int)item.GetComponent<Item>().ItemPart);
+                    _conditionalUI.ChangeEquipUI.StartChange(item.GetComponent<Item>().ItemPart, item);
                     Time.timeScale = 0f;
 
                 }

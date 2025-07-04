@@ -47,9 +47,10 @@ namespace SCR
             _monsterStats.enabled = true;
             _monsterType = monster.MonsterType;
             _creadit = monster.Credit;
-            if (MonsterType == MonsterType.LDMonster)
+            if (MonsterType != MonsterType.CDMonster)
             {
-                _muzzlePoint.transform.position = monster.MuzzlePoint.transform.position;
+                if (monster.MuzzlePoint != null)
+                    _muzzlePoint.transform.position = monster.MuzzlePoint.transform.position;
             }
         }
     }

@@ -185,7 +185,6 @@ namespace SCR
                     _head.RemoveAt(index);
                     Destroy(player.PlayerWeapon.HeadWeapons[index].gameObject);
                     player.PlayerWeapon.HeadWeapons.RemoveAt(index);
-                    _head.Add(player.WaitItem.GetComponent<AttackItem>());
                     break;
                 case ItemPart.Body:
                     GameManager.StageManager.ItemSpawner.Spawn(_body[index].itemPrefab);
@@ -193,7 +192,6 @@ namespace SCR
                     _body.RemoveAt(index);
                     Destroy(player.PlayerWeapon.BodyWeapons[index].gameObject);
                     player.PlayerWeapon.BodyWeapons.RemoveAt(index);
-                    _body.Add(player.WaitItem.GetComponent<AttackItem>());
                     break;
                 case ItemPart.Arm:
                     GameManager.StageManager.ItemSpawner.Spawn(_arm[index].itemPrefab);
@@ -201,14 +199,12 @@ namespace SCR
                     _arm.RemoveAt(index);
                     Destroy(player.PlayerWeapon.ArmWeapons[index].gameObject);
                     player.PlayerWeapon.ArmWeapons.RemoveAt(index);
-                    _arm.Add(player.WaitItem.GetComponent<AttackItem>());
                     break;
                 case ItemPart.Leg:
                     //ObjectPool.ReturnPool(_leg[index].gameObject, EPoolObjectType.EquipSItem);
                     break;
             }
-            DropObj.transform.position = player.transform.position;
-            player.ConditionalUI.EquipUI.gameObject.SetActive(false);
+            player.ConditionalUI.ChangeEquipUI.EndChange(true);
         }
 
         public void GetStat()

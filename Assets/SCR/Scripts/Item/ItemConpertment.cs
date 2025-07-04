@@ -27,7 +27,7 @@ namespace SCR
 
         void OnDisable()
         {
-            InfoUI.SetActive(false);
+            if (InfoUI != null) InfoUI.SetActive(false);
         }
 
         public void Init(GameObject infoUI)

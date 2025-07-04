@@ -82,7 +82,7 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
         else // 근접 몬스터
         {
             attackBehavior = new MeleeAttackBehavior(_monster.AttackBox, StatData.playerLayer); // StatData.playerLayer 추가 필요
-            Debug.Log($"[MonsterBrain] MeleeAttackBehavior 초기화됨. 할당된 HitBox: {_monster.AttackBox?.name}, PlayerLayer: {StatData.playerLayer.value}");
+            //Debug.Log($"[MonsterBrain] MeleeAttackBehavior 초기화됨. 할당된 HitBox: {_monster.AttackBox?.name}, PlayerLayer: {StatData.playerLayer.value}");
         }
 
 

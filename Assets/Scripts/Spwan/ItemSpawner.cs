@@ -13,6 +13,7 @@ public class ItemSpawner : MonoBehaviour
 
     public void SetPos(Vector2 pos)
     {
+        _spwanPoint = new();
         _spwanPoint = pos;
     }
 

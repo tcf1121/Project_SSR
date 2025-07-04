@@ -31,7 +31,9 @@ namespace SCR
 
         public override void Use()
         {
-            GameManager.StageManager.ItemSpawner.SetPos(gameObject.transform.position);
+            Vector2 pos = gameObject.transform.position;
+            pos.y += 0.5f;
+            GameManager.StageManager.ItemSpawner.SetPos(pos);
             GameManager.StageManager.ItemSpawner.Spawn();
             ObjectPool.ReturnPool(this.gameObject, EPoolObjectType.Object);
         }

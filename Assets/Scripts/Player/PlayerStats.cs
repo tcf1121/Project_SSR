@@ -115,6 +115,7 @@ public class PlayerStats : MonoBehaviour
     private UnityAction _isDead;
 
     private Coroutine _hpRegenCor;
+    private Coroutine _damageCor;
 
     void Awake()
     {
@@ -222,11 +223,19 @@ public class PlayerStats : MonoBehaviour
     /// </summary>
     public void TakeDamage(float damage)
     {
+        // 일정 시간 무적 구현
+        if (_damageCor == null)
+        {
+            _damageCor = StartCoroutine(DamageCoroutine(damage));
+        }
+        // 경직 (기획 논의중)
+    }
+
+    public IEnumerator DamageCoroutine(float damage)
+    {
+        float currentTime = 0.5f;
         float oldHp = CurrentHp;
         CurrentHp = Mathf.Max(CurrentHp - damage, 0f);
-
-        // 일정 시간 무적 구현 (기획 논의중)
-        // 경직 (기획 논의중)
         if (CurrentHp != oldHp)
         {
             // OnHpChanged?.Invoke(currentHp); 현재 체력 변경 알림
@@ -238,6 +247,13 @@ public class PlayerStats : MonoBehaviour
             _isDead.Invoke();
             // 사망 처리 로직
         }
+        while (currentTime > 0.0f)
+        {
+            currentTime -= Time.deltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+        StopCoroutine(_damageCor);
+        _damageCor = null;
     }
 
     public void UseHp(int hp)

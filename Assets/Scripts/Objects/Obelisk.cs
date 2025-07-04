@@ -11,6 +11,7 @@ public class Obelisk : InteractionObject
 
                 _animator.SetTrigger("Open");
                 _isOpen = true;
+                Use();
             }
         }
     }

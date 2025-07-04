@@ -1,3 +1,7 @@
+
+
+using UnityEngine;
+
 public class Chest : InteractionObject
 {
     public override void Interaction()
@@ -6,13 +10,16 @@ public class Chest : InteractionObject
         {
             _animator.SetTrigger("Open");
             _isOpen = true;
-
+            Use();
         }
     }
 
     public override void Use()
     {
-        GameManager.StageManager.ItemSpawner.SetPos(gameObject.transform.position);
+        Debug.Log(GameManager.StageManager);
+        Vector2 pos = gameObject.transform.position;
+        pos.y += 0.5f;
+        GameManager.StageManager.ItemSpawner.SetPos(pos);
         GameManager.StageManager.ItemSpawner.Spawn();
     }
 }

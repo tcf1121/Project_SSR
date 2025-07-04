@@ -146,7 +146,7 @@ public class Player : MonoBehaviour
 
     public bool UseObelisk()
     {
-        if (_playerStats.SpendMoney(40 * _useObelisk + 1))
+        if (_playerStats.SpendMoney(40 * (_useObelisk + 1)))
         {
             _useObelisk++;
             return true;

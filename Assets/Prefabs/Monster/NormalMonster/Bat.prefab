@@ -153,7 +153,7 @@ MonoBehaviour:
   _monsterStats: {fileID: 227645487992305897}
   _sprite: {fileID: 7015042846525706413}
   _hitBox: {fileID: 3545202460995538692}
-  _attackBox: {fileID: 0}
+  _attackBox: {fileID: 3301303244111084552}
   _animator: {fileID: 6413095012011238372}
   _muzzlePoint: {fileID: 0}
   _groundSensor: {fileID: 392162294131777505}

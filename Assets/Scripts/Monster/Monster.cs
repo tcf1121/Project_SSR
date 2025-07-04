@@ -82,6 +82,7 @@ public class Monster : MonoBehaviour
         gameObject.transform.position = monster.gameObject.transform.position;
         gameObject.transform.localScale = monster.gameObject.transform.localScale;
 
+
         _attackBox.offset = monster.AttackBox.offset;
         _attackBox.isTrigger = monster.AttackBox.isTrigger;
         _attackBox.size = monster.AttackBox.size;

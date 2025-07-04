@@ -114,14 +114,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monsterType: 2
-  _monsterSpecies: 8
+  _monsterSpecies: 7
   _allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
   _creadit: 4
   _monsterBrain: {fileID: 2195055762248198624}
   _monsterStats: {fileID: 8915342835581327519}
   _sprite: {fileID: 7929684807927383348}
   _hitBox: {fileID: 7371404042282487334}
-  _attackBox: {fileID: 0}
+  _attackBox: {fileID: 5788190269701370493}
   _animator: {fileID: 9194826378569386092}
   _muzzlePoint: {fileID: 2189079874689030301}
   _groundSensor: {fileID: 2391386319553836967}

@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviour
     public static void SetStageManager(StageManager stageManager)
     {
         _stageManager = stageManager;
+        Debug.Log(_stageManager);
     }
 
     public static void NextStage()

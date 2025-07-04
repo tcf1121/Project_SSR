@@ -59,10 +59,10 @@ namespace PHG
 
             if (dist > ChaseR)
             {
-                brain.ChangeState(StateID.Chase);
+               // brain.ChangeState(StateID.Chase);
                 return;
             }
-
+           
             if (dist > AttackR)
             {
                 brain.ChangeState(StateID.Chase);

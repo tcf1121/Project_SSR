@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using SCR;
 using UnityEngine;
 
 namespace PHG
@@ -14,7 +13,8 @@ namespace PHG
         [SerializeField] private float speed = 10f; //이동속도
         [SerializeField] private float lifeTime;//최대 생존 시간
         private MonsterBrain brain;
-        
+        private int projectileDamage;
+
         private Rigidbody2D rb;
         public int PoolKey { get; set; }
         // 런타임
@@ -26,7 +26,7 @@ namespace PHG
         {
             rb = GetComponent<Rigidbody2D>();
             Debug.Log($"[Projectile] Awake: name={gameObject.name}, rb={rb}, active={gameObject.activeSelf}");
-        
+
         }
         private void OnEnable()
         {
@@ -50,6 +50,8 @@ namespace PHG
             // lifeTime과 speed를 monsterBrain.StatData에서 가져와 설정
             lifeTime = this.brain.StatData.projectileLife;
             this.speed = newSpeed; // newSpeed는 monsterBrain.StatData.projectileSpeed에서 가져와야 함.
+            projectileDamage = this.brain.StatData.damage; // 몬스터의 공격력을 투사체 데미지로 설정
+
 
             // Rigidbody2D 초기화 (기존 로직 유지)
             if (rb == null)
@@ -74,22 +76,39 @@ namespace PHG
 
         private void Update()
         {
-            
+
             //실시간 방향 추적
             Debug.DrawRay(transform.position, lastDir * 0.5f, Color.cyan, 0.1f);
             alive += Time.deltaTime;
             if (alive >= lifeTime) ReturnToPool();
         }
 
+
         private void OnTriggerEnter2D(Collider2D col)
         {
-           
-            if (col.CompareTag("Player"))
+            // 플레이어 태그 확인 및 PlayerStats 컴포넌트 접근
+            if (col.gameObject.CompareTag("Player"))
             {
-                //TODO : 데미지
-            ReturnToPool();
-            }
+                Debug.Log($"{gameObject.name}] 플레이어와 충돌");
+                PlayerStats playerStats = col.gameObject.GetComponent<PlayerStats>();
+                // 플레이어를 찾았으면 데미지 적용
+                playerStats.TakeDamage(projectileDamage); // 몬스터의 공격력(projectileDamage) 적용
+                Debug.Log($"[Projectile - {gameObject.name}] {col.name} (플레이어)에게 {projectileDamage} 데미지 적용!");
+                ReturnToPool(); // 플레이어에게 데미지를 주었으면 풀로 복귀
 
+
+            }
+            // TODO: 다른 오브젝트 (벽, 적 등)와 충돌 시 처리 로직 추가
+            // 예를 들어, Projectile이 벽에 부딪히면 사라지도록 하려면:
+            // else if (col.CompareTag("Wall"))
+            // {
+            //     ReturnToPool();
+            // }
+            // 혹은 특정 레이어(예: Ground, Environment)와 충돌 시:
+            // if (((1 << col.gameObject.layer) & brain.StatData.groundMask) != 0) // 예시: GroundMask를 활용
+            // {
+            //     ReturnToPool();
+            // }
         }
 
         private void ReturnToPool()

@@ -19,6 +19,8 @@ namespace PHG
         public LayerMask groundMask;
         [Tooltip("감지할 사다리 레이어")]
         public LayerMask ladderMask;
+        [Tooltip("플레이어 레이어")] // 
+        public LayerMask playerLayer;
 
         /* ───────── 기본 스탯 ───────── */
         [Header("Base Stats")]
@@ -78,7 +80,8 @@ namespace PHG
         /* ───────── 근접 전용 ───────── */
         [Header("Melee Attack")]
         [Tooltip("공격 주기")] public float meleeCooldown = 0.6f;    // 멤버 변수
-        [Tooltip("근접 공격 범위")] public float meleeRadius = 1f;     // 멤버 변수
+        public float attackAnimationTotalDuration = 0.6f;
+        [Tooltip("근접 공격 범위")] public float meleeRadius = 0.25f;     // 멤버 변수
 
         /* ───────── Ability Flags (NEW) ───────── */
         [Header("Ability Flags")]

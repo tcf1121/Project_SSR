@@ -11,7 +11,8 @@ namespace PHG
         public const string Attack = "Attack";
         public const string Stagger = "Stagger";
         public const string Dead = "Dead";
+        public const string Jump = "Jump";
 
-     
+
     }
 }

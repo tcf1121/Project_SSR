@@ -13,6 +13,7 @@ namespace PHG
         private readonly MonsterStatEntry statData;
         private readonly IMonsterJumper jumper;
         private readonly Transform wallSensor;
+        private readonly IMonsterClimber climber; // IMonsterJumper 구현체
 
         private readonly bool isRanged;
         private readonly Transform muzzle;
@@ -31,6 +32,7 @@ namespace PHG
             statData = brain.StatData;
             wallSensor = brain.wallSensor;
             jumper = brain;                // IMonsterJumper 구현체
+            climber = brain.Climber;
             isRanged = brain.IsRanged;
             if (isRanged) muzzle = tf.Find("MuzzlePoint");
         }
@@ -41,7 +43,7 @@ namespace PHG
             if (sPlayer == null)
                 sPlayer = GameObject.FindWithTag("Player")?.transform;
 
-            if (brain.StatData.hasIdleAnim)
+           if (brain.StatData.hasIdleAnim)
                 brain.PlayAnim(AnimNames.Walk);
 
 
@@ -65,8 +67,10 @@ namespace PHG
                                           : CheckGroundedFallback();
             bool midJump = brain.CanJump ? jumper.IsMidJump : false;
 
+            bool isClimbing = brain.CanClimbLadders ? climber.IsClimbing : false;
 
-            if (!midJump && grounded)
+
+            if (!midJump && grounded&&!isClimbing)
                 Orient(dir);
 
             /* --- 벽/점프 처리 (점프 가능 개체만) --- */
@@ -103,6 +107,10 @@ namespace PHG
     grounded && !midJump && jumper.ReadyToJump() &&
     (shouldJumpByWall || shouldJumpByCliff))
             {
+
+                if (brain.StatData.hasIdleAnim)
+                    brain.PlayAnim(AnimNames.Jump);
+
                 float dy = Mathf.Abs(toPl.y);
                 jumper.PerformJump(dir, dy,
                                    statData.jumpForce,
@@ -148,15 +156,29 @@ namespace PHG
             /* --- 공격 사거리 진입 시 전이 --- */
             if (isRanged && dist <= statData.attackRange)
             {
+                rb.velocity = Vector2.zero;
                 brain.ChangeState(StateID.Attack);
                 return;
             }
             // 2b. 사격 대기 범위(readyRange) 진입 시 AimReady State로 전환
             // (공격 사거리 밖이지만 조준 준비 상태로 돌입)
             // statData.readyRange는 statData.attackRange보다 크고 statData.chaseRange보다 큼
-
+            if (!isRanged && dist <= statData.attackRange)
+            {
+                if (isClimbing) // 사다리 타고 있으면 공격 상태로 전환하지 않고 현재 상태 (Chase) 유지
+                {
+                    // Debug.Log($"[{brain.name}] 사다리 등반 중이라 공격 상태로 전환하지 않음.");
+                    // 사다리 로직을 계속 실행하도록 return 하지 않음
+                }
+                else // 사다리 타고 있지 않으면 공격 상태로 전환
+                {
+                    rb.velocity = Vector2.zero;
+                    brain.ChangeState(StateID.Attack);
+                    return; // 공격 상태로 전환했으니 이번 Tick은 여기서 종료
+                }
+            }
             /* --- 추적 유지 구간: 수평 이동만 계속 --- */
-            if (grounded && !midJump)
+            if (grounded && !midJump&&isClimbing)
             {
                 float chargeBoost =
                     (!isRanged && brain.IsCharging && dist < statData.chargeRange)

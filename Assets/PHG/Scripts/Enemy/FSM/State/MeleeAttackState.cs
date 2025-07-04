@@ -3,7 +3,7 @@
 namespace PHG
 {
     /// <summary>
-    /// 근접 공격 상태 – 플레이어가 사정거리 안에 들어오면 정지 후 타격
+    /// 근접 공격 상태 – 플레이어가 사정거리 안에 있는 동안 공격 애니메이션을 무한 반복
     /// </summary>
     public class MeleeAttackState : IState
     {
@@ -11,15 +11,14 @@ namespace PHG
         private readonly MonsterBrain brain;
         private readonly Rigidbody2D rb;
         private readonly Transform tf;
-        private readonly Collider2D hitBox;  // 피격 판정용
+        private readonly Collider2D hitBox;
         private readonly MonsterStatEntry statData;
-
-        /* ───── tunables ───── */
-        private const float swingCooldown = 0.6f;
+        private Animator anim;
 
         /* ───── runtime ───── */
         private Transform player;
-        private float lastSwing;
+        private bool isAttacking;
+        private static readonly int AttackHash = Animator.StringToHash("Attack");
 
         public MeleeAttackState(MonsterBrain brain, Collider2D hitBox)
         {
@@ -33,9 +32,11 @@ namespace PHG
         public void Enter()
         {
             player = GameObject.FindWithTag("Player")?.transform;
-            hitBox.enabled = false;
+            anim = brain.GetComponent<Animator>();
             rb.velocity = Vector2.zero;
-            lastSwing = -swingCooldown;
+            hitBox.enabled = false;
+
+            PlayAttack();                                // 첫 타격
         }
 
         public void Tick()
@@ -45,42 +46,53 @@ namespace PHG
                 brain.ChangeState(StateID.Patrol);
                 return;
             }
-            if (statData == null) return; // 안전망
 
+            /* ───── Attack 클립 완료 대기 ───── */
+            if (isAttacking)
+            {
+                var info = anim.GetCurrentAnimatorStateInfo(0);
+                if (!anim.IsInTransition(0) && info.shortNameHash == AttackHash && info.normalizedTime >= 1f)
+                    isAttacking = false;                 // 클립 1루프 종료
+                else
+                    return;                              // 진행 중이면 대기
+            }
+
+            /* ───── 거리 재판단 & 재공격 ───── */
             float dist = Vector2.Distance(tf.position, player.position);
 
-            /* 사정거리 밖 → 추격 */
-            if (dist > statData.attackRange)
+            if (dist <= statData.attackRange)
             {
-                brain.ChangeState(StateID.Chase);
-                return;
+                PlayAttack();                            // ★ 범위 안이면 즉시 다시 공격
             }
-
-            /* 방향 고정 */
-            int dir = player.position.x > tf.position.x ? 1 : -1;
-            Vector3 scale = tf.localScale;
-            scale.x = Mathf.Abs(scale.x) * dir;
-            tf.localScale = scale;
-
-            /* 공격 */
-            if (Time.time - lastSwing >= swingCooldown)
+            else
             {
-                rb.velocity = Vector2.zero;
-                // brain.Animator?.SetTrigger("Swing"); // 애니메이션 트리거 (옵션)
-                lastSwing = Time.time;
+                brain.ChangeState(StateID.Chase);        // 범위 밖 → 추격
             }
         }
-
-        /// <summary>
-        /// Animation Event로 호출 – 실제 판정 구간만 활성화
-        /// </summary>
-        public void ActivateHitBox() => hitBox.enabled = true;
-        public void DeactivateHitBox() => hitBox.enabled = false;
 
         public void Exit()
         {
-            hitBox.enabled = false;
             rb.velocity = Vector2.zero;
+            hitBox.enabled = false;
+            isAttacking = false;
         }
+
+        /* ───── helpers ───── */
+        private void PlayAttack()
+        {
+            rb.velocity = Vector2.zero;
+
+            // 스프라이트 방향 고정 (Y·Z 비율 유지)
+            int dir = player.position.x > tf.position.x ? 1 : -1;
+            tf.localScale = new Vector3(Mathf.Abs(tf.localScale.x) * dir, tf.localScale.y, tf.localScale.z);
+
+            anim.Play("Attack", 0, 0f);                 // ★ 클립을 0초로 강제 재시작
+            isAttacking = true;
+            // 타격 판정은 애니메이션 이벤트(ActivateHitBox / DeactivateHitBox)로 처리
+        }
+
+        // Animation Event
+        public void ActivateHitBox() => hitBox.enabled = true;
+        public void DeactivateHitBox() => hitBox.enabled = false;
     }
 }

@@ -373,6 +373,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78086174806aae439d0095266c9bbe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpClip: {fileID: 0}
+  dashClip: {fileID: 0}
 --- !u!114 &1131748603754724198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -445,7 +447,6 @@ MonoBehaviour:
   _wallSlideDelayTime: 0.1
   _wallJumpInputBlockTime: 0.4
   _isWallJumpInputBlocked: 0
-  _climbSpeed: 3
   _ladderActionDelay: 0.3
   _groundCheck: {fileID: 0}
   _pickTrigger: {fileID: 771618537290284422}
@@ -459,6 +460,9 @@ MonoBehaviour:
   _allGroundLayers:
     serializedVersion: 2
     m_Bits: 1536
+  _wallLayers:
+    serializedVersion: 2
+    m_Bits: 8192
   _ladderLayer:
     serializedVersion: 2
     m_Bits: 2048
@@ -497,6 +501,7 @@ MonoBehaviour:
     HpRegen: 0
     Speed: 0
     Jump: 0
+  DieClip: {fileID: 0}
 --- !u!114 &7364333849018300201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1681,7 +1686,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1656097421859354425, guid: 52604541fb57c2a4594321a94cbe1d62, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 72.81
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1656097421859354425, guid: 52604541fb57c2a4594321a94cbe1d62, type: 3}
       propertyPath: m_AnchoredPosition.x

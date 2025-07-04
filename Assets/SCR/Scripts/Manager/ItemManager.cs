@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace SCR
@@ -123,6 +125,19 @@ namespace SCR
                     _statItem = _legItem[Random.Range(0, _legItem.Count)];
                     break;
             }
+        }
+
+        public List<GameObject> GetItemList(int ItemNum)
+        {
+            List<GameObject> getList = _itemPrefab.ToList();
+            List<GameObject> returnList = new();
+            for (int i = 0; i < ItemNum; i++)
+            {
+                int randNum = Random.Range(0, getList.Count);
+                returnList.Add(getList[randNum]);
+                getList.RemoveAt(randNum);
+            }
+            return returnList;
         }
     }
 

@@ -13,6 +13,7 @@ namespace SCR
         [SerializeField] private GameObject _headObj;
         [SerializeField] private GameObject _bodyObj;
         [SerializeField] private GameObject _armObj;
+        [SerializeField] private Weapon _baseWeapon;
         [SerializeField] private List<Weapon> _headWeapons;
         [SerializeField] private List<Weapon> _bodyWeapons;
         [SerializeField] private List<Weapon> _armWeapons;
@@ -20,6 +21,7 @@ namespace SCR
         public List<Weapon> BodyWeapons { get => _bodyWeapons; }
         public List<Weapon> ArmWeapons { get => _armWeapons; }
         [SerializeField] private List<Coroutine> _armCor;
+        private Coroutine _baseCor;
         private Coroutine _attackCor;
 
         void Awake() => Init();
@@ -120,6 +122,8 @@ namespace SCR
                 for (int i = 0; i < _armWeapons.Count; i++)
                     if (_armCor[i] == null)
                         _armCor[i] = StartCoroutine(NormalAttack(i));
+                if (_baseCor == null)
+                    _baseCor = StartCoroutine(BaseAttack());
                 yield return new WaitForFixedUpdate();
             }
         }
@@ -136,6 +140,20 @@ namespace SCR
             StopCoroutine(_armCor[index]);
             _armCor[index] = null;
 
+        }
+
+        private IEnumerator BaseAttack()
+        {
+            float attackCycle = _baseWeapon.AttackCycle;
+            while (attackCycle > 0.0f)
+            {
+                attackCycle -= Time.deltaTime;
+                yield return new WaitForFixedUpdate();
+            }
+            //player.Animator 공격 모션
+            // 공격 _baseWeapon.Attak();
+            StopCoroutine(_baseCor);
+            _baseCor = null;
         }
     }
 

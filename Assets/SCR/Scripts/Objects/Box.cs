@@ -12,14 +12,19 @@ namespace SCR
             if (!_isOpen)
             {
                 if (Random.Range(0, 2) == 0)
+                {
                     _animator.SetTrigger("Open");
+                    Use();
+                }
+
                 else
                 {
-                    ObjectPool.ReturnPool(this.gameObject, EPoolObjectType.Object);
                     GameObject monster = ObjectPool.TakeFromPool(EPoolObjectType.CDMonster);
                     monster.GetComponent<Monster>().Clone(MimicPrefab.GetComponent<Monster>());
                     monster.transform.position = gameObject.transform.position;
+                    ObjectPool.ReturnPool(this.gameObject, EPoolObjectType.Object);
                 }
+
                 _isOpen = true;
             }
         }

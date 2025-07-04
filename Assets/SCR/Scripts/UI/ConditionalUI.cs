@@ -18,6 +18,10 @@ namespace SCR
         [Header("EquipUI")]
         [SerializeField] private EquipUI _equipUI;
         public EquipUI EquipUI { get { return _equipUI; } }
+        [SerializeField] private ChangeEquipUI _changeEquipUI;
+        public ChangeEquipUI ChangeEquipUI { get { return _changeEquipUI; } }
+        [SerializeField] private SelectUI _selectUI;
+        public SelectUI SelectUI { get { return _selectUI; } }
 
         public void SetQusetText(string text)
         {
@@ -32,6 +36,7 @@ namespace SCR
         public void LinkedPlayer(Player player)
         {
             _equipUI.SetEquipped(player);
+            _changeEquipUI.SetEquipped(player);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace PHG
         private readonly MonsterBrain brain;
         private readonly Rigidbody2D rb;
         private readonly HitInfo hit;
-
+        private Animator anim;
         private float timer;
         private bool stagger;
 
@@ -21,6 +21,7 @@ namespace PHG
             this.brain = brain;
             this.rb = brain.rb;
             this.hit = hit;
+            Animator anim = brain.GetComponent<Animator>();
         }
 
         public void Enter()
@@ -55,6 +56,7 @@ namespace PHG
             if (stagger)
             {
                 float knockback = brain.StatData.knockbackForce; // ← SO에서 읽음
+                brain.PlayAnim(AnimNames.Stagger); // 피격 애니메이션 재생
                 brain.ApplyKnockback(hit.origin, knockback);
                 timer = 0.35f;
             }

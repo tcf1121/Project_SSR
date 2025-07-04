@@ -43,6 +43,9 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             TestStage();
+            GameObject PlayerGO = Instantiate(_playerPrefab);
+            PlayerGO.transform.parent = this.transform;
+            _player = PlayerGO.GetComponent<Player>();
         }
     }
 

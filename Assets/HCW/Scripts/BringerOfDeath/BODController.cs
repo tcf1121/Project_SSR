@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using SCR;
 
 namespace HCW
 {
@@ -36,11 +37,15 @@ namespace HCW
         public float multiLightningInterval = 0.5f; // 다중 흑뢰 간격
         public float multiLightningArea = 2f; // 다중 흑뢰 범위
 
+        [Header("공격 판정")]
+        [SerializeField] private Vector2 attackBoxSize = new Vector2(1, 1);
+        [SerializeField] private Vector2 attackBoxOffset = new Vector2(0.5f, 0.5f);
+        [SerializeField] private LayerMask playerLayer;
+
 
         private Transform player;
         private Animator animator;
         private Rigidbody2D rb;
-
 
         void Awake()
         {
@@ -96,6 +101,21 @@ namespace HCW
             MoveTowardsPlayer();
 
             // 플레이어가 멀면 원거리공격, 가까우면 근접공격
+            if (Time.time >= lastAttackTime + attackCooldown)
+            {
+                // 원거리 스킬 범위
+                if (distanceToPlayer >= skillMinRange && distanceToPlayer <= skillMaxRange)
+                {
+                    ChangeState(BossState.CastingSkill);
+                    StartCoroutine(CastSkill());
+                }
+                // 일반 공격 범위
+                else if (distanceToPlayer <= normalAttackRange)
+                {
+                    ChangeState(BossState.Attacking);
+                    StartCoroutine(PerformNormalAttack());
+                }
+            }
         }
 
         void UpdateAttackingState()
@@ -125,7 +145,13 @@ namespace HCW
 
             yield return new WaitForSeconds(0.5f);
 
-            // 공격 판정 필요
+            Vector2 boxCastOrigin = (Vector2)transform.position + new Vector2(attackBoxOffset.x * transform.localScale.x, attackBoxOffset.y);
+            RaycastHit2D hit = Physics2D.BoxCast(boxCastOrigin, attackBoxSize, 0f, Vector2.zero, 0f, playerLayer);
+
+            if (hit.collider != null)
+            {
+                hit.collider.GetComponent<PlayerStats>().TakeDamage(attackPower);
+            }
 
             yield return new WaitForSeconds(0.5f);
 
@@ -171,7 +197,21 @@ namespace HCW
         IEnumerator CastMultiBlackLightning()
         {
             yield return new WaitForSeconds(multiCastTime);
-            // TODO
+
+            for (int i = 0; i < multiLightningCount; i++)
+            {
+                if (blackLightningPrefab != null && player != null)
+                {
+                    Vector2 randomPos = (Vector2)player.position + Random.insideUnitCircle * (multiLightningArea / 2);
+                    GameObject spell = Instantiate(blackLightningPrefab, randomPos, Quaternion.identity);
+                    BODSpell bodSpell = spell.GetComponent<BODSpell>();
+                    if (bodSpell != null)
+                    {
+                        bodSpell.damage = attackPower * 1.6f;
+                    }
+                }
+                yield return new WaitForSeconds(multiLightningInterval);
+            }
         }
 
         public void TakeDamage(float damage)
@@ -222,5 +262,3 @@ namespace HCW
         }
     }
 }
-
-

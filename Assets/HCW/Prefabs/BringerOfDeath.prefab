@@ -115,6 +115,11 @@ MonoBehaviour:
   multiLightningCount: 3
   multiLightningInterval: 0.5
   multiLightningArea: 2
+  attackBoxSize: {x: 1, y: 1}
+  attackBoxOffset: {x: 0.5, y: 0.5}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!61 &-7096614236042888529
 BoxCollider2D:
   m_ObjectHideFlags: 0

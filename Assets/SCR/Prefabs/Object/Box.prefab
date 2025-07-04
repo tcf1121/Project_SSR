@@ -193,4 +193,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a8fda34d7acbe24580d9c0dd6b364e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MimicPrefab: {fileID: 0}
+  MimicPrefab: {fileID: 5322395397995982004, guid: 9bc630d02a733234aa9339382dd23ff7, type: 3}

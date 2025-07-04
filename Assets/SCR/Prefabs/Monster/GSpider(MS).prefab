@@ -114,12 +114,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 115141251, guid: a77424b410fa18846ad305dc6787db6e, type: 3}
+  m_Sprite: {fileID: 825366856, guid: 224f9dadfa4f49248bfd47b8ee8bd931, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.4, y: 0.24}
+  m_Size: {x: 0.56, y: 0.34}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -174,6 +174,7 @@ MonoBehaviour:
   hpBar: {fileID: 7480108619216151303}
   hpBarFill: {fileID: 3123913045400028113}
   monsterStats: {fileID: 7997283964140830346}
+  animator: {fileID: 3022777314383077176}
   groundMask:
     serializedVersion: 2
     m_Bits: 1536
@@ -199,6 +200,8 @@ MonoBehaviour:
   _attackRange: 0
   _chargeRange: 0
   _usePatrol: 0
+  _gold: 0
+  _exp: 0
 --- !u!61 &4883287734238660199
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -236,7 +239,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
     oldSize: {x: 0.56, y: 0.34}
-    newSize: {x: 0.4, y: 0.24}
+    newSize: {x: 0.56, y: 0.34}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -414,9 +417,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6824785771363275962}
   - component: {fileID: 8675239163933284563}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: GSpider(MS)
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -470,8 +473,16 @@ PrefabInstance:
       value: HpBar
       objectReference: {fileID: 0}
     - target: {fileID: 5736592864121502359, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736592864121502359, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5797958120611969052, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6985636049630583148, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
       propertyPath: m_Pivot.x
@@ -556,6 +567,10 @@ PrefabInstance:
     - target: {fileID: 7855914775027960744, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8232214213940532228, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

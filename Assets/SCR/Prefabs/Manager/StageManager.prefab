@@ -321,6 +321,12 @@ MonoBehaviour:
   _mapLists:
   - {fileID: 892661351868798771, guid: f29825d5d07250b48b5b46d2ee05e6b6, type: 3}
   - {fileID: 8894005925830626686, guid: 8e57c0a25fd6e004aa6ef030262139ce, type: 3}
+  - {fileID: 3457879738680599334, guid: a0406dfbbe9737942bcf1bd8e336c185, type: 3}
+  - {fileID: 1988137510313101988, guid: ebce2060522cd3849ae8ad43c755798d, type: 3}
+  - {fileID: 5033356164225632655, guid: 71f354e51c4971641ba21e869d134841, type: 3}
+  - {fileID: 764964671155687377, guid: b4ecbd8ac958c7449b4051b11ff41969, type: 3}
+  - {fileID: 188611611168422265, guid: 10fbc57448a17c641ad03d6aaa6d877f, type: 3}
+  - {fileID: 1551059887427478987, guid: d983a824670013a47a2da0835f2a9c81, type: 3}
   _camera: {fileID: 0}
   _confiner: {fileID: 0}
   _itemSpawner: {fileID: 8658651099754444374}

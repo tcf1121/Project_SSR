@@ -8,7 +8,6 @@ namespace SCR
     public class AttackTrigger : MonoBehaviour
     {
         [SerializeField] private Weapon weapon;
-        [SerializeField] private BoxCollider2D _attackCollider;
 
         void OnTriggerEnter2D(Collider2D collision)
         {
@@ -25,16 +24,6 @@ namespace SCR
                 collision.gameObject.GetComponent<MonsterBrain>().EnterDamageState(hitInfo);
                 return;
             }
-        }
-
-        public void AttackOn()
-        {
-            _attackCollider.enabled = true;
-        }
-
-        public void AttackOff()
-        {
-            _attackCollider.enabled = false;
         }
     }
 }

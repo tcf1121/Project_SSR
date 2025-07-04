@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1743885065471089863}
   - component: {fileID: 3589460237328538763}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: BaseMonster(LD)
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -209,6 +209,7 @@ MonoBehaviour:
   hpBar: {fileID: 2215514622320628762}
   hpBarFill: {fileID: 5921080925317936332}
   monsterStats: {fileID: 4036534367490095538}
+  animator: {fileID: 550697854701808936}
   groundMask:
     serializedVersion: 2
     m_Bits: 1536
@@ -319,6 +320,8 @@ MonoBehaviour:
   _attackRange: 5
   _chargeRange: 5
   _usePatrol: 1
+  _gold: 0
+  _exp: 0
 --- !u!212 &224298033681863337
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -438,8 +441,16 @@ PrefabInstance:
       value: HpBar
       objectReference: {fileID: 0}
     - target: {fileID: 5736592864121502359, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736592864121502359, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5797958120611969052, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5797958120611969052, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
       propertyPath: m_IsActive
@@ -528,6 +539,10 @@ PrefabInstance:
     - target: {fileID: 7855914775027960744, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8232214213940532228, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

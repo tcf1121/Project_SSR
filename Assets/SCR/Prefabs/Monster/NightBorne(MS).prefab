@@ -235,6 +235,7 @@ MonoBehaviour:
   hpBar: {fileID: 3775444902719396130}
   hpBarFill: {fileID: 8714995620354882036}
   monsterStats: {fileID: 5873433650609217138}
+  animator: {fileID: 5532302851133918666}
   groundMask:
     serializedVersion: 2
     m_Bits: 1536
@@ -384,6 +385,8 @@ MonoBehaviour:
   _attackRange: 0
   _chargeRange: 0
   _usePatrol: 0
+  _gold: 0
+  _exp: 0
 --- !u!95 &5532302851133918666
 Animator:
   serializedVersion: 5
@@ -428,9 +431,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8544699278218749506}
   - component: {fileID: 166373826049138388}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: NightBorne(MS)
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -482,6 +485,18 @@ PrefabInstance:
     - target: {fileID: 5736592864121502359, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
       propertyPath: m_Name
       value: HpBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736592864121502359, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736592864121502359, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5797958120611969052, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 6985636049630583148, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
       propertyPath: m_Pivot.x
@@ -566,6 +581,10 @@ PrefabInstance:
     - target: {fileID: 7855914775027960744, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8232214213940532228, guid: 99fd6f96238343346953d6e0f5d4cea8, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

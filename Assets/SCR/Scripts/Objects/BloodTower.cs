@@ -14,7 +14,7 @@ namespace SCR
                 gold = GameManager.Player.UseCurrentHpRatio(ratio);
                 _animator.SetTrigger("Open");
                 _isOpen = true;
-
+                Use();
             }
         }
 

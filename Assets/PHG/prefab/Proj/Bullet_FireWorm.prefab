@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6961212697667538765}
   - component: {fileID: -8383491822309600918}
   - component: {fileID: 1941247834333990247}
+  - component: {fileID: -3891782524872730855}
   m_Layer: 0
   m_Name: Bullet_FireWorm
   m_TagString: Untagged
@@ -163,3 +164,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   lifeTime: 5
+--- !u!95 &-3891782524872730855
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8952015228015005479}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6b6aa8e3b0f0b9943a074ad7fa7cfedd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

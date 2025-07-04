@@ -63,6 +63,7 @@ namespace PHG
         private JumpMove jumper;
         public bool IsGrounded() => jumper.IsGrounded();
         public bool IsMidJump => jumper.IsMidJump;
+        public bool IsClimbing => climber.IsClimbing;
         public bool ReadyToJump() => jumper.ReadyToJump();
         public bool PerformJump(int dir, float dy, float jumpForce, float horizontalFactor, float lockDuration) =>
             jumper.PerformJump(dir, dy, jumpForce, horizontalFactor, lockDuration);
@@ -119,7 +120,9 @@ namespace PHG
                 if (StatData == null)
                 {
                     enabled = false;
+
                     return;
+
                 }
             }
             IsFlying = StatData.isFlying;
@@ -128,13 +131,31 @@ namespace PHG
             CanJump = StatData.enableJump;
             CanClimbLadders = StatData.enableLadderClimb;
 
+
+
             groundMask = StatData.groundMask;
             ladderMask = StatData.ladderMask;
 
             if (IsRanged)
+            {
+                muzzle = tf.Find("MuzzlePoint");
+                if (muzzle == null)
+                {
+                    Debug.LogWarning($"[{gameObject.name}] MuzzlePoint를 찾을 수 없습니다. 원거리 공격이 제대로 작동하지 않을 수 있습니다. 비활성화되어 있거나 이름이 잘못되었을 수 있습니다.");
+                }
                 attackBehavior = new RangedAttackBehavior();
-            // 점프 시스템 초기화
-            jumper = new JumpMove();
+            }
+            else // 근접 몬스터
+            {
+                // MeleeAttackBehavior 초기화 시 HitBox와 플레이어 레이어를 전달
+                // 플레이어 레이어는 MonsterStatEntry에 정의되어 있다고 가정합니다.
+                attackBehavior = new MeleeAttackBehavior(hitBox, StatData.playerLayer); // StatData.playerLayer 추가 필요
+                Debug.Log($"[MonsterBrain] MeleeAttackBehavior 초기화됨. 할당된 HitBox: {hitBox?.name}, PlayerLayer: {StatData.playerLayer.value}");
+            }
+
+
+    // 점프 시스템 초기화
+    jumper = new JumpMove();
             jumper.Init(rb, tf, StatData, groundMask);
 
             // 사다리 시스템 인터페이스 연결
@@ -161,30 +182,7 @@ namespace PHG
             takeDamage = new TakeDamageState(this, new HitInfo(0, Vector2.zero));
 
 
-            muzzle = tf.Find("MuzzlePoint");
-            // if (muzzle == null)
-            // {
-            //     Debug.LogError($"[MonsterBrain.OnEnable] MuzzlePoint를 찾지 못했습니다. tf.name: {tf.name}");
-            //
-            //     // 여기에 추가하여 MuzzlePoint GameObject의 활성화 상태와 tf 자체의 활성화 상태를 확인합니다.
-            //     GameObject muzzleObjectInScene = GameObject.Find("MuzzlePoint"); // 씬 전체에서 MuzzlePoint를 찾아봅니다.
-            //     if (muzzleObjectInScene != null)
-            //     {
-            //         Debug.LogError($"하지만 씬에서 'MuzzlePoint'를 찾았습니다. 활성화 상태: {muzzleObjectInScene.activeInHierarchy} (Hierarchy), {muzzleObjectInScene.activeSelf} (Self)");
-            //         if (!muzzleObjectInScene.activeInHierarchy)
-            //         {
-            //             Debug.LogError("MuzzlePoint가 현재 비활성화 상태이므로 Find로 찾을 수 없습니다.");
-            //         }
-            //     }
-            //     else
-            //     {
-            //         Debug.LogError("씬 전체에서도 'MuzzlePoint' 게임 오브젝트를 찾을 수 없습니다. 이름 철자나 존재 여부를 확인하세요.");
-            //     }
-            // }
-            // else
-            // {
-            //     Debug.Log($"[MonsterBrain.OnEnable] MuzzlePoint 찾음: {muzzle.name}");
-            // }
+
 
             sm = new StateMachine();
             sm.Register(StateID.Idle, idle);
@@ -301,14 +299,27 @@ namespace PHG
 
         public void FireProjectile()
         {
-           // Debug.Log("애니메이션 이벤트: FireProjectile() 호출됨");
             if (attackBehavior != null)
             {
-                attackBehavior.Execute(this);
+                Debug.Log($"[{gameObject.name}] Animation Event: FireProjectile() 호출됨!");
+                if (attackBehavior is MeleeAttackBehavior meleeBehavior)
+                {
+                    meleeBehavior.ActivateHitBoxExternally(true); // 공격 시작 시 히트박스 활성화
+                    Debug.Log($"[{gameObject.name}] MeleeAttackBehavior 히트박스 활성화 요청됨.");
+                }
+                attackBehavior.Execute(this); // 근접이든 원거리든 이 메서드가 호출되어 Behavior 실행
             }
             else
             {
-               // Debug.LogWarning(" attackBehavior is null");
+                Debug.LogWarning($"[{gameObject.name}] attackBehavior가 할당되지 않았습니다.");
+            }
+        }
+        public void DeactivateMeleeHitBox()
+        {
+            if (attackBehavior is MeleeAttackBehavior meleeBehavior) // MeleeAttackBehavior 인스턴스인지 확인
+            {
+                meleeBehavior.ActivateHitBoxExternally(false); // 외부 비활성화 메서드 호출
+                Debug.Log($"[{gameObject.name}] Animation Event: Melee HitBox Deactivated");
             }
         }
     }

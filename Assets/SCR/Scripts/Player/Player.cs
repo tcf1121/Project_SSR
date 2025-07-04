@@ -158,6 +158,11 @@ namespace SCR
             else
                 return false;
         }
+
+        public void TakeDamage(int damage)
+        {
+            _playerStats.TakeDamage(damage);
+        }
     }
 }
 

@@ -20,6 +20,8 @@ namespace SCR
         public EquipUI EquipUI { get { return _equipUI; } }
         [SerializeField] private ChangeEquipUI _changeEquipUI;
         public ChangeEquipUI ChangeEquipUI { get { return _changeEquipUI; } }
+        [SerializeField] private SelectUI _selectUI;
+        public SelectUI SelectUI { get { return _selectUI; } }
 
         public void SetQusetText(string text)
         {

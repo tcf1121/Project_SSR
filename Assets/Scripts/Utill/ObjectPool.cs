@@ -41,9 +41,13 @@ namespace Utill
                 instance = this;
             else
                 Destroy(this.gameObject);
-            Init();
+
         }
 
+        void Start()
+        {
+            Init();
+        }
         private void Init()
         {
             // 미리 오브젝트 생성 해놓기

@@ -159,7 +159,6 @@ MonoBehaviour:
   - {fileID: 4620529640536476045, guid: 4a00f3406d91a4f46817f8af2e6ac450, type: 3}
   - {fileID: 4843681419477648835, guid: a1ce3608ae02f7149bf255ba8774fbea, type: 3}
   - {fileID: 5806015760297862262, guid: 98c6a857d48ce6c44a19cf4d9ac6caa4, type: 3}
-  - {fileID: 6384242167013635656, guid: b9df04fa91df69b43a35da66f60f4f77, type: 3}
   - {fileID: 5092664873903176952, guid: f81e7c85bc05dec45b967577d4360c3a, type: 3}
   - {fileID: 6461290185162387325, guid: 8b60a5956ac3f5f4c999684a7ff32afa, type: 3}
   - {fileID: 6314588065134394440, guid: 6b671e4329d426d4f9e890f98d010973, type: 3}
@@ -378,7 +377,7 @@ MonoBehaviour:
     PoolCount: 1
     overlappingPrefab: {fileID: 7881595434699642859, guid: e6ac8a78c2fb1dc4a9c0b73f02c79f01, type: 3}
     container: {fileID: 7702345431664973117}
-  - type: 6
+  - type: 7
     PoolCount: 1
     overlappingPrefab: {fileID: 3985796151101589788, guid: e6fc1d0f41be5c1419dfd87e59ee26eb, type: 3}
     container: {fileID: 7702345431664973117}

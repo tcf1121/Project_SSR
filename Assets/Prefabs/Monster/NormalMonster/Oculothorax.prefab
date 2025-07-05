@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monsterType: 2
-  _monsterSpecies: 7
+  _monsterSpecies: 8
   _allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
   _creadit: 4
   _monsterBrain: {fileID: 2195055762248198624}
@@ -286,7 +286,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.06}

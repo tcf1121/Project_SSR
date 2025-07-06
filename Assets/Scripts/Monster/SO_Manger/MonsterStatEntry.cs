@@ -17,6 +17,8 @@ public class MonsterStatEntry
     public LayerMask groundMask;
     [Tooltip("감지할 사다리 레이어")]
     public LayerMask ladderMask;
+    [Tooltip("감지할 벽 레이어")]
+    public LayerMask wallMask;
     [Tooltip("플레이어 레이어")] // 
     public LayerMask playerLayer;
 

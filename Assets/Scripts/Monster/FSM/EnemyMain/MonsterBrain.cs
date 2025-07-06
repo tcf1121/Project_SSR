@@ -8,32 +8,16 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
 {
     [SerializeField] private Monster _monster;
     public Monster Monster { get => _monster; }
-    [SerializeField] private float staggerThreshold = 15f;
-
 
     public Vector2 LastGroundCheckPos => jumper.LastGroundCheckPos;
     public float GroundCheckRadius => jumper.GroundCheckRadius;
     public MonsterStatEntry StatData { get; private set; }
 
-    public bool IsFlying { get; private set; }
-    public bool IsRanged { get; private set; }
-    public bool IsCharging { get; private set; }
-    public bool CanJump { get; private set; }
-    public bool CanClimbLadders { get; private set; }
+    private StateMachine stateMachine;
+    public StateMachine StateMachine => stateMachine;
 
-    public Transform Target { get; set; } //애니메이션용 위치
-
-    public LayerMask groundMask;
-    private LayerMask ladderMask;
-    public IAttackBehavior attackBehavior;
-    private Transform muzzle;
-    public Transform Muzzle => muzzle;
-
-
-    private StateMachine sm;
-    public StateMachine Sm => sm;
-
-    private IState idle, patrol, chase, attack, takeDamage, dead, aimReady;
+    private IState idle, patrol, chase, attack, dead, aimReady;
+    private TakeDamageState takeDamage;
 
     // 점프 시스템
     #region Jump
@@ -58,7 +42,6 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
     {
         if (_monster.AllMonsterStatData != null)
             StatData = _monster.AllMonsterStatData.GetStatEntry(_monster.MonsterSpecies);
-
     }
 #endif
     private void OnEnable()
@@ -66,65 +49,44 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
 
         StatData = _monster.AllMonsterStatData.GetStatEntry(_monster.MonsterSpecies);
 
-        IsFlying = StatData.isFlying;
-        IsRanged = StatData.isRanged;
-        IsCharging = StatData.isCharging;
-        CanJump = StatData.enableJump;
-        CanClimbLadders = StatData.enableLadderClimb;
-        groundMask = StatData.groundMask;
-        ladderMask = StatData.ladderMask;
 
-        if (IsRanged)
-        {
-            muzzle = _monster.MuzzlePoint;
-            attackBehavior = new RangedAttackBehavior();
-        }
-        else // 근접 몬스터
-        {
-            attackBehavior = new MeleeAttackBehavior(_monster.AttackBox, StatData.playerLayer); // StatData.playerLayer 추가 필요
-            //Debug.Log($"[MonsterBrain] MeleeAttackBehavior 초기화됨. 할당된 HitBox: {_monster.AttackBox?.name}, PlayerLayer: {StatData.playerLayer.value}");
-        }
+        // 원거리 몬스터
+        if (StatData.isRanged) attack = new RangeAttackState(_monster);
+        // 근접 몬스터
+        else attack = new MeleeAttackState(_monster);
 
 
         // 점프 시스템 초기화
         jumper = new JumpMove();
-        jumper.Init(_monster.Rigid, _monster.Transfrom, StatData, groundMask);
+        jumper.Init(_monster, StatData);
 
         // 사다리 시스템 인터페이스 연결
         if (StatData.enableLadderClimb)
         {
             climber = new LadderClimber();
-            climber.Init(this);
+            climber.Init(_monster);
         }
 
         // 상태 등록
-        idle = new IdleState(this);
-        patrol = new PatrolState(this);
-        chase = IsFlying ? new FloatChaseState(this) : new ChaseState(this);
-        dead = new DeadState(this);
-        attack = (IsRanged || _monster.AttackBox == null)
-                    ? new RangeAttackState(this)
-                    : new MeleeAttackState(this, _monster.AttackBox);
-        aimReady = new AimReadyState(this);
-        if (StatData.idleMode == MonsterStatEntry.IdleMode.GreedInteract)
-        {
-            var interact = GetComponent<Interactable>() ?? gameObject.AddComponent<Interactable>();
-            idle = new GreedIdleState(this, interact);
-        }
-        takeDamage = new TakeDamageState(this, new HitInfo(0, Vector2.zero));
+        idle = new IdleState(_monster);
+        patrol = new PatrolState(_monster);
+        chase = StatData.isFlying ? new FloatChaseState(_monster) : new ChaseState(_monster);
+        dead = new DeadState(_monster);
+        aimReady = new AimReadyState(_monster);
+        takeDamage = new TakeDamageState(_monster, 0);
 
 
 
 
-        sm = new StateMachine();
-        sm.Register(StateID.Idle, idle);
-        sm.Register(StateID.Patrol, patrol);
-        sm.Register(StateID.Chase, chase);
-        sm.Register(StateID.Attack, attack);
-        sm.Register(StateID.Dead, dead);
-        sm.ChangeState(StateID.Idle);
-        sm.Register(StateID.TakeDamage, takeDamage);
-        sm.Register(StateID.AimReady, aimReady);
+        stateMachine = new StateMachine();
+        stateMachine.Register(StateID.Idle, idle);
+        stateMachine.Register(StateID.Patrol, patrol);
+        stateMachine.Register(StateID.Chase, chase);
+        stateMachine.Register(StateID.Attack, attack);
+        stateMachine.Register(StateID.Dead, dead);
+        stateMachine.ChangeState(StateID.Idle);
+        stateMachine.Register(StateID.TakeDamage, takeDamage);
+        stateMachine.Register(StateID.AimReady, aimReady);
         _monster.MonsterStats.EnableStats();
 
 
@@ -133,13 +95,13 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
     private void FixedUpdate()
     {
         jumper?.UpdateTimer(Time.fixedDeltaTime);
-        sm?.Tick();
+        stateMachine?.Tick();
         climber?.UpdateClimbTimer(Time.fixedDeltaTime);
     }
 
     public void ChangeState(StateID id)
     {
-        if (sm == null) return;
+        if (stateMachine == null) return;
 
         bool usePatrolFlag = StatData != null ? StatData.usePatrol
                                              : (_monster.MonsterStats != null && _monster.MonsterStats.UsePatrol);
@@ -147,14 +109,14 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
         if (id == StateID.Patrol && !usePatrolFlag)
             return;
 
-        sm.ChangeState(id);
+        stateMachine.ChangeState(id);
     }
 
-    public void EnterDamageState(HitInfo hit)
+    public void EnterDamageState(int damage)
     {
-        takeDamage = new TakeDamageState(this, hit);
-        sm.Register(StateID.TakeDamage, takeDamage);
-        sm.ChangeState(StateID.TakeDamage);
+        takeDamage.SetDamage(damage);
+        stateMachine.Register(StateID.TakeDamage, takeDamage);
+        stateMachine.ChangeState(StateID.TakeDamage);
     }
 
     //Conflict 예상 -----------------------------------------------
@@ -163,7 +125,7 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
         Vector2 dir = ((Vector2)transform.position - origin).normalized;
 
         if (StatData.hasIdleAnim)
-            PlayAnim(AnimNames.Stagger);
+            _monster.PlayAnim(AnimNames.Stagger);
 
         // "퍽!" 느낌용 넉백 속도 세팅
         _monster.Rigid.velocity = dir * force;
@@ -179,44 +141,4 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
     }
     //--------------------------------------------------------------
 
-    public void Clone(MonsterBrain monsterBrain)
-    {
-        staggerThreshold = monsterBrain.staggerThreshold;
-        IsFlying = monsterBrain.IsFlying;
-        IsRanged = monsterBrain.IsRanged;
-        IsCharging = monsterBrain.IsCharging;
-        CanJump = monsterBrain.CanJump;
-        CanClimbLadders = monsterBrain.CanClimbLadders;
-    }
-
-    public void PlayAnim(string animName)
-    {
-        _monster.Animator.Play(animName);
-    }
-
-    public void FireProjectile()
-    {
-        if (attackBehavior != null)
-        {
-            //Debug.Log($"[{gameObject.name}] Animation Event: FireProjectile() 호출됨!");
-            if (attackBehavior is MeleeAttackBehavior meleeBehavior)
-            {
-                meleeBehavior.ActivateHitBoxExternally(true); // 공격 시작 시 히트박스 활성화
-                Debug.Log($"[{gameObject.name}] MeleeAttackBehavior 히트박스 활성화 요청됨.");
-            }
-            attackBehavior.Execute(this); // 근접이든 원거리든 이 메서드가 호출되어 Behavior 실행
-        }
-        else
-        {
-            Debug.LogWarning($"[{gameObject.name}] attackBehavior가 할당되지 않았습니다.");
-        }
-    }
-    public void DeactivateMeleeHitBox()
-    {
-        if (attackBehavior is MeleeAttackBehavior meleeBehavior) // MeleeAttackBehavior 인스턴스인지 확인
-        {
-            meleeBehavior.ActivateHitBoxExternally(false); // 외부 비활성화 메서드 호출
-            Debug.Log($"[{gameObject.name}] Animation Event: Melee HitBox Deactivated");
-        }
-    }
 }

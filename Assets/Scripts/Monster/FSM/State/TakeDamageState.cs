@@ -7,61 +7,53 @@ using UnityEngine;
 /// </summary>
 public class TakeDamageState : IState
 {
-    private readonly MonsterBrain brain;
-    private readonly Rigidbody2D rb;
-    private readonly HitInfo hit;
-    private Animator anim;
+    private readonly Monster _monster;
+    private readonly MonsterStats _monsterStats;
     private float timer;
+    private int _damage;
     private bool stagger;
 
-    public TakeDamageState(MonsterBrain brain, HitInfo hit)
+    public TakeDamageState(Monster monster, int damage)
     {
-        this.brain = brain;
-        rb = brain.Monster.Rigid;
-        this.hit = hit;
-        Animator anim = brain.GetComponent<Animator>();
+        _monster = monster;
+        _monsterStats = _monster.MonsterStats;
+        _damage = damage;
+    }
+
+    public void SetDamage(int damage)
+    {
+        _damage = damage;
     }
 
     public void Enter()
     {
-        var stats = brain.Monster.MonsterStats;
-        Debug.Log($"현재 hp :{stats.CurrentHP}");
+        Debug.Log($"현재 hp :{_monsterStats.CurrentHP}");
 
         // 체력 감소
-        int newHP = stats.CurrentHP - hit.damage;
-        stats.SetHP(newHP);
+        int newHP = _monsterStats.CurrentHP - _damage;
+        _monsterStats.SetHP(newHP);
 
         //Debug.Log($"[TakeDamageState] CurrentHP: {stats.CurrentHP}, MaxHP: {stats.MaxHP}");
 
         // 체력바 갱신
-        if (brain.Monster.HpBarFill != null)
+        if (_monster.HpBarFill != null)
         {
-            brain.Monster.HpBar.gameObject.SetActive(true);
-            brain.Monster.HpBarFill.fillAmount = (float)stats.CurrentHP / stats.MaxHP;
+            _monster.HpBar.gameObject.SetActive(true);
+            _monster.HpBarFill.fillAmount = (float)_monsterStats.CurrentHP / _monsterStats.MaxHP;
         }
 
         // 데미지 텍스트 출력
         //  brain.ShowDamageText(hit.damage);
 
         // 사망 처리
-        stats.KillIfDead();
-        if (stats.CurrentHP <= 0)
+        _monsterStats.KillIfDead();
+        if (_monsterStats.CurrentHP <= 0)
             return;
 
-        // 경직 조건 판단
-        stagger = hit.causesStagger || hit.damage >= brain.StatData.staggerThreshold;
+        // 넉백
+        _monster.KnockBack();
+        timer = 0.35f;
 
-        if (stagger)
-        {
-            float knockback = brain.StatData.knockbackForce; // ← SO에서 읽음
-            brain.PlayAnim(AnimNames.Stagger); // 피격 애니메이션 재생
-            brain.ApplyKnockback(hit.origin, knockback);
-            timer = 0.35f;
-        }
-        else
-        {
-            timer = 0.1f;
-        }
     }
 
     public void Tick()
@@ -69,13 +61,13 @@ public class TakeDamageState : IState
         timer -= Time.deltaTime;
         if (timer <= 0f)
         {
-            brain.Sm.ChangeState(StateID.Idle);
+            _monster.ChangeState(StateID.Idle);
         }
     }
 
     public void Exit()
     {
-        rb.velocity = Vector2.zero;
+        _monster.Rigid.velocity = Vector2.zero;
     }
 }
 

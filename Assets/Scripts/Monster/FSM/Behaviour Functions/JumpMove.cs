@@ -13,12 +13,12 @@ public interface IMonsterJumper
 
 public class JumpMove : IMonsterJumper
 {
-    private Rigidbody2D rb;
-    private Transform tf;
-    private MonsterStatEntry stat;
+    private Rigidbody2D _rigid;
+    private Transform _transfrom;
+    private MonsterStatEntry _statData;
+    private LayerMask _groundMask;
 
-    private LayerMask groundMask;
-    public Vector2 LastGroundCheckPos => rb.position + groundCheckOffset;
+    public Vector2 LastGroundCheckPos => _rigid.position + groundCheckOffset;
     public float GroundCheckRadius => groundCheckRadius;
     public bool LastGrounded { get; private set; }
     private float jumpTimer;
@@ -27,15 +27,15 @@ public class JumpMove : IMonsterJumper
     private Vector2 groundCheckOffset;
     private float groundCheckRadius;
 
-    public void Init(Rigidbody2D rb, Transform tf, MonsterStatEntry statData, LayerMask groundMask)
+    public void Init(Monster monster, MonsterStatEntry statData)
     {
-        this.rb = rb;
-        this.tf = tf;
-        this.stat = statData;
-        this.groundMask = groundMask;
+        _rigid = monster.Rigid;
+        _transfrom = monster.Transfrom;
+        _statData = statData;
+        _groundMask = statData.groundMask;
 
-        this.groundCheckOffset = statData.groundCheckOffset;
-        this.groundCheckRadius = statData.groundCheckRadius;
+        groundCheckOffset = statData.groundCheckOffset;
+        groundCheckRadius = statData.groundCheckRadius;
     }
 
     public void UpdateTimer(float deltaTime)
@@ -46,8 +46,8 @@ public class JumpMove : IMonsterJumper
 
     public bool IsGrounded()
     {
-        Vector2 checkOrigin = rb.position + groundCheckOffset;
-        bool grounded = Physics2D.OverlapCircle(checkOrigin, groundCheckRadius, groundMask);
+        Vector2 checkOrigin = _rigid.position + groundCheckOffset;
+        bool grounded = Physics2D.OverlapCircle(checkOrigin, groundCheckRadius, _groundMask);
 
         if (grounded && isMidJump)
             isMidJump = false;
@@ -73,14 +73,14 @@ public class JumpMove : IMonsterJumper
 
 
         isMidJump = true;
-        jumpTimer = lockDuration > 0 ? lockDuration : stat.jumpCooldown;
+        jumpTimer = lockDuration > 0 ? lockDuration : _statData.jumpCooldown;
 
         float yForce = jumpForce * 0.6f;
         float xImpulse = 0.35f;  // 고정된 벽 넘기 힘
-        rb.velocity = Vector2.zero;
+        _rigid.velocity = Vector2.zero;
 
-        rb.AddForce(Vector2.up * yForce, ForceMode2D.Impulse);
-        rb.AddForce(Vector2.right * dir * xImpulse * horizontalFactor, ForceMode2D.Impulse);
+        _rigid.AddForce(Vector2.up * yForce, ForceMode2D.Impulse);
+        _rigid.AddForce(Vector2.right * dir * xImpulse * horizontalFactor, ForceMode2D.Impulse);
 
         return true;
     }

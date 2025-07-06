@@ -4,7 +4,7 @@
 public class FloatChaseState : IState
 {
     /* ───── refs ───── */
-    private readonly Monster _monster;
+    private Monster _monster;
     private readonly MonsterStatEntry _statData;
 
     public FloatChaseState(Monster monster)

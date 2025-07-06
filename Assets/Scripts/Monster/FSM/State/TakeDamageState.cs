@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class TakeDamageState : IState
 {
-    private readonly Monster _monster;
+    private Monster _monster;
     private readonly MonsterStats _monsterStats;
     private float timer;
     private int _damage;

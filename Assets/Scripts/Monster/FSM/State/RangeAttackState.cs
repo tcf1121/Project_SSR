@@ -3,10 +3,10 @@
 /// <summary>
 /// 원거리 몬스터 – 공격/조준/추격 제어
 /// </summary>
-public class RangeAttackState : IState
+public class RangeAttackState : AttackState
 {
     /* ───────── refs ───────── */
-    readonly private Monster _monster;
+    readonly Monster _monster;
     readonly private MonsterStatEntry _statData;
     private float lastShot;
 
@@ -54,7 +54,6 @@ public class RangeAttackState : IState
 
         // Execute() 직접 호출 삭제!
         _monster.Animator.Play(AnimNames.Attack, 0, 0f);
-
         // 4. 쿨타임 초기화
         lastShot = Time.time;
     }
@@ -65,7 +64,7 @@ public class RangeAttackState : IState
             _monster.Rigid.velocity = Vector2.zero;
 
     }
-    void Shoot()
+    public void Attack()
     {
         if (_monster.MuzzlePoint == null) return;
         ProjectilePool pool = ProjectilePool.Instance;
@@ -111,6 +110,11 @@ public class RangeAttackState : IState
                 p.Launch(dir, _statData.projectileSpeed, _monster.Brain);
             }
         }
+    }
+
+    public void FinishAttack()
+    {
+
     }
 
 

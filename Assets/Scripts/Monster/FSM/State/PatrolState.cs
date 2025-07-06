@@ -5,7 +5,7 @@
 /// </summary>
 public class PatrolState : IState
 {
-    private readonly Monster _monster;
+    private Monster _monster;
     private readonly MonsterStatEntry _statData;
 
     private int dir = 1;
@@ -36,8 +36,8 @@ public class PatrolState : IState
         Vector2 groundCheckPos = _monster.GroundSensor.position + Vector3.right * dir * 0.3f + Vector3.down * 0.1f;
         float groundCheckRadius = 0.1f;
 
-        bool noFloor = !Physics2D.OverlapCircle(groundCheckPos, groundCheckRadius, LayerMask.GetMask("Ground", "Platform"));
-        bool hitWall = Physics2D.Raycast(_monster.WallSensor.position, Vector2.right * dir, wallCheckDist, LayerMask.GetMask("Wall"));
+        bool noFloor = !Physics2D.OverlapCircle(groundCheckPos, groundCheckRadius, _statData.groundMask);
+        bool hitWall = Physics2D.Raycast(_monster.WallSensor.position, Vector2.right * dir, wallCheckDist, _statData.wallMask);
 
         if (noFloor || hitWall)
         {

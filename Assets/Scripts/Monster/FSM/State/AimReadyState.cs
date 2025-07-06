@@ -8,7 +8,7 @@
 /// </summary>
 public class AimReadyState : IState
 {
-    private readonly Monster _monster;
+    private Monster _monster;
     private readonly MonsterStatEntry _statData;
 
     float sqReady, sqAttack;   // 거리 비교용 제곱값

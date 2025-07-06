@@ -1,5 +1,5 @@
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.UI;
 using Utill;
@@ -20,7 +20,8 @@ public class Monster : MonoBehaviour
     public MonsterStats MonsterStats { get => _monsterStats; }
     public SpriteRenderer Sprite { get => _sprite; }
     public BoxCollider2D HitBox { get => _hitBox; }
-    public BoxCollider2D AttackBox { get => _attackBox; }
+    public BoxCollider2D AttackBoxCol { get => _attackBoxCol; }
+    public AtttackBox AttackBox { get => _attackBox; }
     public Animator Animator { get => _animator; }
     public Transform MuzzlePoint { get => _muzzlePoint; }
     public Transform GroundSensor { get => _groundSensor; }
@@ -39,7 +40,8 @@ public class Monster : MonoBehaviour
     [SerializeField] private MonsterStats _monsterStats;
     [SerializeField] private SpriteRenderer _sprite;
     [SerializeField] private BoxCollider2D _hitBox;
-    [SerializeField] private BoxCollider2D _attackBox;
+    [SerializeField] private BoxCollider2D _attackBoxCol;
+    [SerializeField] private AtttackBox _attackBox;
     [SerializeField] private Animator _animator;
     [SerializeField] private Transform _muzzlePoint;
     [SerializeField] private Transform _groundSensor;
@@ -77,7 +79,7 @@ public class Monster : MonoBehaviour
         _creadit = monster.Credit;
         _groundSensor.position = monster.GroundSensor.position;
         _wallSensor.position = monster.WallSensor.position;
-        if (MonsterType != MonsterType.CDMonster)
+        if (monster.MonsterType != MonsterType.CDMonster)
         {
             if (monster.MuzzlePoint != null)
                 _muzzlePoint.position = monster.MuzzlePoint.position;
@@ -87,11 +89,15 @@ public class Monster : MonoBehaviour
         gameObject.transform.position = monster.gameObject.transform.position;
         gameObject.transform.localScale = monster.gameObject.transform.localScale;
 
+        if (monster.MonsterType != MonsterType.LDMonster)
+        {
+            _attackBoxCol.offset = monster.AttackBoxCol.offset;
+            _attackBoxCol.isTrigger = monster.AttackBoxCol.isTrigger;
+            _attackBoxCol.size = monster.AttackBoxCol.size;
+            _attackBoxCol.gameObject.transform.position = monster.AttackBoxCol.gameObject.transform.position;
+            _attackBox = monster.AttackBox;
+        }
 
-        _attackBox.offset = monster.AttackBox.offset;
-        _attackBox.isTrigger = monster.AttackBox.isTrigger;
-        _attackBox.size = monster.AttackBox.size;
-        _attackBox.gameObject.transform.position = monster.AttackBox.gameObject.transform.position;
     }
 
     public void PlayAnim(string animName)
@@ -135,7 +141,7 @@ public class Monster : MonoBehaviour
     public bool PlayerInRange(float range)
     {
         if (_target == null) return false;
-        return DistanceTarget() <= range;
+        return DistanceTarget() <= range ? true : false;
     }
 
     public int LookAtPlayerDirection()

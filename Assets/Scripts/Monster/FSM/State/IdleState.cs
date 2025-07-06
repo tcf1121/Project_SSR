@@ -3,7 +3,7 @@
 
 public class IdleState : IState
 {
-    private readonly Monster _monster;
+    private Monster _monster;
     private readonly MonsterStatEntry _statData;
 
     public IdleState(Monster monster)
@@ -46,11 +46,22 @@ public class IdleState : IState
 
         /* ── 플레이어 감지 → Chase / FloatChase 전환 ── */
 
-        float dist = Vector2.Distance(_monster.Target.position, _monster.transform.position);
-        if (_statData.isRanged && dist < _statData.patrolRange)
+        if (!_statData.isRanged)
         {
-            _monster.ChangeState(StateID.Chase);
-            return;
+            if (_monster.PlayerInRange(_statData.patrolRange))
+            {
+                if (_statData.isFlying) _monster.ChangeState(StateID.FloatChase);
+                else _monster.ChangeState(StateID.Chase);
+                return;
+            }
+        }
+        else if (_statData.isRanged)
+        {
+            if (_monster.PlayerInRange(_statData.readyRange))
+            {
+                _monster.ChangeState(StateID.AimReady);
+                return;
+            }
         }
     }
 

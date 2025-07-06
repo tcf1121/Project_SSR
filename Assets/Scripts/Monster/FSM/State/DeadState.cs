@@ -5,7 +5,7 @@ using Utill;
 
 public class DeadState : IState
 {
-    private readonly Monster _monster;
+    private Monster _monster;
 
     public DeadState(Monster monster)
     {

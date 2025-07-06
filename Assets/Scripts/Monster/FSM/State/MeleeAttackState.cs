@@ -4,10 +4,10 @@
 /// <summary>
 /// 근접 공격 상태 – 플레이어가 사정거리 안에 있는 동안 공격 애니메이션을 무한 반복
 /// </summary>
-public class MeleeAttackState : IState
+public class MeleeAttackState : AttackState
 {
     /* ───── refs ───── */
-    private readonly Monster _monster;
+    private Monster _monster;
     private readonly MonsterStatEntry _statData;
     private BoxCollider2D _attackBox;
 
@@ -19,7 +19,7 @@ public class MeleeAttackState : IState
     {
         _monster = monster;
         _statData = monster.Brain.StatData;
-        _attackBox = monster.AttackBox;
+        _attackBox = monster.AttackBoxCol;
     }
 
     public void Enter()
@@ -41,20 +41,24 @@ public class MeleeAttackState : IState
         }
         else
         {
-            if (!_monster.PlayerInRange(_statData.chargeRange))
+            if (_monster.PlayerInRange(_statData.attackRange))
+            {
+                PlayAttack();                            // ★ 범위 안이면 즉시 다시 공격
+            }
+            else if (!_monster.PlayerInRange(_statData.chaseRange))
             {
                 _monster.ChangeState(StateID.Patrol);
                 return;
             }
-            else if (!_monster.PlayerInRange(_statData.attackRange))
+            else
             {
                 _monster.ChangeState(StateID.Chase);        // 범위 밖 → 추격
-                return;
             }
-            else if (_monster.PlayerInRange(_statData.attackRange))
-            {
-                PlayAttack();                            // ★ 범위 안이면 즉시 다시 공격
-            }
+
+
+
+
+
         }
 
 
@@ -82,6 +86,6 @@ public class MeleeAttackState : IState
     }
 
     // Animation Event
-    public void ActivateHitBox() => _attackBox.enabled = true;
-    public void DeactivateHitBox() => _attackBox.enabled = false;
+    public void Attack() => _attackBox.enabled = true;
+    public void FinishAttack() => _attackBox.enabled = false;
 }

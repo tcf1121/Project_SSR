@@ -121,7 +121,8 @@ MonoBehaviour:
   _monsterStats: {fileID: 8915342835581327519}
   _sprite: {fileID: 7929684807927383348}
   _hitBox: {fileID: 7371404042282487334}
-  _attackBox: {fileID: 5788190269701370493}
+  _attackBoxCol: {fileID: 5788190269701370493}
+  _attackBox: {fileID: 6864278779830489996}
   _animator: {fileID: 9194826378569386092}
   _muzzlePoint: {fileID: 2189079874689030301}
   _groundSensor: {fileID: 2391386319553836967}
@@ -143,10 +144,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monster: {fileID: 6461290185162387325}
-  staggerThreshold: 15
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 1536
 --- !u!114 &8915342835581327519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,7 +191,7 @@ Animator:
   m_GameObject: {fileID: 4638884299391897615}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 93e71b678ad40d34f954fa77d53b99df, type: 2}
+  m_Controller: {fileID: 9100000, guid: 0b8d16f83a6fec24cafd4d0684753376, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -374,6 +371,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4643172695775972198}
   - component: {fileID: 5788190269701370493}
+  - component: {fileID: 6864278779830489996}
   m_Layer: 12
   m_Name: AttackBox
   m_TagString: Untagged
@@ -441,6 +439,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.25, y: 0.25}
   m_EdgeRadius: 0
+--- !u!114 &6864278779830489996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6843946139091133071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 365e7b9b85ce68f4a8d8de3d9331d54e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9054487725784699257
 GameObject:
   m_ObjectHideFlags: 0

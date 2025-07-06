@@ -3,7 +3,7 @@
 
 public class ChaseState : IState
 {
-    private readonly Monster _monster;
+    private Monster _monster;
     private readonly MonsterStatEntry _statData;
 
     private readonly IMonsterJumper jumper;
@@ -133,7 +133,7 @@ grounded && !midJump && jumper.ReadyToJump() &&
             _monster.Rigid.velocity = new Vector2(_monster.Rigid.velocity.x, _monster.Rigid.velocity.y);
 
         /* 추적 종료 판정 */
-        if (!_monster.PlayerInRange(_statData.chargeRange))
+        if (!_monster.PlayerInRange(_statData.chaseRange))
         {
             _monster.ChangeState(StateID.Patrol);
             return;

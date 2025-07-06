@@ -16,7 +16,8 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
     private StateMachine stateMachine;
     public StateMachine StateMachine => stateMachine;
 
-    private IState idle, patrol, chase, attack, dead, aimReady;
+    private IState idle, patrol, chase, dead, aimReady;
+    private AttackState attack;
     private TakeDamageState takeDamage;
 
     // 점프 시스템
@@ -140,5 +141,15 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
         _monster.Rigid.velocity = Vector2.zero;
     }
     //--------------------------------------------------------------
+
+    public void Attack()
+    {
+        attack.Attack();
+    }
+
+    public void FinishAttack()
+    {
+        attack.FinishAttack();
+    }
 
 }

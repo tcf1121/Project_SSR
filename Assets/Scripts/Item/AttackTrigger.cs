@@ -8,13 +8,8 @@ public class AttackTrigger : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Monster"))
         {
-            Vector2 direction = collision.transform.position - GameManager.Player.transform.position;
-            direction.Normalize();
-            direction.x *= -1;
-            HitInfo hitInfo = new HitInfo(
-                (int)(weapon.Player.PlayerStats.FinalStats.Atk * weapon.DamageRatio),
-                direction, true);
-            collision.gameObject.GetComponent<MonsterBrain>().EnterDamageState(hitInfo);
+
+            collision.gameObject.GetComponent<Monster>().GetDamage((int)(weapon.Player.PlayerStats.FinalStats.Atk * weapon.DamageRatio));
             return;
         }
     }

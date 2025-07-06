@@ -34,7 +34,7 @@ public class MonsterStats : MonoBehaviour
 
     public void EnableStats()
     {
-        if (_monster.MonsterBrain.StatData == null)
+        if (_monster.Brain.StatData == null)
         {
             //Debug.LogError("[MonsterStats] MonsterStatEntry를 불러오지 못했습니다.");
             enabled = false;
@@ -47,17 +47,17 @@ public class MonsterStats : MonoBehaviour
     private void InitializeRuntimeStats()
     {
         float Coeff = GameManager.StageManager.DangerIndexManager.GetDangerIndex();
-        _maxHP = Mathf.RoundToInt(_monster.MonsterBrain.StatData.maxHP * Coeff);
-        _damage = Mathf.RoundToInt(_monster.MonsterBrain.StatData.damage * Coeff);
-        _gold = Mathf.RoundToInt(_monster.MonsterBrain.StatData.goldReward * Coeff);
-        _exp = Mathf.RoundToInt(_monster.MonsterBrain.StatData.expReward * Coeff);
-        _moveSpeed = 1f + _monster.MonsterBrain.StatData.moveSpeed * 0.1f;
-        _moveSpeed = 1f + _monster.MonsterBrain.StatData.moveSpeed * 0.1f;
-        _patrolRange = _monster.MonsterBrain.StatData.patrolRange * 0.25f;
-        _chaseRange = _monster.MonsterBrain.StatData.chaseRange * 0.25f;
-        _attackRange = _monster.MonsterBrain.StatData.attackRange * 0.25f;
-        _chargeRange = _monster.MonsterBrain.StatData.chargeRange * 0.25f;
-        _usePatrol = _monster.MonsterBrain.StatData.usePatrol;
+        _maxHP = Mathf.RoundToInt(_monster.Brain.StatData.maxHP * Coeff);
+        _damage = Mathf.RoundToInt(_monster.Brain.StatData.damage * Coeff);
+        _gold = Mathf.RoundToInt(_monster.Brain.StatData.goldReward * Coeff);
+        _exp = Mathf.RoundToInt(_monster.Brain.StatData.expReward * Coeff);
+        _moveSpeed = 1f + _monster.Brain.StatData.moveSpeed * 0.1f;
+        _moveSpeed = 1f + _monster.Brain.StatData.moveSpeed * 0.1f;
+        _patrolRange = _monster.Brain.StatData.patrolRange * 0.25f;
+        _chaseRange = _monster.Brain.StatData.chaseRange * 0.25f;
+        _attackRange = _monster.Brain.StatData.attackRange * 0.25f;
+        _chargeRange = _monster.Brain.StatData.chargeRange * 0.25f;
+        _usePatrol = _monster.Brain.StatData.usePatrol;
         _currentHP = _maxHP;
     }
 
@@ -68,8 +68,8 @@ public class MonsterStats : MonoBehaviour
 
     public void KillIfDead()
     {
-        if (_currentHP <= 0 && _monster.MonsterBrain != null)
-            _monster.MonsterBrain.ChangeState(StateID.Dead);
+        if (_currentHP <= 0 && _monster.Brain != null)
+            _monster.Brain.ChangeState(StateID.Dead);
     }
 
 }

@@ -8,66 +8,61 @@
 /// </summary>
 public class AimReadyState : IState
 {
-    readonly MonsterBrain brain;
-    readonly Rigidbody2D rb;
-    readonly Transform tf;
-    readonly MonsterStatEntry stat;
-    Transform player;
+    private readonly Monster _monster;
+    private readonly MonsterStatEntry _statData;
 
     float sqReady, sqAttack;   // 거리 비교용 제곱값
 
-    public AimReadyState(MonsterBrain brain)
+    public AimReadyState(Monster monster)
     {
-        this.brain = brain;
-        rb = brain.GetComponent<Rigidbody2D>();
-        tf = brain.transform;
-        stat = brain.StatData;
+        _monster = monster;
+        _statData = monster.Brain.StatData;
 
         /* 계산 캐싱 */
-        sqReady = stat.readyRange * stat.readyRange;
-        sqAttack = stat.attackRange * stat.attackRange;
+        sqReady = _statData.readyRange * _statData.readyRange;
+        sqAttack = _statData.attackRange * _statData.attackRange;
     }
     public void Enter()
     {
-        player = GameObject.FindWithTag("Player")?.transform;
 
-        if (stat.hasIdleAnim)
-            brain.PlayAnim(AnimNames.Idle);
-        if (brain.IsGrounded() && !brain.IsMidJump)
-            rb.velocity = Vector2.zero;
+        if (_statData.hasIdleAnim)
+            _monster.PlayAnim(AnimNames.Idle);
+        if (_monster.Brain.IsGrounded() && !_monster.Brain.IsMidJump)
+            _monster.Rigid.velocity = Vector2.zero;
     }
 
     public void Tick()
     {
-        if (player == null)
+        if (_monster.Target == null)
         {
-            brain.ChangeState(StateID.Patrol);
+            _monster.ChangeState(StateID.Patrol);
             return;
         }
 
-        float sqDist = (player.position - tf.position).sqrMagnitude;
+        float sqDist = (_monster.Target.position - _monster.Transfrom.position).sqrMagnitude;
 
         /* 10타일 밖 → Patrol 복귀 */
         if (sqDist > sqReady)
         {
-            brain.ChangeState(StateID.Patrol);
+            _monster.ChangeState(StateID.Patrol);
             return;
         }
 
         /* 사정거리 진입 → Attack 전환 */
         if (sqDist <= sqAttack)
         {
-            brain.ChangeState(StateID.Attack);
+            _monster.ChangeState(StateID.Attack);
             return;
         }
 
 
         /* 정지‧방향 전환만 수행 */
-        if (brain.IsGrounded() && !brain.IsMidJump)
-            rb.velocity = Vector2.zero;
-        int dir = player.position.x > tf.position.x ? 1 : -1;
-        tf.localScale = new Vector3(Mathf.Abs(tf.localScale.x) * dir, tf.localScale.y, tf.localScale.z);
+        if (_monster.Brain.IsGrounded() && !_monster.Brain.IsMidJump)
+            _monster.Rigid.velocity = Vector2.zero;
+        int dir = _monster.Target.position.x > _monster.Transfrom.position.x ? 1 : -1;
+        _monster.Transfrom.localScale = new Vector3(Mathf.Abs(_monster.Transfrom.localScale.x) * dir,
+        _monster.Transfrom.localScale.y, _monster.Transfrom.localScale.z);
     }
 
-    public void Exit() => rb.velocity = Vector2.zero;
+    public void Exit() => _monster.Rigid.velocity = Vector2.zero;
 }

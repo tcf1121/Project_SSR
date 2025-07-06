@@ -5,8 +5,8 @@ using UnityEngine;
 public interface IMonsterClimber
 {
     bool IsClimbing { get; }
-    void Init(MonsterBrain brain);
-    void TryFindAndClimb(int dir, Vector2 playerPos);
+    void Init(Monster _monster);
+    void TryFindAndClimb(int dir);
     void UpdateClimbTimer(float dt);
 }
 
@@ -25,6 +25,7 @@ public class LadderClimber : IMonsterClimber
 
     private Rigidbody2D rb;
     private Transform tf;
+    private Monster _monster;
     private MonsterBrain brain;
 
     public bool IsClimbing { get; private set; }
@@ -34,7 +35,7 @@ public class LadderClimber : IMonsterClimber
     public Vector2 ForwardOffset => forwardOffset;
     public float DetectRadius => detectRadius;
 
-    public void Init(MonsterBrain brain)
+    public void Init(Monster _monster)
     {
         this.brain = brain;
         rb = brain.Monster.Rigid;
@@ -56,7 +57,7 @@ public class LadderClimber : IMonsterClimber
             cooldownTimer -= dt;
     }
 
-    public void TryFindAndClimb(int dir, Vector2 playerPos)
+    public void TryFindAndClimb(int dir)
     {
         if (IsClimbing || cooldownTimer > 0f) return;
 
@@ -70,7 +71,7 @@ public class LadderClimber : IMonsterClimber
 
         if (col == null) return;
 
-        float yDiff = playerPos.y - tf.position.y;
+        float yDiff = _monster.Target.position.y - tf.position.y;
 
         // 예외 처리: 플레이어가 아래에 있고 yDiff가 작지만 여전히 bottom에 가까울 때는 내려가야 함
         if (Mathf.Abs(yDiff) < climbYThreshold)
@@ -94,7 +95,7 @@ public class LadderClimber : IMonsterClimber
             return;
         }
 
-        brain.StartCoroutine(ClimbRoutine(lb, yDiff > 0f, playerPos));
+        brain.StartCoroutine(ClimbRoutine(lb, yDiff > 0f, _monster.Target.position));
     }
 
     private IEnumerator ClimbRoutine(LadderBounds lb, bool goUp, Vector2? playerPos)
@@ -195,7 +196,7 @@ public class LadderClimber : IMonsterClimber
         {
             int hDir = playerTf.position.x > tf.position.x ? 1 : -1;
             float yGap = playerTf.position.y - tf.position.y;
-            if (brain.CanJump)
+            if (brain.StatData.enableJump)
             {
                 brain.PerformJump(hDir, Mathf.Abs(yGap), brain.StatData.jumpForce,
                                   brain.StatData.jumpHorizontalFactor,

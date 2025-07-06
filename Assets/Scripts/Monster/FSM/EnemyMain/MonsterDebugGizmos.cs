@@ -22,16 +22,16 @@ public class MonsterDebugGizmos : MonoBehaviour
         _monster = GetComponent<Monster>();
         _muzzle = transform.Find("MuzzlePoint");
         _player = GameObject.FindWithTag("Player")?.transform;
-        _climber = _monster.MonsterBrain.Climber as LadderClimber;
+        _climber = _monster.Brain.Climber as LadderClimber;
 
         if (_monster != null && _climber != null)
-            _climber.Init(_monster.MonsterBrain); //
+            _climber.Init(_monster); //
     }
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (!showGizmos || _monster == null || _monster.MonsterBrain.StatData == null) return;
+        if (!showGizmos || _monster == null || _monster.Brain.StatData == null) return;
 
         float dir = Mathf.Sign(transform.localScale.x);
         Vector3 p = transform.position;
@@ -49,7 +49,7 @@ public class MonsterDebugGizmos : MonoBehaviour
         Gizmos.DrawLine(_monster.WallSensor.position, _monster.WallSensor.position + Vector3.right * dir * 0.2f);
 
         // ─ Jump ─
-        if (_monster.MonsterBrain.CanJump && _monster is IMonsterJumper jumper)
+        if (_monster.Brain.StatData.enableJump && _monster is IMonsterJumper jumper)
         {
             Vector2 pos = jumper.LastGroundCheckPos;
             float radius = jumper.GroundCheckRadius;
@@ -58,7 +58,7 @@ public class MonsterDebugGizmos : MonoBehaviour
         }
 
         // ─ Ladder ─
-        if (_monster.MonsterBrain.CanClimbLadders && _climber != null)
+        if (_monster.Brain.StatData.enableLadderClimb && _climber != null)
         {
             int facingDir = transform.localScale.x >= 0 ? 1 : -1;
             Vector3 offset = (Vector3)(_climber.ForwardOffset * facingDir);
@@ -80,7 +80,7 @@ public class MonsterDebugGizmos : MonoBehaviour
         }
 
         // ─ Ranges ─
-        var stat = _monster.MonsterBrain.StatData;
+        var stat = _monster.Brain.StatData;
         if (stat.readyRange > 0f) { Handles.color = new Color(0f, 1f, 0f, 0.35f); Handles.DrawWireDisc(p, Vector3.forward, stat.readyRange); }
         if (stat.patrolRange > 0f) { Handles.color = new Color(0f, 0.6f, 1f, 0.35f); Handles.DrawWireDisc(p, Vector3.forward, stat.patrolRange); }
         if (stat.chaseRange > 0f) { Handles.color = new Color(1f, 0.85f, 0f, 0.35f); Handles.DrawWireDisc(p, Vector3.forward, stat.chaseRange); }
@@ -89,7 +89,7 @@ public class MonsterDebugGizmos : MonoBehaviour
 
         // ─ Ranged ─
         // ─ Ranged ─
-        if (_monster.MonsterBrain.IsRanged && _muzzle != null && _player != null)
+        if (_monster.Brain.StatData.isRanged && _muzzle != null && _player != null)
         {
             Gizmos.color = Color.yellow;
 

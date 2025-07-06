@@ -6,40 +6,22 @@
 public class RangeAttackState : IState
 {
     /* ───────── refs ───────── */
-    readonly MonsterBrain brain;
-    readonly Rigidbody2D rb;
-    readonly Transform tf;
-    readonly MonsterStatEntry statData;
-    readonly bool isFlying;
+    readonly private Monster _monster;
+    readonly private MonsterStatEntry _statData;
+    private float lastShot;
 
-    Transform player;
-    public Transform muzzle;
-    float lastShot;
-
-    /* ───────── cached values ───────── */
-    float AttackR => statData.attackRange;
-    float ReadyR => statData.readyRange;
-    float ChaseR => statData.chaseRange;
-    float Cooldown => statData.rangedCooldown;
-    float MoveSpd => statData.moveSpeed;
     const float AirAccel = 8f;
 
-    public RangeAttackState(MonsterBrain brain)
+    public RangeAttackState(Monster monster)
     {
-        this.brain = brain;
-        rb = brain.Monster.Rigid;
-        tf = brain.Monster.transform;
-        statData = brain.StatData;
-        muzzle = brain.Muzzle;
-        isFlying = brain.IsFlying;
+        _monster = monster;
+        _statData = monster.Brain.StatData;
     }
 
     public void Enter()
     {
-        player = GameObject.FindWithTag("Player")?.transform;
-
-        if (brain.StatData.hasIdleAnim)
-            brain.PlayAnim(AnimNames.Attack);
+        if (_statData.hasIdleAnim)
+            _monster.PlayAnim(AnimNames.Attack);
 
 
         lastShot = Time.time;
@@ -48,32 +30,30 @@ public class RangeAttackState : IState
     public void Tick()
     {
         // 1. 쿨타임 확인
-        if (Time.time - lastShot < Cooldown)
+        if (Time.time - lastShot < _statData.rangedCooldown)
             return;
 
         // 2. 플레이어 유효성 및 거리 체크
-        if (player == null) return;
-        float dist = Vector2.Distance(tf.position, player.position);
 
-        if (dist > ChaseR)
+        if (!_monster.PlayerInRange(_statData.chaseRange))
         {
+
             // brain.ChangeState(StateID.Chase);
             return;
         }
-
-        if (dist > AttackR)
+        if (!_monster.PlayerInRange(_statData.attackRange))
         {
-            brain.ChangeState(StateID.Chase);
+            _monster.ChangeState(StateID.Chase);
             return;
         }
 
         FacePlayer();
         // 3. 공격 범위 안이면 정지 후 애니메이션만 재생
-        if (brain.IsGrounded() && !brain.IsMidJump)
-            rb.velocity = Vector2.zero;
+        if (_monster.Brain.IsGrounded() && !_monster.Brain.IsMidJump)
+            _monster.Rigid.velocity = Vector2.zero;
 
         // Execute() 직접 호출 삭제!
-        brain.Monster.Animator.Play(AnimNames.Attack, 0, 0f);
+        _monster.Animator.Play(AnimNames.Attack, 0, 0f);
 
         // 4. 쿨타임 초기화
         lastShot = Time.time;
@@ -81,13 +61,13 @@ public class RangeAttackState : IState
 
     public void Exit()
     {
-        if (brain.IsGrounded() && !brain.IsMidJump)
-            rb.velocity = Vector2.zero;
+        if (_monster.Brain.IsGrounded() && !_monster.Brain.IsMidJump)
+            _monster.Rigid.velocity = Vector2.zero;
 
     }
     void Shoot()
     {
-        if (muzzle == null) return;
+        if (_monster.MuzzlePoint == null) return;
         ProjectilePool pool = ProjectilePool.Instance;
         if (pool == null)
         {
@@ -96,26 +76,26 @@ public class RangeAttackState : IState
         }
 
         // 조준 위치 보정 (Y값 내려서 상체나 머리 쪽 조준)
-        Vector2 aimTarget = player.position + Vector3.up * 0.25f;  // ← 보정값 필요 시 조절
-        Vector2 baseDir = (aimTarget - (Vector2)muzzle.position).normalized;
+        Vector2 aimTarget = _monster.Target.position + Vector3.up * 0.25f;  // ← 보정값 필요 시 조절
+        Vector2 baseDir = (aimTarget - (Vector2)_monster.MuzzlePoint.position).normalized;
 
         // 기본 투사체
-        Projectile prefab = statData.projectileprefab;
+        Projectile prefab = _statData.projectileprefab;
 
-        if (statData.firePattern == MonsterStatEntry.FirePattern.Single)
+        if (_statData.firePattern == MonsterStatEntry.FirePattern.Single)
         {
-            Projectile p = pool.Get(prefab, muzzle.position);
+            Projectile p = pool.Get(prefab, _monster.MuzzlePoint.position);
 
             // 회전은 Z축 기준 2D 전용으로 적용
             float angle = Mathf.Atan2(baseDir.y, baseDir.x) * Mathf.Rad2Deg;
             p.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-            p.Launch(baseDir, statData.projectileSpeed, brain);
+            p.Launch(baseDir, _statData.projectileSpeed, _monster.Brain);
         }
-        else
+        else // Spread
         {
-            int pellets = Mathf.Max(1, statData.pelletCount);
-            float spread = statData.spreadAngle;
+            int pellets = Mathf.Max(1, _statData.pelletCount);
+            float spread = _statData.spreadAngle;
             float step = (pellets > 1) ? spread / (pellets - 1) : 0f;
 
             for (int i = 0; i < pellets; ++i)
@@ -126,9 +106,9 @@ public class RangeAttackState : IState
 
                 Vector2 dir = Quaternion.AngleAxis(shotAngle, Vector3.forward) * Vector2.right;
 
-                Projectile p = pool.Get(prefab, muzzle.position);
+                Projectile p = pool.Get(prefab, _monster.MuzzlePoint.position);
                 p.transform.rotation = Quaternion.AngleAxis(shotAngle, Vector3.forward);
-                p.Launch(dir, statData.projectileSpeed, brain);
+                p.Launch(dir, _statData.projectileSpeed, _monster.Brain);
             }
         }
     }
@@ -136,10 +116,10 @@ public class RangeAttackState : IState
 
     void FacePlayer()
     {
-        if (player == null) return;
-        int sign = player.position.x >= tf.position.x ? 1 : -1;
-        Vector3 sc = tf.localScale;
+        if (_monster.Target == null) return;
+        int sign = _monster.LookAtPlayerDirection();
+        Vector3 sc = _monster.Transfrom.localScale;
         sc.x = Mathf.Abs(sc.x) * sign;
-        tf.localScale = sc;
+        _monster.Transfrom.localScale = sc;
     }
 }

@@ -50,7 +50,7 @@ GameObject:
   - component: {fileID: 122323369154712029}
   m_Layer: 12
   m_Name: CursingWitch
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94,6 +94,7 @@ MonoBehaviour:
   _monsterStats: {fileID: 284868357439547620}
   _sprite: {fileID: 40107609939279621}
   _hitBox: {fileID: 2030668208433255918}
+  _attackBoxCol: {fileID: 0}
   _attackBox: {fileID: 3178881839418656696}
   _animator: {fileID: 122323369154712029}
   _muzzlePoint: {fileID: 481631172083416025}
@@ -116,10 +117,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monster: {fileID: 3244448039656585745}
-  staggerThreshold: 15
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 1536
 --- !u!114 &284868357439547620
 MonoBehaviour:
   m_ObjectHideFlags: 0

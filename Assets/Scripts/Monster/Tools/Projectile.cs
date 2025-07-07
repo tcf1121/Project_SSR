@@ -7,15 +7,15 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     //멤버변수
-    [SerializeField] private float speed = 10f; //이동속도
-    [SerializeField] private float lifeTime;//최대 생존 시간
+    [SerializeField] protected float speed = 10f; //이동속도
+    [SerializeField] protected float lifeTime;//최대 생존 시간
     private MonsterBrain brain;
     private int projectileDamage;
 
     private Rigidbody2D rb;
     public int PoolKey { get; set; }
     // 런타임
-    private float alive;
+    protected float alive;
     //디버그용
     private Vector2 lastDir;
 

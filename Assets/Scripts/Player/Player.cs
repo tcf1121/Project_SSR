@@ -34,6 +34,8 @@ public class Player : MonoBehaviour
     private Collider2D _collider;
     public Animator Animator { get { return _animator; } }
     private Animator _animator;
+    public AudioSource AudioSource { get => _audioSource; }
+    private AudioSource _audioSource;
 
 
 
@@ -50,6 +52,7 @@ public class Player : MonoBehaviour
     private void Init()
     {
         _animator = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
         _rigid = GetComponent<Rigidbody2D>();
         _collider = GetComponent<Collider2D>();
         _equipped = GetComponent<Equipped>();

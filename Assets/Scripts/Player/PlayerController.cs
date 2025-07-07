@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 {
     // ===== 링크 스크립트 =====
     private Player player;
-    private AudioSource audioSource;
+
 
     // ===== 입력 상태 =====
     public Vector2 InputDirection { get { return _inputDirection; } }
@@ -59,18 +59,11 @@ public class PlayerController : MonoBehaviour
     #region 유니티 주기
     void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
         player = GetComponent<Player>();
         playerState = PlayerState.Idle;
         canClimb = true;
         canJump = true;
         pressNormalAttack = false;
-
-        Transform child = transform.Find("AudioSource");
-        if (child != null)
-        {
-            audioSource = child.GetComponent<AudioSource>();
-        }
     }
 
     void FixedUpdate()
@@ -403,16 +396,14 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void ExecuteJump()
     {
-        // ���� ȿ���� ����
-        audioSource.PlayOneShot(jumpClip);
+        player.AudioSource.PlayOneShot(jumpClip);
 
         player.Rigid.velocity = new Vector2(player.Rigid.velocity.x, player.PlayerPhysical.FinalJump);
     }
 
     private void HalfExecuteJump()
     {
-        // ���� ȿ���� ����
-        audioSource.PlayOneShot(jumpClip);
+        player.AudioSource.PlayOneShot(jumpClip);
 
         player.Rigid.velocity = new Vector2(player.Rigid.velocity.x, player.PlayerPhysical.FinalJump * 0.6f);
     }
@@ -422,10 +413,8 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void TryDropThroughPlatform()
     {
-        // ���� ȿ���� ����
-        audioSource.PlayOneShot(jumpClip);
+        player.AudioSource.PlayOneShot(jumpClip);
 
-        // �� �ؿ� ���� ������ �÷����� �ִ��� Ȯ��
         // 발 밑에 관통 가능한 플랫폼이 있는지 확인
         Collider2D platform = Physics2D.OverlapBox(player.PlayerPhysical.GroundCheck.position, player.PlayerPhysical.GroundCheckBoxSize, 0f, player.PlayerPhysical.PlatformLayer);
 
@@ -631,10 +620,8 @@ public class PlayerController : MonoBehaviour
         isTouchingWall = false;
         wallTouchTimer = 0f;
 
-        // ���� ȿ���� ����
-        audioSource.PlayOneShot(jumpClip);
+        player.AudioSource.PlayOneShot(jumpClip);
 
-        // �Է� ���� ����
         // 입력 차단 시작
         player.PlayerPhysical.IsWallJumpInputBlocked = true;
         wallJumpInputBlockTimer = player.PlayerPhysical.WallJumpInputBlockTime;
@@ -694,8 +681,7 @@ public class PlayerController : MonoBehaviour
     {
         playerState = PlayerState.Dash;
 
-        // �뽬 ȿ���� ����
-        audioSource.PlayOneShot(dashClip);
+        player.AudioSource.PlayOneShot(dashClip);
 
         dashDirection = new Vector2(facingRight ? 1 : -1, 0);
         player.Rigid.AddForce(dashDirection * 5f, ForceMode2D.Impulse);

@@ -18,6 +18,7 @@ public class MonsterStats : MonoBehaviour
     [SerializeField] private bool _usePatrol;
     [SerializeField] private int _gold;
     [SerializeField] private int _exp;
+    [SerializeField] private bool _isDead;
 
     public int MaxHP { get => _maxHP; }
     public int CurrentHP { get => _currentHP; }
@@ -30,6 +31,7 @@ public class MonsterStats : MonoBehaviour
     public bool UsePatrol { get => _usePatrol; }
     public int Gold { get => _gold; }
     public int Exp { get => _exp; }
+    public bool IsDead { get => _isDead; }
 
 
     public void EnableStats()
@@ -49,7 +51,10 @@ public class MonsterStats : MonoBehaviour
         float Coeff = GameManager.StageManager.DangerIndexManager.GetDangerIndex();
         _maxHP = Mathf.RoundToInt(_monster.Brain.StatData.maxHP * Coeff);
         _damage = Mathf.RoundToInt(_monster.Brain.StatData.damage * Coeff);
-        _monster.AttackBox.SetDamage(_damage);
+        if (_monster.AttackBox != null)
+        {
+            _monster.AttackBox.SetDamage(_damage);
+        }
         _gold = Mathf.RoundToInt(_monster.Brain.StatData.goldReward * Coeff);
         _exp = Mathf.RoundToInt(_monster.Brain.StatData.expReward * Coeff);
         _moveSpeed = 1f + _monster.Brain.StatData.moveSpeed * 0.1f;
@@ -60,6 +65,8 @@ public class MonsterStats : MonoBehaviour
         _chargeRange = _monster.Brain.StatData.chargeRange * 0.25f;
         _usePatrol = _monster.Brain.StatData.usePatrol;
         _currentHP = _maxHP;
+        _isDead = false;
+
     }
 
     public void SetHP(int newHP)
@@ -69,8 +76,12 @@ public class MonsterStats : MonoBehaviour
 
     public void KillIfDead()
     {
-        if (_currentHP <= 0 && _monster.Brain != null)
+        if (_currentHP <= 0 && _monster.Brain != null && !_isDead)
+        {
+            _isDead = true;
             _monster.Brain.ChangeState(StateID.Dead);
+        }
+
     }
 
 }

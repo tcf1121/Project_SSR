@@ -52,7 +52,7 @@ GameObject:
   - component: {fileID: 5307194570423240099}
   m_Layer: 12
   m_Name: Snake
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96,7 +96,8 @@ MonoBehaviour:
   _monsterStats: {fileID: 7258919175896141732}
   _sprite: {fileID: 5493160213835558594}
   _hitBox: {fileID: 6661014093558322292}
-  _attackBox: {fileID: 7669980305988149379}
+  _attackBoxCol: {fileID: 0}
+  _attackBox: {fileID: 0}
   _animator: {fileID: 5307194570423240099}
   _muzzlePoint: {fileID: 6140505373397657927}
   _groundSensor: {fileID: 4834738295515879853}
@@ -118,10 +119,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monster: {fileID: 6314588065134394440}
-  staggerThreshold: 15
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 1536
 --- !u!114 &7258919175896141732
 MonoBehaviour:
   m_ObjectHideFlags: 0

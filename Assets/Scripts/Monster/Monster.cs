@@ -52,14 +52,6 @@ public class Monster : MonoBehaviour
     [SerializeField] private Image _hpBarFill;
     private Transform _target;
 
-
-
-
-
-
-
-
-
     public void Clone(Monster monster)
     {
         if (GameManager.Player != null)
@@ -71,11 +63,11 @@ public class Monster : MonoBehaviour
         _sprite.flipX = monster.Sprite.flipX;
 
         _animator.runtimeAnimatorController = monster.Animator.runtimeAnimatorController;
-        _monsterBrain.enabled = true;
-        _monsterStats.enabled = true;
         _monsterType = monster.MonsterType;
         _allMonsterStatData = monster.AllMonsterStatData;
         _monsterSpecies = monster.MonsterSpecies;
+        _monsterBrain.SetBrain();
+        _monsterStats.enabled = true;
         _creadit = monster.Credit;
         _groundSensor.position = monster.GroundSensor.position;
         _wallSensor.position = monster.WallSensor.position;

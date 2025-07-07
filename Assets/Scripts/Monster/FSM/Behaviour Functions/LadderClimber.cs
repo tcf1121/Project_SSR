@@ -35,9 +35,10 @@ public class LadderClimber : IMonsterClimber
     public Vector2 ForwardOffset => forwardOffset;
     public float DetectRadius => detectRadius;
 
-    public void Init(Monster _monster)
+    public void Init(Monster monster)
     {
-        this.brain = brain;
+        _monster = monster;
+        brain = monster.Brain;
         rb = brain.Monster.Rigid;
         tf = brain.Monster.transform;
 

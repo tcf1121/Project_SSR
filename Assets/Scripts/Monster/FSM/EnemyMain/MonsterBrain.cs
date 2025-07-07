@@ -45,7 +45,7 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
             StatData = _monster.AllMonsterStatData.GetStatEntry(_monster.MonsterSpecies);
     }
 #endif
-    private void OnEnable()
+    public void SetBrain()
     {
 
         StatData = _monster.AllMonsterStatData.GetStatEntry(_monster.MonsterSpecies);

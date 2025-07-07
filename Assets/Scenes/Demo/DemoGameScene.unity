@@ -753,6 +753,42 @@ PrefabInstance:
       propertyPath: _confiner
       value: 
       objectReference: {fileID: 1947402503}
+    - target: {fileID: 6188266495006637393, guid: dae99fe9f8dbae6459fcf9db0ce05e45, type: 3}
+      propertyPath: _mapLists.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6188266495006637393, guid: dae99fe9f8dbae6459fcf9db0ce05e45, type: 3}
+      propertyPath: _mapLists.Array.data[0]
+      value: 
+      objectReference: {fileID: 892661351868798771, guid: f29825d5d07250b48b5b46d2ee05e6b6, type: 3}
+    - target: {fileID: 6188266495006637393, guid: dae99fe9f8dbae6459fcf9db0ce05e45, type: 3}
+      propertyPath: _mapLists.Array.data[1]
+      value: 
+      objectReference: {fileID: 8894005925830626686, guid: 8e57c0a25fd6e004aa6ef030262139ce, type: 3}
+    - target: {fileID: 6188266495006637393, guid: dae99fe9f8dbae6459fcf9db0ce05e45, type: 3}
+      propertyPath: _mapLists.Array.data[2]
+      value: 
+      objectReference: {fileID: 3986992873557339169, guid: a0406dfbbe9737942bcf1bd8e336c185, type: 3}
+    - target: {fileID: 6188266495006637393, guid: dae99fe9f8dbae6459fcf9db0ce05e45, type: 3}
+      propertyPath: _mapLists.Array.data[3]
+      value: 
+      objectReference: {fileID: 7584620868595688846, guid: 79f45c1d43769be4c91178f450fca097, type: 3}
+    - target: {fileID: 6188266495006637393, guid: dae99fe9f8dbae6459fcf9db0ce05e45, type: 3}
+      propertyPath: _mapLists.Array.data[4]
+      value: 
+      objectReference: {fileID: 7211834284916677325, guid: deda262d5b46bbf4ebd3836645af2c38, type: 3}
+    - target: {fileID: 6188266495006637393, guid: dae99fe9f8dbae6459fcf9db0ce05e45, type: 3}
+      propertyPath: _mapLists.Array.data[5]
+      value: 
+      objectReference: {fileID: 6661873837702847208, guid: bf954bb0a48dfc44ba2b141d0b497f22, type: 3}
+    - target: {fileID: 6188266495006637393, guid: dae99fe9f8dbae6459fcf9db0ce05e45, type: 3}
+      propertyPath: _mapLists.Array.data[6]
+      value: 
+      objectReference: {fileID: 3339658598083214891, guid: 10fbc57448a17c641ad03d6aaa6d877f, type: 3}
+    - target: {fileID: 6188266495006637393, guid: dae99fe9f8dbae6459fcf9db0ce05e45, type: 3}
+      propertyPath: _mapLists.Array.data[7]
+      value: 
+      objectReference: {fileID: 8631251671859111773, guid: ab3bff3a3cef06e4d9cfc3aefb07ae0b, type: 3}
     - target: {fileID: 6195627085606550348, guid: dae99fe9f8dbae6459fcf9db0ce05e45, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

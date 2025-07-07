@@ -30,11 +30,12 @@ Transform:
   m_GameObject: {fileID: 1258477866283267251}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.436, y: 1.593, z: 0}
+  m_LocalPosition: {x: 0, y: 0.285, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6628343215354535468}
+  - {fileID: 5783874048819583794}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8707555305029477423
@@ -126,13 +127,13 @@ MonoBehaviour:
   currentHP: 0
   attackPower: 40
   moveSpeed: 4
-  detectRange: 10
-  attackPrefab: {fileID: -2253911629886400664, guid: 65efaaf4f60c0d14da12d3b4c13b1f71, type: 3}
+  detectRange: 1
+  attackPrefab: {fileID: 5474304153459862659, guid: dc9e31d072f34004c9ea35f9ce7921de, type: 3}
   firePoint: {fileID: 6628343215354535468}
-  bulletSpeed: 10
+  bulletSpeed: 5
   attackCooldown: 3
   laserPrefab: {fileID: 7541508428916574481, guid: 03b41f2fb23d84f4693515f6a259e4b6, type: 3}
-  laserPoint: {fileID: 0}
+  laserPoint: {fileID: 5783874048819583794}
   laserChargeTime: 2
   laserDuration: 3
   laserYRange: 1
@@ -163,7 +164,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &2308735900765702672
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -209,6 +210,37 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.50145346, y: 0.8273084}
   m_EdgeRadius: 0
+--- !u!1 &1555108644260487287
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5783874048819583794}
+  m_Layer: 0
+  m_Name: LaserPointe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5783874048819583794
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1555108644260487287}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.8, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 80523012454912816}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6461308047997039600
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,7 +266,7 @@ Transform:
   m_GameObject: {fileID: 6461308047997039600}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.189, y: 0.636, z: 0}
+  m_LocalPosition: {x: 0, y: 0.09, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

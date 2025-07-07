@@ -83,7 +83,7 @@ GameObject:
   - component: {fileID: 3545202460995538692}
   m_Layer: 12
   m_Name: Bat
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 6290609407275008883}
   - component: {fileID: 3301303244111084552}
   - component: {fileID: 6146071563708880591}
-  m_Layer: 12
+  m_Layer: 8
   m_Name: AttackBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -421,6 +421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 365e7b9b85ce68f4a8d8de3d9331d54e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _damage: 0
 --- !u!1 &8889780411955421780
 GameObject:
   m_ObjectHideFlags: 0

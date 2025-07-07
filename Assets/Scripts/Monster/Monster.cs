@@ -53,12 +53,6 @@ public class Monster : MonoBehaviour
     private Transform _target;
 
 
-
-
-
-
-
-
     public void Clone(Monster monster)
     {
         if (GameManager.Player != null)

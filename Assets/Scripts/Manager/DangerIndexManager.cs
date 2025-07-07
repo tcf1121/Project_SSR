@@ -27,6 +27,7 @@ public class DangerIndexManager : MonoBehaviour
 
     // Get
     public float GetDangerIndex() => DangerIndex;
+    public float GetCount() => count;
 
     private void Awake()
     {

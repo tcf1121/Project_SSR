@@ -11,6 +11,7 @@ public class ProjectilePool : MonoBehaviour
 
     /* key = prefab.GetInstanceID() */
     private readonly Dictionary<int, Queue<Projectile>> pools = new();
+    private readonly Dictionary<int, Queue<PlayerProjectile>> Playerpools = new();
 
     void Awake()
     {
@@ -56,6 +57,27 @@ public class ProjectilePool : MonoBehaviour
         return proj;
     }
 
+    public PlayerProjectile GetPlayer(PlayerProjectile prefab, Vector2 spawnPos)
+    {
+        int key = prefab.GetInstanceID();
+
+        if (!Playerpools.TryGetValue(key, out Queue<PlayerProjectile> q))
+        {
+            Debug.Log("!pools");
+            q = new Queue<PlayerProjectile>();
+            Playerpools[key] = q;
+        }
+
+        PlayerProjectile proj = q.Count > 0
+            ? q.Dequeue()
+            : Instantiate(prefab, GameObject.Find("PlayerObjectPool").transform);  // 부모를 풀 오브젝트로 지정
+
+        proj.PoolKey = key;
+        proj.transform.position = spawnPos;
+        proj.gameObject.SetActive(true);
+        return proj;
+    }
+
     /// <summary>
     /// Projectile 자체에서 Hit / 수명 종료 시 호출
     /// </summary>
@@ -68,6 +90,20 @@ public class ProjectilePool : MonoBehaviour
             Debug.LogWarning($"[ProjectilePool] Unknown PoolKey {key}. Creating fallback queue.");
             q = new Queue<Projectile>();
             pools[key] = q;
+        }
+
+        proj.gameObject.SetActive(false);
+        q.Enqueue(proj);   // 중복 Enqueue 방지 – 한 번만
+    }
+
+    public void ReleasePlayer(PlayerProjectile proj)
+    {
+        int key = proj.PoolKey;
+
+        if (!Playerpools.TryGetValue(key, out Queue<PlayerProjectile> q))
+        {
+            q = new Queue<PlayerProjectile>();
+            Playerpools[key] = q;
         }
 
         proj.gameObject.SetActive(false);

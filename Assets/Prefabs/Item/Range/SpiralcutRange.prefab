@@ -46,10 +46,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71bb7bcc762650545819ba267ef26363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 0}
   attackCycle: 1
   damageRatio: 0.1
   _strengthening: 0.15
   itemPart: 1
+  projectilePrefab: {fileID: 0}
+  muzzlePoint: {fileID: 0}
   _animator:
   - {fileID: 1487699810912949413}
   - {fileID: 1030196993081259017}
@@ -66,7 +69,7 @@ GameObject:
   - component: {fileID: 1030196993081259017}
   - component: {fileID: 3531214033593850227}
   - component: {fileID: 275761771409811281}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trigger2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -232,7 +235,7 @@ GameObject:
   - component: {fileID: 1487699810912949413}
   - component: {fileID: 7576957174948994383}
   - component: {fileID: 4993718674713927773}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trigger1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

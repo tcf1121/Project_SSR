@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5347569119072425302}
   - component: {fileID: 3692999805293677093}
   - component: {fileID: 6331144602638979696}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Skill3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 7212899602577133780}
   - component: {fileID: 6094171093265343470}
   - component: {fileID: 22664590751701437}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Skill2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 3386439060844989198}
   - component: {fileID: 7242959928353642700}
   - component: {fileID: 5017813520063892814}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Skill4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -511,7 +511,7 @@ GameObject:
   - component: {fileID: 1665411570260618029}
   - component: {fileID: 5741979045159028691}
   - component: {fileID: 2074281053997166551}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Skill5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -677,7 +677,7 @@ GameObject:
   - component: {fileID: 714511763277911502}
   - component: {fileID: 3068776408796158718}
   - component: {fileID: 3826724723128974344}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Skill1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -879,10 +879,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71bb7bcc762650545819ba267ef26363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 0}
   attackCycle: 5
   damageRatio: 1.3
   _strengthening: 0.15
   itemPart: 1
+  projectilePrefab: {fileID: 0}
+  muzzlePoint: {fileID: 0}
   _animator:
   - {fileID: 3826724723128974344}
   - {fileID: 22664590751701437}

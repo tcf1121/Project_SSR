@@ -165,5 +165,11 @@ public class GolemController : MonoBehaviour
         animator.SetTrigger("Die");
         Destroy(gameObject, 2f); // TODO : 시체 남겨야하나?
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectRange);
+    }
 }
 

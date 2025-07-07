@@ -68,6 +68,7 @@ public class Teleporter : MonoBehaviour
         // 몬스터 스포너 가속?
 
         StartCoroutine(EventTimerRoutine());
+        Debug.Log("텔레포터 활성화");
 
     }
 

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -35,6 +35,8 @@ public class PickTrigger : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Teleport"))
         {
+            Teleporter teleporter = collision.gameObject.GetComponent<Teleporter>();
+            teleporter.ActivateTelePort();
             _collider.enabled = false;
             return;
         }

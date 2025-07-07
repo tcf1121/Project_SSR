@@ -23,7 +23,7 @@ public class PatrolState : IState
 
         if (_monster.Brain.StatData.hasIdleAnim)
             _monster.PlayAnim(AnimNames.Walk);
-
+        _monster.Rigid.velocity = Vector2.zero;
         dir = _monster.Transfrom.localScale.x >= 0f ? 1 : -1;
     }
 

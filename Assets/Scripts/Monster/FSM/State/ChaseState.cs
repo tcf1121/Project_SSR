@@ -5,6 +5,7 @@ public class ChaseState : IState
 {
     private Monster _monster;
     private readonly MonsterStatEntry _statData;
+    private readonly MonsterStats _monsterStats;
 
     private readonly IMonsterJumper jumper;
     private readonly IMonsterClimber climber; // IMonsterJumper 구현체
@@ -21,6 +22,7 @@ public class ChaseState : IState
         _statData = monster.Brain.StatData;
         jumper = _monster.Brain;                // IMonsterJumper 구현체
         climber = _monster.Brain.Climber;
+        _monsterStats = _monster.MonsterStats;
     }
 
     /* ───────── IState ───────── */
@@ -36,11 +38,12 @@ public class ChaseState : IState
 
     public void Tick()
     {
-        if (!_monster.PlayerInRange(_statData.chaseRange))
-        {
-            _monster.Brain.ChangeState(StateID.Patrol);
-            return;
-        }
+      //if (!_monster.PlayerInRange(_statData.chaseRange))
+      //{
+      //     Debug.Log("상태변환: ChaseState → PatrolState");
+      //     _monster.Brain.ChangeState(StateID.Patrol);
+      //    return;
+      //}
 
         /* --- 기본 벡터 및 판정 --- */
         int dir = _monster.LookAtPlayerDirection();
@@ -135,7 +138,15 @@ grounded && !midJump && jumper.ReadyToJump() &&
         /* 추적 종료 판정 */
         if (!_monster.PlayerInRange(_statData.chaseRange))
         {
+            Debug.Log($"{_monster.name}상태변환: ChaseState → PatrolState");
+            if (!_monster.Brain.StatData.usePatrol)
+            {
+                // 추적 범위 밖으로 나갔고 순찰 플래그가 꺼져 있다면
+                _monster.ChangeState(StateID.Patrol); // 강제 패트롤
+            }
             _monster.ChangeState(StateID.Patrol);
+            Debug.Log($"{_monster.name}상태변환: ChaseState → PatrolState 전이 완료");
+
             return;
         }
 

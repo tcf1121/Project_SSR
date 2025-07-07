@@ -59,7 +59,6 @@ public class Monster : MonoBehaviour
 
 
 
-
     public void Clone(Monster monster)
     {
         if (GameManager.Player != null)
@@ -102,6 +101,7 @@ public class Monster : MonoBehaviour
 
     public void PlayAnim(string animName)
     {
+        Debug.Log($"[FSM] {Brain.name} Current State: {Brain.StateMachine.CurrentStateID}");
         Animator.Play(animName);
     }
 

@@ -107,8 +107,8 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
         bool usePatrolFlag = StatData != null ? StatData.usePatrol
                                              : (_monster.MonsterStats != null && _monster.MonsterStats.UsePatrol);
 
-        if (id == StateID.Patrol && !usePatrolFlag)
-            return;
+        //if (id == StateID.Patrol && !usePatrolFlag)
+        //    return;
 
         stateMachine.ChangeState(id);
     }

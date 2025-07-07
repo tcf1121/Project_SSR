@@ -20,6 +20,9 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
+    wallMask:
+      serializedVersion: 2
+      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -33,7 +36,7 @@ MonoBehaviour:
     knockbackDuration: 0.07
     patrolRange: 1
     chaseRange: 3
-    attackRange: 0.5
+    attackRange: 0.3
     chargeRange: 0
     enableJump: 1
     jumpHorizontalFactor: 0.499
@@ -78,6 +81,9 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
+    wallMask:
+      serializedVersion: 2
+      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -120,7 +126,7 @@ MonoBehaviour:
     climbYThreshold: 3
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 1
-    climbSpeed: 3
+    climbSpeed: 1
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
@@ -136,6 +142,9 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
+    wallMask:
+      serializedVersion: 2
+      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -194,6 +203,9 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
+    wallMask:
+      serializedVersion: 2
+      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -215,7 +227,7 @@ MonoBehaviour:
     jumpCooldown: 1
     maxJumpYDiffForAdjustment: 4
     groundCheckOffset: {x: 0, y: -0.05}
-    groundCheckRadius: 2.31
+    groundCheckRadius: 1.5
     usePatrol: 1
     idleMode: 0
     rangedCooldown: 2
@@ -234,8 +246,8 @@ MonoBehaviour:
     isCharging: 1
     enableLadderClimb: 1
     climbYThreshold: 1
-    ladderForwardOffset: {x: 0, y: 0}
-    ladderDetectRadius: 1
+    ladderForwardOffset: {x: 0, y: 2}
+    ladderDetectRadius: 1.5
     climbSpeed: 1.5
     expReward: 20
     goldReward: 20
@@ -252,12 +264,15 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
+    wallMask:
+      serializedVersion: 2
+      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 100
     damage: 10
-    moveSpeed: 2
+    moveSpeed: 1.5
     rushMultiplier: 0
     maxClimbableHeight: 2
     staggerThreshold: 15
@@ -269,7 +284,7 @@ MonoBehaviour:
     chargeRange: 0
     enableJump: 1
     jumpHorizontalFactor: 0.6
-    jumpForce: 8
+    jumpForce: 4
     jumpCooldown: 1
     maxJumpYDiffForAdjustment: 5
     groundCheckOffset: {x: 0, y: -0.05}
@@ -294,7 +309,7 @@ MonoBehaviour:
     climbYThreshold: 1
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 1
-    climbSpeed: 3
+    climbSpeed: 1
     expReward: 10
     goldReward: 5
     rewardCoefficient: 1
@@ -310,6 +325,9 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
+    wallMask:
+      serializedVersion: 2
+      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -337,7 +355,7 @@ MonoBehaviour:
     rangedCooldown: 3
     projectileprefab: {fileID: -4595588588518355158, guid: 6d727b2ffdf049d40b7b74472effffbf, type: 3}
     readyRange: 10
-    projectileSpeed: 4
+    projectileSpeed: 2
     projectileLife: 3
     firePattern: 1
     pelletCount: 3
@@ -368,6 +386,9 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
+    wallMask:
+      serializedVersion: 2
+      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -379,8 +400,8 @@ MonoBehaviour:
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 10
-    chaseRange: 6
+    patrolRange: 8
+    chaseRange: 10
     attackRange: 6
     chargeRange: 2.5
     enableJump: 0
@@ -394,8 +415,8 @@ MonoBehaviour:
     idleMode: 0
     rangedCooldown: 2
     projectileprefab: {fileID: 1941247834333990247, guid: c7d6d6b83b9fcf34bb19b50bd379aa35, type: 3}
-    readyRange: 0
-    projectileSpeed: 10
+    readyRange: 11
+    projectileSpeed: 2
     projectileLife: 3
     firePattern: 0
     pelletCount: 5
@@ -426,6 +447,9 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
+    wallMask:
+      serializedVersion: 2
+      m_Bits: 8192
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -484,6 +508,9 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
+    wallMask:
+      serializedVersion: 2
+      m_Bits: 8192
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -514,8 +541,8 @@ MonoBehaviour:
     projectileSpeed: 2
     projectileLife: 3
     firePattern: 1
-    pelletCount: 30
-    spreadAngle: 360
+    pelletCount: 5
+    spreadAngle: 30
     meleeCooldown: 0.6
     attackAnimationTotalDuration: 0.6
     meleeRadius: 1
@@ -542,6 +569,9 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
+    wallMask:
+      serializedVersion: 2
+      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -569,7 +599,7 @@ MonoBehaviour:
     rangedCooldown: 2
     projectileprefab: {fileID: 5756601596482412224, guid: 914b883013a6c6a49a499a2a69aee692, type: 3}
     readyRange: 10
-    projectileSpeed: 8
+    projectileSpeed: 3
     projectileLife: 3
     firePattern: 0
     pelletCount: 3
@@ -600,6 +630,9 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
+    wallMask:
+      serializedVersion: 2
+      m_Bits: 8192
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -613,8 +646,8 @@ MonoBehaviour:
     knockbackDuration: 0.07
     patrolRange: 7
     chaseRange: 10
-    attackRange: 0.1
-    chargeRange: 3
+    attackRange: 0.3
+    chargeRange: 0
     enableJump: 0
     jumpHorizontalFactor: 0.6
     jumpForce: 4

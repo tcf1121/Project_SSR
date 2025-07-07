@@ -51,6 +51,7 @@ public class MonsterStats : MonoBehaviour
         float Coeff = GameManager.StageManager.DangerIndexManager.GetDangerIndex();
         _maxHP = Mathf.RoundToInt(_monster.Brain.StatData.maxHP * Coeff);
         _damage = Mathf.RoundToInt(_monster.Brain.StatData.damage * Coeff);
+
         if (_monster.AttackBox != null)
         {
             _monster.AttackBox.SetDamage(_damage);
@@ -66,7 +67,6 @@ public class MonsterStats : MonoBehaviour
         _usePatrol = _monster.Brain.StatData.usePatrol;
         _currentHP = _maxHP;
         _isDead = false;
-
     }
 
     public void SetHP(int newHP)

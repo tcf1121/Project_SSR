@@ -48,7 +48,7 @@ public class IdleState : IState
 
         if (!_statData.isRanged)
         {
-            if (_monster.PlayerInRange(_statData.patrolRange))
+            if (_monster.PlayerInRange(_statData.patrolRange)==true)
             {
                 if (_statData.isFlying) _monster.ChangeState(StateID.FloatChase);
                 else _monster.ChangeState(StateID.Chase);

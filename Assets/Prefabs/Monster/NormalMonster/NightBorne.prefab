@@ -58,7 +58,7 @@ Transform:
   m_GameObject: {fileID: 5325805308092175049}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.15, y: 0.15, z: 0}
+  m_LocalPosition: {x: 0.253, y: 0.15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -212,7 +212,7 @@ MonoBehaviour:
   _monsterType: 0
   _monsterSpecies: 3
   _allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
-  _creadit: 4
+  _creadit: 1
   _monsterBrain: {fileID: 6170830296577293375}
   _monsterStats: {fileID: 8360000419671584274}
   _sprite: {fileID: 5205195395401114121}

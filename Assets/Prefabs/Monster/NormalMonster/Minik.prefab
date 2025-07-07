@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 5293113561736079357}
   m_Layer: 12
   m_Name: Minik
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 4191781314233586067}
   - component: {fileID: 1103260826381423612}
   - component: {fileID: 1139341455574975850}
-  m_Layer: 12
+  m_Layer: 8
   m_Name: AttackBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -390,6 +390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 365e7b9b85ce68f4a8d8de3d9331d54e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _damage: 0
 --- !u!1 &4791530376346315981
 GameObject:
   m_ObjectHideFlags: 0

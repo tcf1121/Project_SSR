@@ -54,9 +54,9 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void GameOver()
+    public void GameOver()
     {
-
+        LoadingSceneManager.LoadScene(0);
     }
 
     public void EndGame()

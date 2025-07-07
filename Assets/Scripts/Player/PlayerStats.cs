@@ -76,7 +76,6 @@ public struct Stats
 public class PlayerStats : MonoBehaviour
 {
     private Player player;
-    private AudioSource audioSource;
 
     [Header("케릭터 기본 정보")] // 후에 프라이빗으로 변경
     [SerializeField] private int _level = 1;
@@ -131,12 +130,7 @@ public class PlayerStats : MonoBehaviour
         _changeLevel += SetLevel;
         _isDead += Die;
         Money = 0;
-
-        Transform child = transform.Find("AudioSource");
-        if (child != null)
-        {
-            audioSource = child.GetComponent<AudioSource>();
-        }
+        _damageCor = null;
     }
 
     void Start()
@@ -193,7 +187,7 @@ public class PlayerStats : MonoBehaviour
     #region 생명 관리
     public void Die()
     {
-        audioSource.PlayOneShot(DieClip);
+        player.AudioSource.PlayOneShot(DieClip);
         player.Animator.SetBool("IsAlive", false);
         StopCoroutine(_hpRegenCor);
         Time.timeScale = 0f;

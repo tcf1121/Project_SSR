@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2222992120994796447}
   - component: {fileID: 4831669325546831935}
   - component: {fileID: 4983587746787666378}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: baseWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,10 +47,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71bb7bcc762650545819ba267ef26363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 4106143075825820721}
   attackCycle: 1
   damageRatio: 0.5
   _strengthening: 0
   itemPart: 2
+  projectilePrefab: {fileID: 0}
+  muzzlePoint: {fileID: 0}
   _animator:
   - {fileID: 4831669325546831935}
 --- !u!114 &2222992120994796447
@@ -116,7 +119,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.25, y: 0.17}
@@ -299,7 +302,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 2
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4

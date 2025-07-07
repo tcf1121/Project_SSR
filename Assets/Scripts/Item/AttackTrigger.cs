@@ -8,7 +8,6 @@ public class AttackTrigger : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Monster"))
         {
-
             collision.gameObject.GetComponent<Monster>().GetDamage((int)(weapon.Player.PlayerStats.FinalStats.Atk * weapon.DamageRatio));
             return;
         }

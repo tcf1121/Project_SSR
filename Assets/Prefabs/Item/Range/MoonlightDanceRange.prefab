@@ -50,10 +50,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71bb7bcc762650545819ba267ef26363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 0}
   attackCycle: 10
   damageRatio: 0.65
   _strengthening: 0.6
   itemPart: 0
+  projectilePrefab: {fileID: 0}
+  muzzlePoint: {fileID: 0}
   _animator:
   - {fileID: 7115015963875486984}
   - {fileID: 7254496019318444817}
@@ -74,7 +77,7 @@ GameObject:
   - component: {fileID: 868735111524780947}
   - component: {fileID: 9186571121760159329}
   - component: {fileID: 4503364414838516444}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trigger5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +230,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 3882310841103302548}
-  _attackCollider: {fileID: 9186571121760159329}
 --- !u!1 &1720862115196511126
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,7 +243,7 @@ GameObject:
   - component: {fileID: 5736262209922273923}
   - component: {fileID: 4012743767072799822}
   - component: {fileID: 1037931028226317696}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trigger3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -394,7 +396,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 3882310841103302548}
-  _attackCollider: {fileID: 4012743767072799822}
 --- !u!1 &2990426709622436998
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,7 +409,7 @@ GameObject:
   - component: {fileID: 7115015963875486984}
   - component: {fileID: 4651876469643394811}
   - component: {fileID: 3372897767064467482}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trigger1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -561,7 +562,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 3882310841103302548}
-  _attackCollider: {fileID: 4651876469643394811}
 --- !u!1 &5040524501471895493
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,7 +575,7 @@ GameObject:
   - component: {fileID: 7443863725569224979}
   - component: {fileID: 8849199142051184257}
   - component: {fileID: 1781172628937516477}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trigger6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -728,7 +728,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 3882310841103302548}
-  _attackCollider: {fileID: 8849199142051184257}
 --- !u!1 &7034004254931625208
 GameObject:
   m_ObjectHideFlags: 0
@@ -742,7 +741,7 @@ GameObject:
   - component: {fileID: 7254496019318444817}
   - component: {fileID: 2021991669068931490}
   - component: {fileID: 5199990757086984325}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trigger2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -895,7 +894,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 3882310841103302548}
-  _attackCollider: {fileID: 2021991669068931490}
 --- !u!1 &7549755750080177280
 GameObject:
   m_ObjectHideFlags: 0
@@ -909,7 +907,7 @@ GameObject:
   - component: {fileID: 5872933711171364969}
   - component: {fileID: 5628590423750291956}
   - component: {fileID: 7947301724112456463}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trigger4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1062,4 +1060,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 3882310841103302548}
-  _attackCollider: {fileID: 5628590423750291956}

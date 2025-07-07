@@ -50,7 +50,7 @@ GameObject:
   - component: {fileID: 6907997900576285571}
   m_Layer: 12
   m_Name: FireWorm
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

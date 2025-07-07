@@ -1243,6 +1243,7 @@ MonoBehaviour:
   _monsterStats: {fileID: 0}
   _sprite: {fileID: 0}
   _hitBox: {fileID: 0}
+  _attackBoxCol: {fileID: 0}
   _attackBox: {fileID: 0}
   _animator: {fileID: 0}
   _muzzlePoint: {fileID: 0}
@@ -1690,6 +1691,7 @@ MonoBehaviour:
   _monsterStats: {fileID: 0}
   _sprite: {fileID: 0}
   _hitBox: {fileID: 0}
+  _attackBoxCol: {fileID: 0}
   _attackBox: {fileID: 0}
   _animator: {fileID: 0}
   _muzzlePoint: {fileID: 0}
@@ -1830,10 +1832,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monster: {fileID: 0}
-  staggerThreshold: 15
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!50 &1821997629
 Rigidbody2D:
   serializedVersion: 4
@@ -1946,6 +1944,7 @@ MonoBehaviour:
   _monsterStats: {fileID: 0}
   _sprite: {fileID: 0}
   _hitBox: {fileID: 0}
+  _attackBoxCol: {fileID: 0}
   _attackBox: {fileID: 0}
   _animator: {fileID: 0}
   _muzzlePoint: {fileID: 0}

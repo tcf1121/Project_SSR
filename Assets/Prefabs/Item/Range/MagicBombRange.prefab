@@ -45,10 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71bb7bcc762650545819ba267ef26363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 0}
   attackCycle: 1
   damageRatio: 0.5
   _strengthening: 0.1
   itemPart: 2
+  projectilePrefab: {fileID: 0}
+  muzzlePoint: {fileID: 0}
   _animator:
   - {fileID: 9198537496235880126}
 --- !u!1 &8209593611295362531
@@ -64,7 +67,7 @@ GameObject:
   - component: {fileID: 9198537496235880126}
   - component: {fileID: 7878268797168721517}
   - component: {fileID: 3280768786547826436}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -217,4 +220,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 7702904795266635223}
-  _attackCollider: {fileID: 7878268797168721517}

@@ -52,6 +52,11 @@ public class MeleeAttackState : AttackState
             }
             else
             {
+                if(_monster.Brain.StatData.isFlying)
+                {
+                    _monster.ChangeState(StateID.FloatChase); // 비행 유닛은 FloatChase로 전환
+                    return;
+                }
                 _monster.ChangeState(StateID.Chase);        // 범위 밖 → 추격
             }
 

@@ -70,14 +70,17 @@ public class JumpMove : IMonsterJumper
         if (!ReadyToJump())
             return false;
 
-
-
         isMidJump = true;
         jumpTimer = lockDuration > 0 ? lockDuration : _statData.jumpCooldown;
 
         float yForce = jumpForce * 0.6f;
-        float xImpulse = 0.35f;  // 고정된 벽 넘기 힘
-        _rigid.velocity = Vector2.zero;
+        float xImpulse = 0.35f;
+
+        // ★★★ 이 부분을 수정해야 합니다. ★★★
+        // 모든 속도를 0으로 초기화하는 대신, 점프 직전 Y축 속도만 0으로 설정합니다.
+        // 이는 중력에 의한 기존 낙하 속도를 제거하여 점프 높이를 일관되게 하면서도,
+        // 중력의 재적용을 방해하지 않습니다.
+        _rigid.velocity = new Vector2(_rigid.velocity.x, 0f); // Y축 속도만 0으로 초기화
 
         _rigid.AddForce(Vector2.up * yForce, ForceMode2D.Impulse);
         _rigid.AddForce(Vector2.right * dir * xImpulse * horizontalFactor, ForceMode2D.Impulse);

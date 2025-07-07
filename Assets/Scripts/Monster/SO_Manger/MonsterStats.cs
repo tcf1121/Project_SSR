@@ -49,7 +49,7 @@ public class MonsterStats : MonoBehaviour
         float Coeff = GameManager.StageManager.DangerIndexManager.GetDangerIndex();
         _maxHP = Mathf.RoundToInt(_monster.Brain.StatData.maxHP * Coeff);
         _damage = Mathf.RoundToInt(_monster.Brain.StatData.damage * Coeff);
-        _monster.AttackBox.SetDamage(_damage);
+
         _gold = Mathf.RoundToInt(_monster.Brain.StatData.goldReward * Coeff);
         _exp = Mathf.RoundToInt(_monster.Brain.StatData.expReward * Coeff);
         _moveSpeed = 1f + _monster.Brain.StatData.moveSpeed * 0.1f;
@@ -60,6 +60,10 @@ public class MonsterStats : MonoBehaviour
         _chargeRange = _monster.Brain.StatData.chargeRange * 0.25f;
         _usePatrol = _monster.Brain.StatData.usePatrol;
         _currentHP = _maxHP;
+        if (_monster.AttackBox != null)
+        {
+            _monster.AttackBox.SetDamage(_damage);
+        }
     }
 
     public void SetHP(int newHP)

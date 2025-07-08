@@ -25,7 +25,7 @@ public class MonsterDebugGizmos : MonoBehaviour
         _climber = _monster.Brain.Climber as LadderClimber;
 
         if (_monster != null && _climber != null)
-            _climber.Init(_monster.Brain); //
+            _climber.Init(_monster); //
     }
 
 #if UNITY_EDITOR

@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 ﻿
 using System.Collections;
+=======
+﻿using System.Collections;
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,8 +12,6 @@ using UnityEngine.UI;
 public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
 {
     [SerializeField] private Monster _monster;
-
-    public bool IsDead { get; private set; } // 몬스터가 죽었는지 여부
     public Monster Monster { get => _monster; }
 
     public Vector2 LastGroundCheckPos => jumper.LastGroundCheckPos;
@@ -34,7 +36,6 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
     public bool PerformJump(int dir, float dy, float jumpForce, float horizontalFactor, float lockDuration) =>
         jumper.PerformJump(dir, dy, jumpForce, horizontalFactor, lockDuration);
     public void UpdateTimer(float deltaTime) => jumper.UpdateTimer(deltaTime);
-
     #endregion
 
     // 사다리 시스템 (인터페이스 기반)
@@ -79,6 +80,10 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
         {
             // 사다리 기능이 있으면, 실제 LadderClimber를 생성
             climber = new LadderClimber();
+<<<<<<< HEAD
+=======
+            climber.Init(_monster);
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
         }
         else
         {
@@ -98,7 +103,7 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
         IState floatChaseState = new FloatChaseState(_monster);
 
 
-        stateMachine = new StateMachine(_monster);
+        stateMachine = new StateMachine();
         stateMachine.Register(StateID.Idle, idle);
         stateMachine.Register(StateID.Patrol, patrol);
         stateMachine.Register(StateID.Chase, normalChase);
@@ -118,39 +123,18 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
     {
         jumper?.UpdateTimer(Time.fixedDeltaTime);
         stateMachine?.Tick();
+<<<<<<< HEAD
 
+=======
+        climber?.UpdateClimbTimer(Time.fixedDeltaTime);
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
         // --- 낙하 데미지 감지 및 적용 ---
         HandleFallDamage();
     }
 
-    public void SetIsDead(bool deadStatus)
-    {
-        IsDead = deadStatus;
-        // 몬스터가 죽었을 때 Rigidbody2D 물리력을 정지
-        if (deadStatus)
-        {
-            if (_monster.Rigid != null)
-            {
-                _monster.Rigid.velocity = Vector2.zero;
-                _monster.Rigid.isKinematic = true; // 죽으면 물리 영향을 안 받도록
-            }
-            if (_monster.HitBox != null) _monster.HitBox.enabled = false;
-            if (_monster.AttackBoxCol != null) _monster.AttackBoxCol.enabled = false;
-        }
-        else // 다시 활성화될 때
-        {
-            if (_monster.Rigid != null)
-            {
-                _monster.Rigid.isKinematic = false; // 다시 물리 영향을 받도록
-            }
-            if (_monster.HitBox != null) _monster.HitBox.enabled = true;
-            if (_monster.AttackBoxCol != null) _monster.AttackBoxCol.enabled = false;
-        }
-    }
     public void ChangeState(StateID id)
     {
         if (stateMachine == null) return;
-        if (IsDead&& id != StateID.Dead) return;
 
         bool usePatrolFlag = StatData != null ? StatData.usePatrol
                                              : (_monster.MonsterStats != null && _monster.MonsterStats.UsePatrol);
@@ -163,7 +147,6 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
 
     public void EnterDamageState(int damage)
     {
-        attack.CancelAttack();
         takeDamage.SetDamage(damage);
         stateMachine.Register(StateID.TakeDamage, takeDamage);
         stateMachine.ChangeState(StateID.TakeDamage);
@@ -220,20 +203,11 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
 
     public void Attack()
     {
-        if (_monster.Brain.StateMachine.CurrentStateID != StateID.Attack)
-            return;
-        if (_monster.AudioSource != null && _monster.AttackSoundClip != null)
-        {
-            _monster.AudioSource.PlayOneShot(_monster.AttackSoundClip);
-        }
         attack.Attack();
-        
     }
 
     public void FinishAttack()
     {
-        if (_monster.Brain.StateMachine.CurrentStateID != StateID.Attack)
-            return;
         attack.FinishAttack();
     }
 

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4972333500379626154}
   - component: {fileID: 1783871031404130968}
   - component: {fileID: 2308735900765702672}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Golem
   m_TagString: Boss
   m_Icon: {fileID: 0}
@@ -222,7 +222,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5783874048819583794}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LaserPointe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -253,7 +253,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6628343215354535468}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: FirePointe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -283,9 +283,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 80523012454912816}
     m_Modifications:
+    - target: {fileID: 1347602137642223065, guid: 5d528199141e1c646a19a05f14c9c6ac, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2084914537295751139, guid: 5d528199141e1c646a19a05f14c9c6ac, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 5232001819699434087, guid: 5d528199141e1c646a19a05f14c9c6ac, type: 3}
       propertyPath: m_Name
       value: HPUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232001819699434087, guid: 5d528199141e1c646a19a05f14c9c6ac, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7754928412342803055, guid: 5d528199141e1c646a19a05f14c9c6ac, type: 3}
       propertyPath: m_Pivot.x

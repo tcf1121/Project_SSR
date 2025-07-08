@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-﻿
+
 using System.Collections;
-=======
-﻿using System.Collections;
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -80,10 +76,6 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
         {
             // 사다리 기능이 있으면, 실제 LadderClimber를 생성
             climber = new LadderClimber();
-<<<<<<< HEAD
-=======
-            climber.Init(_monster);
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
         }
         else
         {
@@ -123,11 +115,7 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
     {
         jumper?.UpdateTimer(Time.fixedDeltaTime);
         stateMachine?.Tick();
-<<<<<<< HEAD
 
-=======
-        climber?.UpdateClimbTimer(Time.fixedDeltaTime);
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
         // --- 낙하 데미지 감지 및 적용 ---
         HandleFallDamage();
     }

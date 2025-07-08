@@ -346,7 +346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bossSpawnPoint: {fileID: 0}
-  eventDuration: 10
+  eventDuration: 90
   _animator: {fileID: 5554068923174692671}
   _TimeLeftUI: {fileID: 8767928003596807714}
   _timeFill: {fileID: 5372905903859819638}

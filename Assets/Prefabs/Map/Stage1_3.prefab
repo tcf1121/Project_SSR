@@ -261,9 +261,9 @@ GameObject:
   - component: {fileID: 7550179045235027257}
   - component: {fileID: 211829413811819170}
   - component: {fileID: 1681703296634525386}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider20
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -509,9 +509,9 @@ GameObject:
   - component: {fileID: 679853402334355609}
   - component: {fileID: 8522307970444551929}
   - component: {fileID: 6870188084718179058}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider22
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -813,7 +813,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2609702320541190636}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5846,7 +5846,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7275356944736757432}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5877,7 +5877,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 456389327178687479}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5893,11 +5893,7 @@ Transform:
   m_GameObject: {fileID: 1075970711039765080}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5912,7 +5908,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6873586083932556522}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5928,11 +5924,7 @@ Transform:
   m_GameObject: {fileID: 1125718857647287504}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5999,9 +5991,9 @@ GameObject:
   - component: {fileID: 892254949824130672}
   - component: {fileID: 2102501656149569566}
   - component: {fileID: 7024764033435476378}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider12
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6313,7 +6305,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4667287846144800464}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6348,9 +6340,9 @@ GameObject:
   - component: {fileID: 1871981237871447621}
   - component: {fileID: 4322580093861861204}
   - component: {fileID: 3643472659860284197}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider25
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6916,7 +6908,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2926421686724650257}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6947,7 +6939,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3508632658606809972}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6978,7 +6970,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5167301567642649443}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7227,7 +7219,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5243685988844847499}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7243,11 +7235,7 @@ Transform:
   m_GameObject: {fileID: 1659132307279645822}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7262,7 +7250,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2147785263199224368}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7278,11 +7266,7 @@ Transform:
   m_GameObject: {fileID: 1756920211289693627}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7301,9 +7285,9 @@ GameObject:
   - component: {fileID: 4515663386013912360}
   - component: {fileID: 8966017241889933647}
   - component: {fileID: 1800675709400266430}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider4
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8373,7 +8357,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5164330400926259773}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8404,7 +8388,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2426732860152746421}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8439,9 +8423,9 @@ GameObject:
   - component: {fileID: 1485473987968043089}
   - component: {fileID: 3946073760483972463}
   - component: {fileID: 8103271525957414234}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider14
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8723,7 +8707,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2649224382559998191}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8754,7 +8738,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9178611134199925708}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8770,11 +8754,7 @@ Transform:
   m_GameObject: {fileID: 2343225334154368283}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8789,7 +8769,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9099173159336521490}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8805,11 +8785,7 @@ Transform:
   m_GameObject: {fileID: 2371757058065133411}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11579,9 +11555,9 @@ GameObject:
   - component: {fileID: 8631519435561230353}
   - component: {fileID: 3468623821423176997}
   - component: {fileID: 5917564026806966811}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider9
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11923,7 +11899,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4197204899328126540}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11939,11 +11915,7 @@ Transform:
   m_GameObject: {fileID: 3036765236763489862}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11962,9 +11934,9 @@ GameObject:
   - component: {fileID: 8110430253620628268}
   - component: {fileID: 4365971737848450082}
   - component: {fileID: 7286293170478518380}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider6
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12316,7 +12288,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 299051498274792433}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12332,11 +12304,7 @@ Transform:
   m_GameObject: {fileID: 3064855729485715614}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12351,7 +12319,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1686593924990273129}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12367,11 +12335,7 @@ Transform:
   m_GameObject: {fileID: 3125432106259383399}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12386,7 +12350,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6401760816043009784}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12402,11 +12366,7 @@ Transform:
   m_GameObject: {fileID: 3195782385054100199}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -28860,9 +28820,9 @@ GameObject:
   - component: {fileID: 1651007723788418708}
   - component: {fileID: 7508402766731978891}
   - component: {fileID: 2872063226086335800}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider16
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29358,9 +29318,9 @@ GameObject:
   - component: {fileID: 6458901482141239803}
   - component: {fileID: 7815702688396935049}
   - component: {fileID: 5124394417420731035}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider2
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29904,9 +29864,9 @@ GameObject:
   - component: {fileID: 519446493331103815}
   - component: {fileID: 2411094053484865302}
   - component: {fileID: 5661809073058056279}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider3
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32045,7 +32005,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7014229797885016766}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32061,11 +32021,7 @@ Transform:
   m_GameObject: {fileID: 3833010777678176340}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -32438,7 +32394,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2330242566851951657}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32470,7 +32426,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3667764177976578253}
   - component: {fileID: 5103613203088905972}
-  - component: {fileID: 8228235432058058156}
   m_Layer: 0
   m_Name: Stage1_3
   m_TagString: Untagged
@@ -32509,106 +32464,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _stageNum: 1
   _skyObj: {fileID: 608890127408962090}
-  stage1: {fileID: 8300000, guid: 80ed462dc1af3754ea7ab32792ab6a46, type: 3}
-  stage2: {fileID: 8300000, guid: 3e7239e63ccb49049855d3ae894724e3, type: 3}
-  stage3: {fileID: 8300000, guid: ff5ea7aefcf738943ba4b306f03a03f3, type: 3}
-  stage4: {fileID: 8300000, guid: 77b1cbf733bdea54caf3ac5b139704a1, type: 3}
---- !u!82 &8228235432058058156
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3986992873557339169}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  stage1: {fileID: 0}
+  stage2: {fileID: 0}
+  stage3: {fileID: 0}
+  stage4: {fileID: 0}
 --- !u!1 &4015570617391414710
 GameObject:
   m_ObjectHideFlags: 0
@@ -32622,9 +32481,9 @@ GameObject:
   - component: {fileID: 6938771718389372857}
   - component: {fileID: 7855485592415902119}
   - component: {fileID: 654733259948119850}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider7
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33034,9 +32893,9 @@ GameObject:
   - component: {fileID: 2423444459861221535}
   - component: {fileID: 4621159366716081969}
   - component: {fileID: 7527191474060680970}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider24
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33468,7 +33327,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8689569499856613214}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33499,7 +33358,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3290712014753599798}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33515,11 +33374,7 @@ Transform:
   m_GameObject: {fileID: 4330578739873694531}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -34308,9 +34163,9 @@ GameObject:
   - component: {fileID: 6706656946019443144}
   - component: {fileID: 8874861112356822394}
   - component: {fileID: 7712995925195069221}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider19
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -34622,7 +34477,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2280439533750711620}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34653,7 +34508,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 989066417055847467}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34669,11 +34524,7 @@ Transform:
   m_GameObject: {fileID: 4709222527780313491}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -34692,9 +34543,9 @@ GameObject:
   - component: {fileID: 5897922355570756427}
   - component: {fileID: 6569729097990703172}
   - component: {fileID: 1766811139551855126}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider8
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35378,7 +35229,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8457032845898246760}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35413,9 +35264,9 @@ GameObject:
   - component: {fileID: 7951439160878996656}
   - component: {fileID: 6944551353594259766}
   - component: {fileID: 3238643344466728644}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider15
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -40569,9 +40420,9 @@ GameObject:
   - component: {fileID: 818804112193756133}
   - component: {fileID: 1923940877415493801}
   - component: {fileID: 4311172677035120409}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider18
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -40890,7 +40741,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2536807813720533465}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40906,11 +40757,7 @@ Transform:
   m_GameObject: {fileID: 5693733330698346965}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -40925,7 +40772,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2333754861607786020}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40956,7 +40803,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5141829190848573250}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40987,7 +40834,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6982046583235088908}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41003,11 +40850,7 @@ Transform:
   m_GameObject: {fileID: 5842041980171810369}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -41022,7 +40865,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8028214970760755481}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41038,11 +40881,7 @@ Transform:
   m_GameObject: {fileID: 5846025115464578507}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -41249,9 +41088,9 @@ GameObject:
   - component: {fileID: 5831146230213638361}
   - component: {fileID: 6798574830661480344}
   - component: {fileID: 8324424219611340320}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider13
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41527,9 +41366,9 @@ GameObject:
   - component: {fileID: 8016335919038764262}
   - component: {fileID: 1681837971553493299}
   - component: {fileID: 7124852775625097927}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider21
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42035,9 +41874,9 @@ GameObject:
   - component: {fileID: 3502948230840214162}
   - component: {fileID: 7291137725531861841}
   - component: {fileID: 5569786099427566907}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider10
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86423,9 +86262,9 @@ GameObject:
   - component: {fileID: 6549742566572768346}
   - component: {fileID: 1166763606666170578}
   - component: {fileID: 8666282385574597463}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider1
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86697,7 +86536,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6495106167154640689}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86713,11 +86552,7 @@ Transform:
   m_GameObject: {fileID: 6216394737932210944}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -87158,7 +86993,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3858574635007364265}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87174,11 +87009,7 @@ Transform:
   m_GameObject: {fileID: 6583544853744716337}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -87193,7 +87024,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7746618568254523925}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87224,7 +87055,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3234916053040890164}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87813,7 +87644,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4813519273642881880}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87829,11 +87660,7 @@ Transform:
   m_GameObject: {fileID: 7069370402208289114}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -88446,7 +88273,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8192054691129290686}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88462,11 +88289,7 @@ Transform:
   m_GameObject: {fileID: 7087985349716959917}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -88481,7 +88304,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1646489282890802077}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88497,11 +88320,7 @@ Transform:
   m_GameObject: {fileID: 7089792966761493157}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -89058,7 +88877,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7189157307740313671}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89279,7 +89098,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 568318619356626553}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122456,9 +122275,9 @@ GameObject:
   - component: {fileID: 4709590369923976028}
   - component: {fileID: 7507816018108401294}
   - component: {fileID: 8145076594169230548}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider26
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122904,9 +122723,9 @@ GameObject:
   - component: {fileID: 7210635310913418612}
   - component: {fileID: 4512092285169238493}
   - component: {fileID: 1558291212697478159}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider5
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -123252,9 +123071,9 @@ GameObject:
   - component: {fileID: 6568071680316987748}
   - component: {fileID: 6653181555176550283}
   - component: {fileID: 4532620663887144763}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider11
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -131505,7 +131324,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1220768595346098987}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131786,7 +131605,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8428617594199094070}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144377,7 +144196,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1664531761489981559}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144393,11 +144212,7 @@ Transform:
   m_GameObject: {fileID: 8210467492855112112}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -144412,7 +144227,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2452586006343194183}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144443,7 +144258,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4869681229168482764}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144459,11 +144274,7 @@ Transform:
   m_GameObject: {fileID: 8522374715013708080}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -144478,7 +144289,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5423310091191066937}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144513,9 +144324,9 @@ GameObject:
   - component: {fileID: 615312153834351334}
   - component: {fileID: 4910845794608915231}
   - component: {fileID: 7352461536620504877}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider23
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -144831,9 +144642,9 @@ GameObject:
   - component: {fileID: 2531662301154058104}
   - component: {fileID: 3865565430046352670}
   - component: {fileID: 1786157250413599280}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Rope_Collider17
-  m_TagString: Untagged
+  m_TagString: Ladder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -145245,7 +145056,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1578964832446768103}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145261,11 +145072,7 @@ Transform:
   m_GameObject: {fileID: 8684497985801842357}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -145337,7 +145144,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8186644754018082563}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145353,11 +145160,7 @@ Transform:
   m_GameObject: {fileID: 8784015186689432181}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -145372,7 +145175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 662173527921756203}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145651,7 +145454,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5179087994054621280}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145682,7 +145485,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 365077219739125075}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145698,11 +145501,7 @@ Transform:
   m_GameObject: {fileID: 9131092541062900414}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.049999952, z: 0}
-=======
-  m_LocalPosition: {x: 0, y: 0, z: 0}
->>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -145717,7 +145516,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8761348239063943559}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}

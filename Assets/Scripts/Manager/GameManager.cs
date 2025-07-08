@@ -20,13 +20,13 @@ public class GameManager : MonoBehaviour
     private static ItemManager _itemManager;
     [SerializeField] private DeadUi deadUi;
     [SerializeField] private PauseMenu pauseMenu;
-
+    [SerializeField] private SoundManager _soundManager;
     private void Awake()
     {
         SetSingleton();
         _stage = 1;
         _itemManager = GetComponent<ItemManager>();
-        
+
 
     }
     private void SetSingleton()
@@ -44,13 +44,13 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            TestStage();
-            GameObject PlayerGO = Instantiate(_playerPrefab);
-            PlayerGO.transform.parent = this.transform;
-            _player = PlayerGO.GetComponent<Player>();
-        }
+        // if (Input.GetKeyDown(KeyCode.Backspace))
+        // {
+        //     TestStage();
+        //     GameObject PlayerGO = Instantiate(_playerPrefab);
+        //     PlayerGO.transform.parent = this.transform;
+        //     _player = PlayerGO.GetComponent<Player>();
+        // }
     }
 
     private void OnEnable()
@@ -81,13 +81,18 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-       
-        SoundManager.Instance.PlaySFX("Click");
 
+        SoundManager.Instance.PlaySFX("Click");
+        _stage = 1;
         NextStage();
+        if (_player != null)
+        {
+            Destroy(_player.gameObject);
+        }
         GameObject PlayerGO = Instantiate(_playerPrefab);
         PlayerGO.transform.parent = this.transform;
         _player = PlayerGO.GetComponent<Player>();
+
 
     }
 

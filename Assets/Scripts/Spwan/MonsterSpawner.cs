@@ -134,7 +134,7 @@ public class MonsterSpawner : MonoBehaviour
                 currentTime -= Time.deltaTime;
                 yield return new WaitForFixedUpdate();
             }
-            _creadit += 0.21f * (1f + 0.4f * GameManager.StageManager.DangerIndexManager.GetDangerIndex());
+            _creadit += 0.11f * (1f + 0.4f * GameManager.StageManager.DangerIndexManager.GetDangerIndex());
         }
     }
 

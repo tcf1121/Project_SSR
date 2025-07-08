@@ -25,7 +25,11 @@ Transform:
   m_GameObject: {fileID: 7488697929963127}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -205,7 +209,11 @@ Transform:
   m_GameObject: {fileID: 162215213194620572}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25899,7 +25907,11 @@ Transform:
   m_GameObject: {fileID: 698184509568619872}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25930,7 +25942,11 @@ Transform:
   m_GameObject: {fileID: 786336819434613422}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -26707,7 +26723,11 @@ Transform:
   m_GameObject: {fileID: 1091155285343111552}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -43593,7 +43613,11 @@ Transform:
   m_GameObject: {fileID: 1375627422439203807}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -43624,7 +43648,11 @@ Transform:
   m_GameObject: {fileID: 1377340971904844314}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44013,7 +44041,11 @@ Transform:
   m_GameObject: {fileID: 1623509753527984448}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -69563,7 +69595,11 @@ Transform:
   m_GameObject: {fileID: 2908837776614957321}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -70132,7 +70168,11 @@ Transform:
   m_GameObject: {fileID: 2976375030134879802}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -70163,7 +70203,11 @@ Transform:
   m_GameObject: {fileID: 2986722429198980576}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -70675,7 +70719,11 @@ Transform:
   m_GameObject: {fileID: 3449582710100663605}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -71481,7 +71529,11 @@ Transform:
   m_GameObject: {fileID: 4076927128582711384}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -79191,7 +79243,11 @@ Transform:
   m_GameObject: {fileID: 4489591987919553708}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -79935,7 +79991,11 @@ Transform:
   m_GameObject: {fileID: 5377106934939591053}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -79966,7 +80026,11 @@ Transform:
   m_GameObject: {fileID: 5461030493550839246}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -119520,7 +119584,11 @@ Transform:
   m_GameObject: {fileID: 5709791840532215436}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -128800,10 +128868,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _stageNum: 2
   _skyObj: {fileID: 6797428039382773668}
-  stage1: {fileID: 0}
-  stage2: {fileID: 0}
-  stage3: {fileID: 0}
-  stage4: {fileID: 0}
 --- !u!1 &6797428039382773668
 GameObject:
   m_ObjectHideFlags: 0
@@ -130952,7 +131016,11 @@ Transform:
   m_GameObject: {fileID: 7265708371016906759}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -132796,7 +132864,11 @@ Transform:
   m_GameObject: {fileID: 7778474643971879167}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -146009,7 +146081,11 @@ Transform:
   m_GameObject: {fileID: 9064359492587117532}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -146040,7 +146116,11 @@ Transform:
   m_GameObject: {fileID: 9131276273622331332}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 0, y: 0.05, z: 0}
+=======
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> parent of 953c5e6 ([Chor] Develop_MonsterAI_and_Animation)
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

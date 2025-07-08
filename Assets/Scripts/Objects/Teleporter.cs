@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Teleporter : MonoBehaviour
 {
     [Header("이벤트")]
-    [SerializeField] private GameObject bossPrefab; // 보스 프리팹
+
     [SerializeField] Transform bossSpawnPoint; // 보스 스폰 위치
     [SerializeField] private float eventDuration = 90f; // 이벤트 지속 시간
 
@@ -23,6 +24,9 @@ public class Teleporter : MonoBehaviour
     private BoxCollider2D _collider;
     [SerializeField] private Animator _animator;
 
+    [SerializeField] GameObject _UI;
+    [SerializeField] Image _leftTime;
+
     private void Awake()
     {
         if (bossSpawnPoint == null)
@@ -32,16 +36,6 @@ public class Teleporter : MonoBehaviour
         _collider = GetComponent<BoxCollider2D>();
         isDie += KillBoss;
         isClear += CheckClear;
-    }
-
-    public void OnCollider()
-    {
-        _collider.enabled = true;
-    }
-
-    public void OffCollider()
-    {
-        _collider.enabled = false;
     }
 
     public void ActivateTelePort()
@@ -96,20 +90,24 @@ public class Teleporter : MonoBehaviour
 
     private void SpawnBoss()
     {
-        if (bossPrefab != null)
+        GameObject boss;
+        boss = GameManager.StageManager.BossSpawner.StageBoss();
+        if (boss != null)
         {
             // 보스 스폰위치가 설정되어 있으면 해당 위치에 소환 아니면 텔레포터 위치에 소환
             Vector3 spawnPos = (bossSpawnPoint != null) ? bossSpawnPoint.position : transform.position;
-            currentBoss = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
+            currentBoss = Instantiate(boss, spawnPos, Quaternion.identity);
         }
     }
 
     private IEnumerator EventTimerRoutine()
     {
+        _UI.SetActive(true);
         float currentTime = eventDuration;// 90초 타이머 시작
         while (currentTime > 0.0f)
         {
             currentTime -= Time.deltaTime;
+            _leftTime.fillAmount = (eventDuration - currentTime) / eventDuration;
             yield return new WaitForFixedUpdate();
         }
         isTimerFinished = true;

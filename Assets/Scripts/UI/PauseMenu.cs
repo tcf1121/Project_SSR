@@ -58,23 +58,6 @@ public class PauseMenu : MonoBehaviour
         pauseMenuPanel.SetActive(false);
         warningPopup.SetActive(false);
 
-        float masterVol;
-        if (mainAudioMixer.GetFloat("MasterVolume", out masterVol))
-            soundSlider.value = Mathf.Pow(10, masterVol / 20);
-
-        float bgmVol;
-        if (mainAudioMixer.GetFloat("BGMVolume", out bgmVol))
-            bgmSlider.value = Mathf.Pow(10, bgmVol / 20);
-
-        float sfxVol;
-        if (mainAudioMixer.GetFloat("SFXVolume", out sfxVol))
-            sfxSlider.value = Mathf.Pow(10, sfxVol / 20);
-
-        soundSlider.value = AudioListener.volume;
-        bgmSlider.onValueChanged.AddListener(SetBGMVolume);
-        sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-        soundSlider.onValueChanged.AddListener(SetMasterVolume);
-
         isGameScene = SceneManager.GetActiveScene().name != "타이틀 씬 이름"; // TODO: 타이틀 씬 이름을 넣어야함
 
         resolutionDropdown.onValueChanged.AddListener(SetResolution);
@@ -113,17 +96,26 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadScene("로비 씬 이름을 넣어야함");
     }
 
-    public void SetMasterVolume(float volume)
+    public void SetMasterVolume()
     {
-        mainAudioMixer.SetFloat("MasterVolume", Mathf.Log10(volume) * 20);
+        float sound = soundSlider.value;
+
+        if (sound == -40f) mainAudioMixer.SetFloat("Master", -80);
+        else mainAudioMixer.SetFloat("Master", sound);
     }
-    public void SetBGMVolume(float volume)
+    public void SetBGMVolume()
     {
-        mainAudioMixer.SetFloat("BGMVolume", Mathf.Log10(volume) * 20);
+        float sound = bgmSlider.value;
+
+        if (sound == -40f) mainAudioMixer.SetFloat("BGM", -80);
+        else mainAudioMixer.SetFloat("BGM", sound);
     }
-    public void SetSFXVolume(float volume)
+    public void SetSFXVolume()
     {
-        mainAudioMixer.SetFloat("SFXVolume", Mathf.Log10(volume) * 20);
+        float sound = sfxSlider.value;
+
+        if (sound == -40f) mainAudioMixer.SetFloat("SFX", -80);
+        else mainAudioMixer.SetFloat("SFX", sound);
     }
 
     public void OnClickGoToTitle() // "타이틀" 버튼 클릭시
@@ -134,7 +126,7 @@ public class PauseMenu : MonoBehaviour
     public void ConfirmGoToTitle() // 팝업에서 "예" 선택시
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("타이틀 씬 이름"); // TODO: 타이틀 씬 이름을 넣어야함
+        GameManager.Instance.GameOver(); // TODO: 타이틀 씬 이름을 넣어야함
     }
 
     public void CancelGoToTitle() // 팝업에서 "아니오" 선택시

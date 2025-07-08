@@ -14,6 +14,8 @@ public class StageManager : MonoBehaviour
     [SerializeField] private GameObject stageMap;
     public DangerIndexManager DangerIndexManager { get => dangerIndexManager; }
     [SerializeField] private DangerIndexManager dangerIndexManager;
+    public StageBoss StageBoss { get => stageBoss; }
+    [SerializeField] private StageBoss stageBoss;
 
     void Awake()
     {

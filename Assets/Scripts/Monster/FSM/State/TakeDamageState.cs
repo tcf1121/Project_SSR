@@ -27,6 +27,10 @@ public class TakeDamageState : IState
 
     public void Enter()
     {
+        if (_monster.AttackBoxCol != null)
+        {
+            _monster.AttackBoxCol.enabled = false;
+        }
         Debug.Log($"현재 hp :{_monsterStats.CurrentHP}");
 
         // 체력 감소
@@ -67,23 +71,24 @@ public class TakeDamageState : IState
 
     public void Exit()
     {
-        _monster.Rigid.velocity = Vector2.zero;
+        _monster.HitBox.enabled = true;      
+      
     }
-}
 
-/// <summary>
-/// 피격 정보를 담는 구조체. 데미지, 넉백 방향, 경직 여부 등 포함
-/// </summary>
-public struct HitInfo
-{
-    public int damage;
-    public Vector2 origin;
-    public bool causesStagger;
-
-    public HitInfo(int dmg, Vector2 origin, bool stagger = false)
+    /// <summary>
+    /// 피격 정보를 담는 구조체. 데미지, 넉백 방향, 경직 여부 등 포함
+    /// </summary>
+    public struct HitInfo
     {
-        this.damage = dmg;
-        this.origin = origin;
-        this.causesStagger = stagger;
+        public int damage;
+        public Vector2 origin;
+        public bool causesStagger;
+
+        public HitInfo(int dmg, Vector2 origin, bool stagger = false)
+        {
+            this.damage = dmg;
+            this.origin = origin;
+            this.causesStagger = stagger;
+        }
     }
 }

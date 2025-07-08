@@ -2,13 +2,21 @@ using System.Collections.Generic;
 
 public class StateMachine
 {
-    private readonly Dictionary<StateID, IState> states = new();
+    Monster _monster;
+    MonsterBrain _brain => _monster.Brain;
+
     private IState current;
     public StateID CurrentStateID { get; private set; }
     public void Register(StateID id, IState state) => states[id] = state;
 
+    private readonly Dictionary<StateID, IState> states = new();
+    public StateMachine(Monster monster)
+    {
+        _monster = monster;
+    }
     public void ChangeState(StateID next)
     {
+        if (_monster.Brain.IsDead) return;
         if (!states.TryGetValue(next, out var target)) return;
         current?.Exit();
         current = target;

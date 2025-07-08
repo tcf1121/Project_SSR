@@ -1,232 +1,283 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-
-public interface IMonsterClimber
+namespace PHG
 {
-    bool IsClimbing { get; }
-    void Init(Monster monster);
-    void TryFindAndClimb(int dir);
-    void UpdateClimbTimer(float dt);
-}
-
-public class LadderClimber : IMonsterClimber
-{
-    private float climbSpeed = 3f;
-    private float alignSpeed = 4f;
-    private float climbYThreshold = 0.7f;
-    private float detectRadius = 0.35f;
-    private LayerMask ladderMask;
-    private Vector2 forwardOffset = new(0.15f, 0);
-
-    private const string CLIMBING_LAYER_NAME = "MonsterClimbing";
-    private const float CLIMB_COOLDOWN = 0.75f;
-
-    // 사다리 이탈 시 점프 힘 (Y축)
-    private const float LADDER_EXIT_JUMP_FORCE_Y = 3.0f;
-    // 사다리 이탈 시 수평 속도
-    private const float LADDER_EXIT_HORIZONTAL_VELOCITY = 2.0f;
-
-    // 사다리 상단에서 "완전히 벗어났다"고 판단할 Y 오프셋 (몬스터의 높이 등을 고려)
-    private const float LADDER_TOP_EXIT_HEIGHT_OFFSET = 0.2f;
-
-    // 사다리 이탈 시 플레이어 방향으로 강제 이동시킬 X 오프셋 (여전히 사용됨)
-    private const float FORCE_EXIT_X_OFFSET = 0.3f;
-
-
-    private Rigidbody2D rb;
-    private Collider2D monsterCollider; // 몬스터 콜라이더 참조
-    private Transform tf;
-    private Monster _monster;
-    private MonsterBrain brain;
-
-    public bool IsClimbing { get; private set; }
-    private float cooldownTimer;
-
-    public float MinYThreshold => climbYThreshold;
-    public Vector2 ForwardOffset => forwardOffset;
-    public float DetectRadius => detectRadius;
-
-    public void Init(Monster monster)
+    public interface IMonsterClimber
     {
-        _monster = monster;
-        brain = monster.Brain;
-        rb = brain.Monster.Rigid;
-        tf = brain.Monster.transform;
-        monsterCollider = brain.Monster.GetComponent<Collider2D>(); // 콜라이더 참조 초기화
-
-        var stat = brain.StatData;
-        climbSpeed = stat.climbSpeed;
-        forwardOffset = stat.ladderForwardOffset;
-        detectRadius = stat.ladderDetectRadius;
-        climbYThreshold = stat.climbYThreshold;
-        ladderMask = stat.ladderMask;
+        bool IsClimbing { get; }
+        void Init(MonsterBrain brain);
+        void TryFindAndClimb(int dir, Vector2 playerPos);
+        void UpdateClimbTimer(float dt);
     }
 
-    public void UpdateClimbTimer(float dt)
+    public class LadderClimber : IMonsterClimber
     {
-        if (cooldownTimer > 0f)
-            cooldownTimer -= dt;
-    }
+        private float climbSpeed = 3f;
+        private float alignSpeed = 4f;
+        private float jumpAwayForce = 3f; // Current code might not directly use this but good to keep.
+        private float climbYThreshold = 0.7f; // Minimum Y offset from ladder bottom to start climbing.
+        private LayerMask ladderMask;
+        private float detectRadius = 0.35f;
+        private Vector2 forwardOffset = new(0.15f, 0);
 
-    public void TryFindAndClimb(int dir)
-    {
-        if (IsClimbing || cooldownTimer > 0f) return;
+        private const string CLIMBING_LAYER_NAME = "MonsterClimbing";
+        private const float CLIMB_COOLDOWN = 0.75f;
 
-        Vector2 probe = (Vector2)tf.position + forwardOffset * Mathf.Sign(tf.localScale.x);
-        Collider2D col = Physics2D.OverlapCircle(probe, detectRadius, ladderMask);
+        // Exit related constants (adjusted for stronger push)
+        // 상수 값을 더욱 공격적으로 상향 조정하여 강제 이탈 보장
+        private const float LADDER_EXIT_JUMP_FORCE_Y = 8.0f; // 이전 5.0f -> 8.0f (더 높은 점프)
+        private const float LADDER_EXIT_HORIZONTAL_VELOCITY = 7.0f; // 이전 4.0f -> 7.0f (더 빠른 수평 이동)
+        // Increased buffer for monster's feet to clear the ladder top.
+        private const float LADDER_TOP_EXIT_HEIGHT_OFFSET = 1.0f; // 이전 0.75f -> 1.0f (더 높이 순간이동)
+        private const float FORCE_EXIT_X_OFFSET = 1.0f; // 이전 0.75f -> 1.0f (더 멀리 수평 순간이동)
+
+        // Constants for detecting if the monster is stuck at the ladder top and forcing an exit.
+        private const float CLIMB_STUCK_VELOCITY_THRESHOLD = 0.05f; // Vertical velocity below this is considered 'stuck'.
+        private const float CLIMB_STUCK_DURATION = 0.7f; // Time (in seconds) the monster must be stuck for.
+        // Within this distance from the top limit, stuck detection begins.
+        private const float CLIMB_STUCK_NEAR_TOP_BUFFER = 0.6f;
+
+        private Monster _monster; // Reference to Monster component
+        private Rigidbody2D rb;
+        private Transform tf;
+        private MonsterBrain brain;
+        private BoxCollider2D monsterHitBox; // Added direct reference to Monster's HitBox
+
+        public bool IsClimbing { get; private set; }
+        private float cooldownTimer;
+        private float _stuckClimbTimer; // Stuck detection timer
+
+        public float MinYThreshold => climbYThreshold;
+        public Vector2 ForwardOffset => forwardOffset;
+        public float DetectRadius => detectRadius;
+
+        public void Init(MonsterBrain brain)
+        {
+            this.brain = brain;
+            this._monster = brain.Monster; // Initialize _monster field via MonsterBrain
+            this.rb = brain.Monster.Rigid; // Get Rigidbody2D from Monster via MonsterBrain
+            this.tf = brain.Monster.transform; // Get Transform from Monster via MonsterBrain
+            this.monsterHitBox = brain.Monster.HitBox; // Get HitBox from Monster via MonsterBrain
+
+            var stat = brain.StatData;
+            climbSpeed = stat.climbSpeed;
+            forwardOffset = stat.ladderForwardOffset;
+            detectRadius = stat.ladderDetectRadius;
+            climbYThreshold = stat.climbYThreshold;
+            ladderMask = stat.ladderMask;
+
+            // Debug.Log($"[LadderClimber] Init 완료: offset={forwardOffset}, radius={detectRadius}, threshold={climbYThreshold}");
+        }
+
+        public void UpdateClimbTimer(float dt)
+        {
+            if (cooldownTimer > 0f)
+                cooldownTimer -= dt;
+        }
+
+        public void TryFindAndClimb(int dir, Vector2 playerPos)
+        {
+            if (IsClimbing || cooldownTimer > 0f) return;
+
+            // Check for a ladder ahead of the monster from its current position by forwardOffset.
+            Vector2 probe = (Vector2)tf.position + forwardOffset * Mathf.Sign(tf.localScale.x);
+            Collider2D col = Physics2D.OverlapCircle(probe, detectRadius, ladderMask);
 
 #if UNITY_EDITOR
-        Debug.DrawLine(tf.position, probe, Color.cyan, 1f);
-        Debug.DrawLine(probe, probe + Vector2.up * detectRadius, Color.red, 1f);
-        Debug.DrawLine(probe, probe + Vector2.down * detectRadius, Color.red, 1f);
-        Debug.DrawLine(probe, probe + Vector2.left * detectRadius, Color.red, 1f);
-        Debug.DrawLine(probe, probe + Vector2.right * detectRadius, Color.red, 1f);
+            Debug.DrawLine(tf.position, probe, Color.cyan, 1f); //
 #endif
 
-        if (col == null) return;
+            if (col == null) return; // If no ladder, don't try to climb.
 
-        float yDiff = _monster.Target.position.y - tf.position.y;
-        LadderBounds lb = col.GetComponentInParent<LadderBounds>();
-        if (lb == null)
-        {
-            return;
-        }
-
-        bool goUp = yDiff > 0;
-        bool canClimb = false;
-
-        if (goUp)
-        {
-            if (!_monster.Brain.IsGrounded())
+            float yDiff = playerPos.y - tf.position.y; //
+            LadderBounds lb = col.GetComponentInParent<LadderBounds>(); //
+            if (lb == null) //
             {
-                return;
-            }
-            canClimb = tf.position.y < lb.top.position.y;
-        }
-        else
-        {
-            canClimb = tf.position.y > lb.bottom.position.y + climbYThreshold;
-        }
-
-        if (!canClimb)
-        {
-            return;
-        }
-
-        brain.StartCoroutine(ClimbRoutine(lb, goUp));
-    }
-
-    private IEnumerator ClimbRoutine(LadderBounds lb, bool initialGoUp)
-    {
-        IsClimbing = true;
-        int originalLayer = brain.gameObject.layer;
-        int climbLayer = LayerMask.NameToLayer(CLIMBING_LAYER_NAME);
-        if (climbLayer != -1) brain.gameObject.layer = climbLayer;
-
-        rb.simulated = false; // 사다리 등반 중에는 물리 비활성화
-        _monster.PlayAnim(AnimNames.Walk);
-
-        // 사다리 중앙으로 X축 정렬
-        float xMid = lb.bottom.position.x;
-        while (Mathf.Abs(tf.position.x - xMid) > 0.05f)
-        {
-            tf.position = Vector3.MoveTowards(tf.position, new Vector3(xMid, tf.position.y, tf.position.z), alignSpeed * Time.deltaTime);
-            yield return null;
-        }
-        tf.position = new Vector3(xMid, tf.position.y, tf.position.z);
-
-        float tolerance = 0.05f;
-        Transform playerTf = _monster.Target;
-
-        // 몬스터 콜라이더 높이를 고려하여 사다리 상단 탈출 한계를 더 높게 잡습니다.
-        float climbUpperLimit = lb.top.position.y + LADDER_TOP_EXIT_HEIGHT_OFFSET;
-
-        while (true)
-        {
-            // 플레이어 타겟이 없거나, 플레이어가 감지 범위를 벗어나면 사다리에서 이탈
-            if (playerTf == null || !_monster.PlayerInRange(brain.StatData.chaseRange + 1f))
-            {
-                Debug.Log("[ClimbRoutine] 플레이어 범위 이탈 또는 타겟 없음 → 사다리 이탈");
-                break;
+                Debug.LogWarning("[LadderClimber] LadderBounds 컴포넌트를 찾을 수 없습니다."); //
+                return; // Cannot climb without LadderBounds.
             }
 
-            // 현재 위치에서 더 이상 사다리가 감지되지 않으면 사다리 이탈
-            Vector2 currentCheckPos = (Vector2)tf.position + forwardOffset * Mathf.Sign(tf.localScale.x);
-            Collider2D currentLadderCol = Physics2D.OverlapCircle(currentCheckPos, detectRadius, ladderMask);
-            if (currentLadderCol == null)
+            bool goUp = yDiff > 0; // Climb up if player is above the monster.
+            bool canClimb = false;
+
+            if (goUp) //
             {
-                Debug.Log("[ClimbRoutine] 사다리 이탈 (허공) → 강제 종료");
-                break;
+                // When going up: Cannot climb if monster is not grounded AND below the ladder's bottom.
+                if (!_monster.Brain.IsGrounded() && tf.position.y < lb.bottom.position.y) //
+                {
+                    return;
+                }
+                // Can climb if monster can reach the top of the ladder.
+                canClimb = tf.position.y < lb.top.position.y + monsterHitBox.size.y * 0.5f; //
+            }
+            else // When going down.
+            {
+                // Can climb if monster is sufficiently above the ladder's bottom (considering climbYThreshold).
+                canClimb = tf.position.y > lb.bottom.position.y + climbYThreshold; //
             }
 
-            float yDiffToPlayer = playerTf.position.y - tf.position.y;
-            bool goUp = yDiffToPlayer > 0;
-
-            bool atTopLimit = tf.position.y >= climbUpperLimit - tolerance;
-            bool atBottomLimit = !goUp && tf.position.y <= lb.bottom.position.y + tolerance;
-
-            // 사다리 상단 도달 또는 X축 이탈 거리 초과 시 이탈 준비
-            if (atTopLimit || (Mathf.Abs(playerTf.position.x - tf.position.x) > 2.5f && _monster.Brain.IsGrounded()))
+            if (!canClimb) //
             {
-                Debug.Log("[ClimbRoutine] 사다리 상단 도달 또는 X축 이탈 거리 초과 → 이탈 시도.");
-                // 여기서 사다리 이탈 로직으로 바로 넘어갑니다.
-                break;
+                return; // If climb conditions are not met, exit.
             }
-            else if (atBottomLimit)
+
+            // Start climb coroutine.
+            brain.StartCoroutine(ClimbRoutine(lb, goUp));
+        }
+
+        private IEnumerator ClimbRoutine(LadderBounds lb, bool initialGoUp) // Removed playerPos parameter as it's directly queried
+        {
+            IsClimbing = true; //
+            int originalLayer = brain.gameObject.layer; //
+            int climbLayer = LayerMask.NameToLayer(CLIMBING_LAYER_NAME); //
+            if (climbLayer != -1) brain.gameObject.layer = climbLayer; // Change monster layer to climbing layer
+
+            rb.isKinematic = true; // <--- 변경: isKinematic 유지
+            rb.velocity = Vector2.zero; // Clear existing velocity (prevents issues from residual velocity)
+            _monster.PlayAnim(AnimNames.Walk); // Play climbing animation (e.g., walk animation)
+
+            _stuckClimbTimer = 0f; // Initialize stuck detection timer
+
+            // Align X-axis to the center of the ladder.
+            float xMid = lb.bottom.position.x; //
+            while (Mathf.Abs(tf.position.x - xMid) > 0.05f) // Allow X-axis error margin
             {
-                Debug.Log("[ClimbRoutine] 사다리 하단 도달. 등반 종료.");
-                break;
+                tf.position = Vector3.MoveTowards(tf.position, new Vector3(xMid, tf.position.y, tf.position.z), alignSpeed * Time.deltaTime); //
+                yield return null;
+            }
+            tf.position = new Vector3(xMid, tf.position.y, tf.position.z); // Exactly center the monster
+
+            float tolerance = 0.05f; // Error margin for judging ladder limit reach
+            Transform playerTf = _monster.Target; // Get player Transform reference (more reliable than FindWithTag)
+
+            // Calculate ladder bounds based on the monster's "foot" position, not its center.
+            // monsterHitBox.offset.y is the Y offset between the collider center and Transform center.
+            // monsterHitBox.size.y * 0.1f is a custom 'foot' position correction value.
+            float monsterFootToCenterOffset = monsterHitBox.offset.y - monsterHitBox.size.y * 0.1f;
+            float climbUpperLimit = lb.top.position.y + monsterFootToCenterOffset + LADDER_TOP_EXIT_HEIGHT_OFFSET;
+            float climbLowerLimit = lb.bottom.position.y + monsterFootToCenterOffset;
+
+            bool goUp = initialGoUp; // Use the initial direction
+
+            while (true)
+            {
+                // Exit ladder if player target is lost or out of range.
+                if (playerTf == null || !_monster.PlayerInRange(brain.StatData.chaseRange + 1f))
+                {
+                    Debug.Log("[ClimbRoutine] 플레이어 범위 이탈 또는 타겟 없음 → 사다리 이탈");
+                    break;
+                }
+
+                // Continuously check for ladder presence below the monster's foot (prevents falling into void).
+                Vector2 checkPos = (Vector2)tf.position + monsterHitBox.offset - Vector2.up * (monsterHitBox.size.y * 0.5f - 0.01f);
+                Collider2D currentLadderCol = Physics2D.OverlapCircle(checkPos, detectRadius * 0.5f, ladderMask);
+                if (currentLadderCol == null)
+                {
+                    Debug.Log("[ClimbRoutine] 사다리 이탈 (발 아래 사다리 없음) → 강제 종료");
+                    break;
+                }
+
+                float yDiffToPlayer = playerTf.position.y - tf.position.y;
+                float xDiffToPlayer = Mathf.Abs(playerTf.position.x - tf.position.x);
+
+                // Update direction if player's relative Y changes significantly
+                if ((goUp && yDiffToPlayer < -0.5f) || (!goUp && yDiffToPlayer > 0.5f))
+                {
+                    goUp = yDiffToPlayer > 0;
+                }
+
+                float currentMonsterFootY = tf.position.y + monsterFootToCenterOffset;
+
+                // Check if monster's foot has reached the upper/lower ladder limit.
+                bool atTopLimit = currentMonsterFootY >= climbUpperLimit - tolerance;
+                bool atBottomLimit = !goUp && currentMonsterFootY <= climbLowerLimit + tolerance;
+
+                // Exit conditions:
+                // 1. Reached top of ladder.
+                // 2. Reached bottom of ladder (and trying to go down).
+                // 3. Stuck near top of ladder (detected by timer).
+                if (atTopLimit)
+                {
+                    Debug.Log("[ClimbRoutine] 사다리 상단 도달 → 이탈 시도.");
+                    break;
+                }
+                else if (atBottomLimit)
+                {
+                    Debug.Log("[ClimbRoutine] 사다리 하단 도달. 등반 종료.");
+                    break;
+                }
+                else
+                {
+                    // If monster is near the top of the ladder and not moving vertically, start stuck timer.
+                    if (goUp && currentMonsterFootY >= (climbUpperLimit - CLIMB_STUCK_NEAR_TOP_BUFFER) && Mathf.Abs(rb.velocity.y) < CLIMB_STUCK_VELOCITY_THRESHOLD)
+                    {
+                        _stuckClimbTimer += Time.deltaTime;
+                        if (_stuckClimbTimer >= CLIMB_STUCK_DURATION)
+                        {
+                            Debug.Log("[ClimbRoutine] 몬스터가 사다리 상단 근처에서 정지 감지 (강제 이탈) → 이탈 시도.");
+                            break; // Exit loop to trigger exit sequence.
+                        }
+                    }
+                    else
+                    {
+                        _stuckClimbTimer = 0f; // Reset timer if conditions are not met.
+                    }
+
+                    // Calculate target Y position for the monster's transform (center) based on player's Y.
+                    float targetMonsterFootY = playerTf.position.y;
+                    float actualTargetTransformY = targetMonsterFootY - monsterFootToCenterOffset;
+
+                    // Move monster towards the target Y.
+                    float newY = Mathf.MoveTowards(tf.position.y, actualTargetTransformY, climbSpeed * Time.deltaTime);
+                    tf.position = new Vector3(tf.position.x, newY, tf.position.z);
+                }
+
+                yield return null;
+            }
+
+            // --- Final Ladder Exit Processing ---
+            rb.isKinematic = false; // <--- 변경: isKinematic 유지
+            rb.velocity = Vector2.zero; // Clear residual velocity on ladder exit
+
+            if (playerTf != null)
+            {
+                int playerXDir = (int)Mathf.Sign(playerTf.position.x - tf.position.x);
+
+                Vector3 exitPos = tf.position; // Monster's current position
+
+                // Calculate the target Y for the monster's transform.position (center)
+                // to ensure its hitbox bottom is LADDER_TOP_EXIT_HEIGHT_OFFSET away from the ladder top.
+                float targetExitCenterY = lb.top.position.y
+                                          + (monsterHitBox.size.y * 0.5f - monsterHitBox.offset.y)
+                                          + LADDER_TOP_EXIT_HEIGHT_OFFSET;
+
+                // Directly set the monster's Y position to the calculated safe point (teleport).
+                // This ensures the monster always clears the ladder top.
+                exitPos.y = targetExitCenterY;
+
+                // Apply horizontal offset
+                exitPos.x += playerXDir * FORCE_EXIT_X_OFFSET;
+
+                // Apply the calculated exit position to the monster's Transform.
+                tf.position = exitPos;
+
+                // Apply jump and horizontal propulsion after position adjustment
+                rb.velocity = new Vector2(playerXDir * LADDER_EXIT_HORIZONTAL_VELOCITY, LADDER_EXIT_JUMP_FORCE_Y);
+                Debug.Log($"[ClimbRoutine] 사다리 이탈 후 점프 및 수평 추진력 적용: Velocity X={rb.velocity.x:F2}, Y={rb.velocity.y:F2}");
             }
             else
             {
-                float targetY = playerTf.position.y;
-                targetY = Mathf.Clamp(targetY, lb.bottom.position.y, climbUpperLimit);
-
-                float newY = Mathf.MoveTowards(tf.position.y, targetY, climbSpeed * Time.deltaTime);
-                tf.position = new Vector3(tf.position.x, newY, tf.position.z);
+                // If no player target, just give a default jump force.
+                rb.velocity = new Vector2(0, LADDER_EXIT_JUMP_FORCE_Y);
             }
 
-            yield return null;
+            brain.gameObject.layer = originalLayer; // Restore original layer
+            IsClimbing = false;
+            cooldownTimer = CLIMB_COOLDOWN; // Apply cooldown after climbing
+
+            Debug.Log("[ClimbRoutine] 사다리 등반 코루틴 종료. FSM 상태 전환 시도.");
+            brain.ChangeState(StateID.Chase); // Change FSM state to Chase
         }
-
-        // --- 사다리 이탈 최종 처리 ---
-        // 콜라이더를 잠시 비활성화하여 강제 점프/이동 시 지형과의 충돌 방지
-        if (monsterCollider != null) monsterCollider.enabled = false;
-        rb.simulated = false; // 물리 시뮬레이션은 여전히 비활성화 상태
-
-        if (playerTf != null)
-        {
-            int playerXDir = (int)Mathf.Sign(playerTf.position.x - tf.position.x);
-            // 사다리에서 살짝 위로 띄우고 플레이어 방향으로 밀어내는 위치 조정
-            Vector3 exitPos = tf.position;
-            exitPos.y += LADDER_TOP_EXIT_HEIGHT_OFFSET * 0.5f; // 사다리 위로 좀 더 명확하게 띄움
-            exitPos.x += playerXDir * FORCE_EXIT_X_OFFSET; // 플레이어 방향으로 살짝 이동
-            tf.position = exitPos;
-        }
-
-        yield return null; // 위치 변경 적용을 위해 한 프레임 대기
-
-        // 콜라이더 재활성화 및 물리 시뮬레이션 활성화
-        if (monsterCollider != null) monsterCollider.enabled = true;
-        rb.simulated = true;
-        rb.velocity = Vector2.zero; // 모든 속도 초기화
-
-        // 플레이어 방향으로 점프 및 수평 추진력 부여
-        if (playerTf != null)
-        {
-            int playerXDir = (int)Mathf.Sign(playerTf.position.x - tf.position.x);
-            rb.velocity = new Vector2(playerXDir * LADDER_EXIT_HORIZONTAL_VELOCITY, LADDER_EXIT_JUMP_FORCE_Y);
-            Debug.Log($"[ClimbRoutine] 사다리 이탈 후 점프 및 수평 추진력 적용: Velocity X={rb.velocity.x:F2}, Y={rb.velocity.y:F2}");
-        }
-
-        // --- 사다리 이탈 최종 처리 끝 ---
-
-        brain.gameObject.layer = originalLayer;
-        IsClimbing = false;
-        cooldownTimer = CLIMB_COOLDOWN;
-
-        Debug.Log("[ClimbRoutine] 사다리 등반 코루틴 종료. Chase 상태로의 전환은 MonsterBrain에 맡김.");
-        // brain.ChangeState(StateID.Chase); // 이 부분을 제거합니다!
     }
 }

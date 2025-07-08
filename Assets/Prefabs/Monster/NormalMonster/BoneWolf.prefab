@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 5982186683026772604}
   - component: {fileID: 464489438545871076}
   - component: {fileID: 1164987540491013140}
+  - component: {fileID: 362993448807597686}
   m_Layer: 12
   m_Name: BoneWolf
   m_TagString: Monster
@@ -57,7 +58,7 @@ MonoBehaviour:
   _monsterType: 0
   _monsterSpecies: 0
   _allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
-  _creadit: 4
+  _creadit: 1
   _monsterBrain: {fileID: 6815477051200637758}
   _monsterStats: {fileID: 1960792372105581404}
   _sprite: {fileID: 4178420163988386019}
@@ -72,6 +73,9 @@ MonoBehaviour:
   _transfrom: {fileID: 6366471082086663629}
   _hpBar: {fileID: 8878357668862508150}
   _hpBarFill: {fileID: 4008962571307211936}
+  _audioSource: {fileID: 362993448807597686}
+  _attackSoundClip: {fileID: 8300000, guid: 84597e58664d76b4091bd233a3e1fd80, type: 3}
+  deathSoundClip: {fileID: 8300000, guid: 27374f9fe200b3448aa4445e6b81d0fc, type: 3}
 --- !u!114 &6815477051200637758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,6 +89,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monster: {fileID: 7354574312957129920}
+  _minFallDistanceForDamage: 3
+  _baseFallDamage: 10
+  _damageMultiplierPerMeter: 5
 --- !u!114 &1960792372105581404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,6 +116,7 @@ MonoBehaviour:
   _usePatrol: 0
   _gold: 0
   _exp: 0
+  _isDead: 0
 --- !u!50 &4888856274909362955
 Rigidbody2D:
   serializedVersion: 4
@@ -267,6 +275,102 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showGizmos: 1
+--- !u!82 &362993448807597686
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1767146840303253492}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 6462022050016309229, guid: 129a6183fab874648bc4f2ded9fde0c4, type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &7211110098461834994
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,7 +442,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7448836992332634990}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -388,7 +492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 365e7b9b85ce68f4a8d8de3d9331d54e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 0
+  _damage: 2
 --- !u!1 &7554354322716496360
 GameObject:
   m_ObjectHideFlags: 0

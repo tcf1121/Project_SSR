@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.UI;
 using Utill;
@@ -31,6 +30,9 @@ public class Monster : MonoBehaviour
     public RectTransform HpBar { get => _hpBar; }
     public Image HpBarFill { get => _hpBarFill; }
     public Transform Target { get => _target; }
+    public AudioSource AudioSource => _audioSource;
+    public AudioClip AttackSoundClip => _attackSoundClip;
+    public AudioClip DeathSoundClip => deathSoundClip;
 
     [SerializeField] private MonsterType _monsterType;
     [SerializeField] private MonsterSpecies _monsterSpecies;
@@ -50,6 +52,9 @@ public class Monster : MonoBehaviour
     [SerializeField] private Transform _transfrom;
     [SerializeField] private RectTransform _hpBar;
     [SerializeField] private Image _hpBarFill;
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _attackSoundClip;
+    public AudioClip deathSoundClip;
     private Transform _target;
 
 
@@ -57,6 +62,13 @@ public class Monster : MonoBehaviour
     {
         if (GameManager.Player != null)
             _target = GameManager.Player.transform;
+        _monsterType = monster.MonsterType;
+        _monsterSpecies = monster.MonsterSpecies;
+        _allMonsterStatData = monster.AllMonsterStatData;
+
+        _monsterBrain.SetBrain();
+        _monsterStats.enabled = true;
+        _monsterStats.EnableStats();
         _hitBox.offset = monster.HitBox.offset;
         _hitBox.isTrigger = monster.HitBox.isTrigger;
         _hitBox.size = monster.HitBox.size;
@@ -64,11 +76,6 @@ public class Monster : MonoBehaviour
         _sprite.flipX = monster.Sprite.flipX;
 
         _animator.runtimeAnimatorController = monster.Animator.runtimeAnimatorController;
-        _monsterType = monster.MonsterType;
-        _allMonsterStatData = monster.AllMonsterStatData;
-        _monsterSpecies = monster.MonsterSpecies;
-        _monsterBrain.SetBrain();
-        _monsterStats.enabled = true;
         _creadit = monster.Credit;
         _groundSensor.position = monster.GroundSensor.position;
         _wallSensor.position = monster.WallSensor.position;
@@ -81,6 +88,7 @@ public class Monster : MonoBehaviour
         _hpBar.position = monster.HpBar.position;
         gameObject.transform.position = monster.gameObject.transform.position;
         gameObject.transform.localScale = monster.gameObject.transform.localScale;
+        _monsterBrain.SetIsDead(false);
 
         if (monster.MonsterType != MonsterType.LDMonster)
         {
@@ -91,8 +99,27 @@ public class Monster : MonoBehaviour
             _attackBox = monster.AttackBox;
         }
 
-    }
+        _attackSoundClip = monster._attackSoundClip;
+        deathSoundClip = monster.deathSoundClip;
+    
+        _audioSource.volume = monster.AudioSource.volume;
+        _audioSource.spatialBlend = monster.AudioSource.spatialBlend;
+        _audioSource.pitch = monster.AudioSource.pitch;
 
+
+
+
+    }
+    public void Init()
+    {
+        _monsterBrain.SetIsDead(false);
+        _monsterBrain.SetBrain();
+        if (GameManager.Player != null)
+            _target = GameManager.Player.transform;
+        _hpBarFill.fillAmount = 1f;
+        _rigid.velocity = Vector2.zero;
+        _rigid.angularVelocity = 0f;
+    }
     public void PlayAnim(string animName)
     {
         Debug.Log($"[FSM] {Brain.name} Current State: {Brain.StateMachine.CurrentStateID}");
@@ -101,29 +128,33 @@ public class Monster : MonoBehaviour
 
     public void Death()
     {
+        if (Brain.IsDead) return; // 이미 죽은 상태면 무시
         // 1. 보상 계산
         GameManager.Player.GetReward(MonsterStats.Gold, MonsterStats.Exp);
         // 2. 사망 애니메이션 + 비활성화 처리
         StartCoroutine(DieCoroutine());
+        // Brain.ChangeState(StateID.Dead);
     }
 
     private IEnumerator DieCoroutine()
     {
+        Brain.SetIsDead(true);
         if (Brain.StatData.hasIdleAnim)
             PlayAnim(AnimNames.Dead);
 
 
         yield return new WaitForSeconds(1.5f); // 사망 연출 대기
-
+        Brain.SetIsDead(false);
+        MonsterStats.SetHP(MonsterStats.MaxHP);
         gameObject.SetActive(false); // 오브젝트 풀 반환
         if (_monsterType == MonsterType.FlyMonster) ObjectPool.ReturnPool(gameObject, EPoolObjectType.FlyMonster);
         else if (_monsterType == MonsterType.LDMonster) ObjectPool.ReturnPool(gameObject, EPoolObjectType.LDMonster);
         else ObjectPool.ReturnPool(gameObject, EPoolObjectType.CDMonster);
-
     }
 
     public void ChangeState(StateID id)
     {
+        if (Brain.IsDead) return;
         Brain.ChangeState(id);
     }
 

@@ -27,7 +27,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 80
-    damage: 12
+    damage: 1
     moveSpeed: 2
     rushMultiplier: 0
     maxClimbableHeight: 4
@@ -88,7 +88,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 60
-    damage: 10
+    damage: 1
     moveSpeed: 0.5
     rushMultiplier: 2
     maxClimbableHeight: 2
@@ -144,13 +144,13 @@ MonoBehaviour:
       m_Bits: 2048
     wallMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 8192
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 100
     damage: 10
-    moveSpeed: 2
+    moveSpeed: 1
     rushMultiplier: 2
     maxClimbableHeight: 2
     staggerThreshold: 15
@@ -158,7 +158,7 @@ MonoBehaviour:
     knockbackDuration: 0.07
     patrolRange: 2
     chaseRange: 4
-    attackRange: 0.5
+    attackRange: 0.23
     chargeRange: 0
     enableJump: 1
     jumpHorizontalFactor: 1
@@ -210,7 +210,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 100
-    damage: 10
+    damage: 1
     moveSpeed: 1
     rushMultiplier: 2
     maxClimbableHeight: 3
@@ -271,7 +271,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 100
-    damage: 10
+    damage: 1
     moveSpeed: 1.5
     rushMultiplier: 0
     maxClimbableHeight: 2
@@ -327,12 +327,12 @@ MonoBehaviour:
       m_Bits: 2048
     wallMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 8192
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 100
-    damage: 10
+    damage: 0
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 2
@@ -357,7 +357,7 @@ MonoBehaviour:
     readyRange: 10
     projectileSpeed: 2
     projectileLife: 3
-    firePattern: 1
+    firePattern: 0
     pelletCount: 3
     spreadAngle: 30
     meleeCooldown: 0.6
@@ -393,7 +393,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 100
-    damage: 10
+    damage: 0
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 2
@@ -454,7 +454,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 100
-    damage: 10
+    damage: 1
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 2
@@ -463,7 +463,7 @@ MonoBehaviour:
     knockbackDuration: 0.07
     patrolRange: 10
     chaseRange: 10
-    attackRange: 0.2
+    attackRange: 0.1
     chargeRange: 2.5
     enableJump: 0
     jumpHorizontalFactor: 0.6
@@ -515,7 +515,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 100
-    damage: 10
+    damage: 1
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 2
@@ -546,7 +546,7 @@ MonoBehaviour:
     meleeCooldown: 0.6
     attackAnimationTotalDuration: 0.6
     meleeRadius: 1
-    isFlying: 0
+    isFlying: 1
     isRanged: 1
     isCharging: 0
     enableLadderClimb: 0
@@ -560,7 +560,7 @@ MonoBehaviour:
     hasIdleAnim: 1
     hasWalkAnim: 1
     hasAttackAnim: 1
-    hasStaggerAnim: 0
+    hasStaggerAnim: 1
     hasDeadAnim: 1
   - monsterType: 11
     groundMask:
@@ -576,7 +576,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 100
-    damage: 10
+    damage: 0
     moveSpeed: 2
     rushMultiplier: 4
     maxClimbableHeight: 2
@@ -637,7 +637,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 100
-    damage: 10
+    damage: 1
     moveSpeed: 1
     rushMultiplier: 2
     maxClimbableHeight: 2

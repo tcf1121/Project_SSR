@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 1644662295075373101}
   - component: {fileID: 4981024866902660313}
   - component: {fileID: 6907997900576285571}
+  - component: {fileID: 8224639275738278250}
   m_Layer: 12
   m_Name: FireWorm
   m_TagString: Monster
@@ -95,7 +96,7 @@ MonoBehaviour:
   _sprite: {fileID: 4193403427495675892}
   _hitBox: {fileID: 1644662295075373101}
   _attackBoxCol: {fileID: 0}
-  _attackBox: {fileID: 5842702604836807413}
+  _attackBox: {fileID: 0}
   _animator: {fileID: 6907997900576285571}
   _muzzlePoint: {fileID: 3706219868404331591}
   _groundSensor: {fileID: 8491071210175262331}
@@ -104,6 +105,9 @@ MonoBehaviour:
   _transfrom: {fileID: 8269217594752173237}
   _hpBar: {fileID: 6787146648733910428}
   _hpBarFill: {fileID: 1343260847395628362}
+  _audioSource: {fileID: 8224639275738278250}
+  _attackSoundClip: {fileID: 8300000, guid: 99aca8233bd62574fafea4d75d85f1e1, type: 3}
+  deathSoundClip: {fileID: 8300000, guid: 27374f9fe200b3448aa4445e6b81d0fc, type: 3}
 --- !u!114 &8596652378365913914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,6 +121,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monster: {fileID: 4508440944917376088}
+  _minFallDistanceForDamage: 3
+  _baseFallDamage: 10
+  _damageMultiplierPerMeter: 5
 --- !u!114 &3547561994803347461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,6 +148,7 @@ MonoBehaviour:
   _usePatrol: 0
   _gold: 0
   _exp: 0
+  _isDead: 0
 --- !u!212 &4193403427495675892
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -299,6 +307,102 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &8224639275738278250
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3806226950037447550}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 6462022050016309229, guid: 129a6183fab874648bc4f2ded9fde0c4, type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4838135489185775967
 GameObject:
   m_ObjectHideFlags: 0

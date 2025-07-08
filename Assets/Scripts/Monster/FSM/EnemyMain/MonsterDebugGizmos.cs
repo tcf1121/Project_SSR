@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using PHG;
 
 
 [ExecuteAlways]
@@ -25,7 +26,7 @@ public class MonsterDebugGizmos : MonoBehaviour
         _climber = _monster.Brain.Climber as LadderClimber;
 
         if (_monster != null && _climber != null)
-            _climber.Init(_monster); //
+            _climber.Init(_monster.Brain); //
     }
 
 #if UNITY_EDITOR

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using PHG;
 
 public class ChaseState : IState
 {
@@ -146,7 +147,7 @@ public class ChaseState : IState
             Mathf.Abs(_monster.LookAtPlayerYPos()) > 1.25f &&
             Mathf.Abs(_monster.Rigid.velocity.y) < 0.1f)
         {
-            _monster.Brain.Climber?.TryFindAndClimb(dir);
+            _monster.Brain.Climber?.TryFindAndClimb(dir,_monster.Target.position);
         }
 
         if (_monster.Brain.StatData.enableLadderClimb && isClimbing)

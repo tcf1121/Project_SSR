@@ -51,7 +51,6 @@ public class PickTrigger : MonoBehaviour
         {
             _collider.enabled = false;
             itemObject.Add(collision.gameObject);
-            SoundManager.Instance.PlaySFX("Item_Get");
             return;
         }
     }

@@ -49,7 +49,6 @@ public struct Stats
 
     public void LevelUp()
     {
-
         MaxHp += 33f;
         Atk += 2f;
         HpRegen += 0.2f;
@@ -77,7 +76,6 @@ public struct Stats
 public class PlayerStats : MonoBehaviour
 {
     private Player player;
-    
 
     [Header("케릭터 기본 정보")] // 후에 프라이빗으로 변경
     [SerializeField] private int _level = 1;
@@ -97,7 +95,6 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private Stats _finalStats;
 
     public AudioClip DieClip;
-    public AudioClip LevelUpClip;
 
     // 체력 재생 타이머
     private float regenTimer = 0f;
@@ -162,7 +159,6 @@ public class PlayerStats : MonoBehaviour
 
     public void LevelUp()
     {
-        player.AudioSource.PlayOneShot(LevelUpClip);
         _level++;
         RequiredExp(); // 필요경험치 재계산
         _baseStats.LevelUp();

@@ -18,15 +18,12 @@ public class GameManager : MonoBehaviour
     private static StageManager _stageManager;
     public static ItemManager ItemManager { get => _itemManager; }
     private static ItemManager _itemManager;
-    
 
     private void Awake()
     {
         SetSingleton();
         _stage = 1;
         _itemManager = GetComponent<ItemManager>();
-        
-
     }
     private void SetSingleton()
     {
@@ -71,16 +68,9 @@ public class GameManager : MonoBehaviour
 #endif
     }
 
-    
-    
-
-
 
     public void StartGame()
     {
-       
-        SoundManager.Instance.PlaySFX("Click");
-
         NextStage();
         GameObject PlayerGO = Instantiate(_playerPrefab);
         PlayerGO.transform.parent = this.transform;

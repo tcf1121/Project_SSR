@@ -112,7 +112,7 @@ MonoBehaviour:
   _basicDamage: 0.5
   _strengthening: 0.1
   _coolTime: 1
-  _attackrange: {fileID: 7372104346640669320, guid: 69669d403526ca546945baf3ed911f9f, type: 3}
+  _attackrange: {fileID: 7372104346640669320, guid: ba3593d5df023934e9146722f78c712f, type: 3}
 --- !u!50 &3895574604878148375
 Rigidbody2D:
   serializedVersion: 4

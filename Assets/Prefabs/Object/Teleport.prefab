@@ -196,6 +196,4 @@ MonoBehaviour:
   bossPrefab: {fileID: 0}
   bossSpawnPoint: {fileID: 0}
   eventDuration: 90
-  nextStage: {fileID: 8300000, guid: c53708001db137e4facb121813a08b9d, type: 3}
-  spawnBoss: {fileID: 8300000, guid: a3a32307074b0834383c99a996b21eaa, type: 3}
   _animator: {fileID: 5554068923174692671}

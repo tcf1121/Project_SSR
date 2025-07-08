@@ -50,11 +50,11 @@ AudioMixerController:
   m_UpdateMode: 0
   m_ExposedParameters:
   - guid: 1eee13f12f3795749b8adb78a75c2181
-    name: MyExposedParam
+    name: BGM
   - guid: 9e1dd732725bf7848ac167686fcf62d7
-    name: MyExposedParam 2
+    name: Master
   - guid: 3e73db2fc5b865e418941ad6d419059d
-    name: MyExposedParam 1
+    name: SFX
   m_AudioMixerGroupViews:
   - guids:
     - 4c34ff3486dbf024b937297662e43c54

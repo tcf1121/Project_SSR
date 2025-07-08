@@ -24,7 +24,6 @@ public class Stage : MonoBehaviour
         audioSource.clip = Selectauido(_stageNum);
         
         audioSource.Play();
-
     }
 
 
@@ -32,11 +31,11 @@ public class Stage : MonoBehaviour
 
     AudioClip Selectauido(int number)
     {
-        if(number == 1) return stage1;
-        else if(number == 2) return stage2;
-        else if(number == 3) return stage3;
+        if (number == 1) return stage1;
+        else if (number == 2) return stage2;
+        else if (number == 3) return stage3;
         else return stage4;
-        
+
     }
 }
 

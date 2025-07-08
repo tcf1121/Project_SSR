@@ -1,5 +1,67 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &472130155449188817
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1436345478931829184}
+  m_Layer: 0
+  m_Name: SummonPos(2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1436345478931829184
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472130155449188817}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.5, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5485696624623490308}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3130160922217249874
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7301113505893501001}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7301113505893501001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3130160922217249874}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5485696624623490308}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3951859377888011945
 GameObject:
   m_ObjectHideFlags: 0
@@ -16,7 +78,7 @@ GameObject:
   - component: {fileID: 2757432223295029808}
   m_Layer: 0
   m_Name: Crystal Knight
-  m_TagString: Untagged
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33,7 +95,10 @@ Transform:
   m_LocalPosition: {x: -6.8083744, y: 2.0081296, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7301113505893501001}
+  - {fileID: 770773581408082887}
+  - {fileID: 1436345478931829184}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &610475977938193890
@@ -74,9 +139,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 1612521651
+  m_SortingLayer: 2
+  m_SortingOrder: 2
   m_Sprite: {fileID: -1540961088, guid: 32e819b9886d26b43972aef64585fdbc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -85,7 +150,7 @@ SpriteRenderer:
   m_Size: {x: 0.6, y: 0.63}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &2661535879063473003
@@ -121,11 +186,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 789c70b0ab4f37340a7644b588daad11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 0
   maxHP: 3625
   currentHP: 0
   attackPower: 48
   moveSpeed: 2
-  detectRange: 1
+  phase2AttackPowerMultiplier: 1.5
+  phase2MoveSpeedMultiplier: 1.2
+  phase2AttackCooldownMultiplier: 0.7
+  detectRange: 5
+  attackRange: 1.5
+  rangedAttackMinRange: 3
+  rangedAttackMaxRange: 5
+  projectilePrefab: {fileID: 1941982543547934543, guid: 8ac16afa9ead6f4499e789d3f97add43, type: 3}
+  firePoint: {fileID: 7301113505893501001}
+  rangedAttackDamageMultiplier: 1.2
+  clonePrefab: {fileID: 7460585528781887838, guid: 2cefc64c8aa10f04b97e3acd1012b962, type: 3}
+  summonPositions:
+  - {fileID: 770773581408082887}
+  - {fileID: 1436345478931829184}
+  summonCooldown: 15
+  attackCooldown: 2
+  prepareAttackDuration: 0.5
+  waitAfterAttackDuration: 1
+
 --- !u!50 &8150942971442980969
 Rigidbody2D:
   serializedVersion: 4
@@ -188,3 +272,34 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.6, y: 0.63}
   m_Direction: 0
+--- !u!1 &7971146546305757211
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 770773581408082887}
+  m_Layer: 0
+  m_Name: SummonPos(1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &770773581408082887
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7971146546305757211}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5485696624623490308}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

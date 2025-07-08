@@ -194,7 +194,7 @@ public class PlayerStats : MonoBehaviour
         player.AudioSource.PlayOneShot(DieClip);
         player.Animator.SetBool("IsAlive", false);
         StopCoroutine(_hpRegenCor);
-        Time.timeScale = 0f;
+        GameManager.Instance.GameOver();
     }
 
 

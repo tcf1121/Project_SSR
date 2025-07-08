@@ -123,9 +123,9 @@ MonoBehaviour:
     isRanged: 0
     isCharging: 1
     enableLadderClimb: 1
-    climbYThreshold: 3
-    ladderForwardOffset: {x: 0.15, y: 0}
-    ladderDetectRadius: 1
+    climbYThreshold: 0.8
+    ladderForwardOffset: {x: 0, y: 0}
+    ladderDetectRadius: 3
     climbSpeed: 1
     expReward: 10
     goldReward: 5
@@ -246,8 +246,8 @@ MonoBehaviour:
     isCharging: 1
     enableLadderClimb: 1
     climbYThreshold: 1
-    ladderForwardOffset: {x: 0, y: 2}
-    ladderDetectRadius: 1.5
+    ladderForwardOffset: {x: 0.3, y: 0}
+    ladderDetectRadius: 3
     climbSpeed: 1.5
     expReward: 20
     goldReward: 20

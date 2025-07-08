@@ -42,7 +42,7 @@ public class LadderBounds : MonoBehaviour
         {
             float centerX = (min.x + max.x) * 0.5f;          // ← 중심 X
             bottom.position = new Vector3(centerX, min.y, transform.position.z);
-            top.position = new Vector3(centerX, max.y+0.3f, transform.position.z);
+            top.position = new Vector3(centerX, max.y+0.05f, transform.position.z);
         }
 
     }

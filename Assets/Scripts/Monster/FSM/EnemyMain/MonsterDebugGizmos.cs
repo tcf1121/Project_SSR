@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using PHG;
 
 
 [ExecuteAlways]
@@ -59,26 +58,7 @@ public class MonsterDebugGizmos : MonoBehaviour
         }
 
         // ─ Ladder ─
-        if (_monster.Brain.StatData.enableLadderClimb && _climber != null)
-        {
-            int facingDir = transform.localScale.x >= 0 ? 1 : -1;
-            Vector3 offset = (Vector3)(_climber.ForwardOffset * facingDir);
-            Vector3 probe = transform.position + offset;
-
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawWireSphere(probe, _climber.DetectRadius);
-
-            // climb threshold (orange)
-            Gizmos.color = new Color(1f, 0.5f, 0f, 0.8f);
-            Vector3 pos = transform.position;
-            float threshold = _climber.MinYThreshold;
-            float halfW = 0.4f;
-            Vector3 up = pos + Vector3.up * threshold;
-            Vector3 down = pos + Vector3.down * threshold;
-            Gizmos.DrawLine(up + Vector3.left * halfW, up + Vector3.right * halfW);
-            Gizmos.DrawLine(down + Vector3.left * halfW, down + Vector3.right * halfW);
-            Gizmos.DrawLine(up, down);
-        }
+    
 
         // ─ Ranges ─
         var stat = _monster.Brain.StatData;

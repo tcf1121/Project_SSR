@@ -1,4 +1,4 @@
-﻿using PHG;
+﻿
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -77,10 +77,15 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
         // 사다리 시스템 인터페이스 연결
         if (StatData.enableLadderClimb)
         {
+            // 사다리 기능이 있으면, 실제 LadderClimber를 생성
             climber = new LadderClimber();
-            climber.Init(_monster.Brain);
         }
-
+        else
+        {
+            // ⭐ 사다리 기능이 없으면, 기능 없는 NullClimber를 생성
+            climber = new NullClimber();
+        }
+        climber.Init(this);
         // 상태 등록
         idle = new IdleState(_monster);
         patrol = new PatrolState(_monster);
@@ -114,7 +119,6 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
         jumper?.UpdateTimer(Time.fixedDeltaTime);
         stateMachine?.Tick();
 
-        climber?.UpdateClimbTimer(Time.fixedDeltaTime);
         // --- 낙하 데미지 감지 및 적용 ---
         HandleFallDamage();
     }

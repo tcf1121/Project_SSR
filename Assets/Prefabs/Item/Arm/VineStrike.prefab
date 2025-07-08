@@ -76,12 +76,12 @@ SpriteRenderer:
   m_SortingLayerID: 1766628039
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 91a9a65969c9ddf4db757a082d236c34, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 87b9311809ebb1244bd0f5e12c12ef43, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.34133333, y: 0.34133333}
+  m_Size: {x: 0.44, y: 0.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 213a00f6174a9a347a04cba447ff5aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _image: {fileID: 21300000, guid: 91a9a65969c9ddf4db757a082d236c34, type: 3}
+  _image: {fileID: 21300000, guid: 87b9311809ebb1244bd0f5e12c12ef43, type: 3}
   _itemPart: 2
   _code: Arm09
   _name: "\uB369\uAD74\uCC44\uCC0D"
@@ -111,7 +111,7 @@ MonoBehaviour:
   _basicDamage: 0.7
   _strengthening: 0.1
   _coolTime: 1
-  _attackrange: {fileID: 3170165673971065987, guid: 8321315a50030dc4a97e466642c86efe, type: 3}
+  _attackrange: {fileID: 3170165673971065987, guid: 7d153702050163a42b58df7959799f61, type: 3}
 --- !u!50 &8241086456389762666
 Rigidbody2D:
   serializedVersion: 4
@@ -176,7 +176,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 0.34133333, y: 0.34133333}
-    newSize: {x: 0.34133333, y: 0.34133333}
+    newSize: {x: 0.44, y: 0.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0

@@ -36,7 +36,6 @@ public class PickTrigger : MonoBehaviour
         if (collision.gameObject.CompareTag("Teleport"))
         {
             _collider.enabled = false;
-            collision.gameObject.GetComponent<Teleporter>().ActivateTelePort();
             return;
         }
         else if (collision.gameObject.CompareTag("Box"))

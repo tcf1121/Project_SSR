@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GolemController : MonoBehaviour
 {
@@ -28,8 +27,6 @@ public class GolemController : MonoBehaviour
     public float hardenDuration = 3f;
     private bool isHarden = false;
 
-    [SerializeField] private GameObject hpUI;
-    [SerializeField] private Image fillHP;
     private Transform player;
     private Animator animator;
     private bool isAttacking = false;
@@ -148,8 +145,6 @@ public class GolemController : MonoBehaviour
             damage *= 0.1f;
 
         currentHP -= damage;
-        fillHP.fillAmount = currentHP / maxHP;
-
         if (currentHP <= 0)
         {
             Die();
@@ -167,7 +162,6 @@ public class GolemController : MonoBehaviour
 
     void Die()
     {
-        hpUI.SetActive(false);
         animator.SetTrigger("Die");
         Destroy(gameObject, 2f); // TODO : 시체 남겨야하나?
     }

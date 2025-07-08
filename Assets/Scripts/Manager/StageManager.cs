@@ -14,8 +14,6 @@ public class StageManager : MonoBehaviour
     [SerializeField] private GameObject stageMap;
     public DangerIndexManager DangerIndexManager { get => dangerIndexManager; }
     [SerializeField] private DangerIndexManager dangerIndexManager;
-    public BossSpawner BossSpawner { get => _bossSpawner; }
-    [SerializeField] private BossSpawner _bossSpawner;
 
     void Awake()
     {

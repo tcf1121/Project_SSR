@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BODController : MonoBehaviour
 {
@@ -40,8 +39,7 @@ public class BODController : MonoBehaviour
     [SerializeField] private Vector2 attackBoxOffset = new Vector2(0.5f, 0.5f);
     [SerializeField] private LayerMask playerLayer;
 
-    [SerializeField] private GameObject hpUI;
-    [SerializeField] private Image fillHP;
+
     private Transform player;
     private Animator animator;
     private Rigidbody2D rb;
@@ -218,7 +216,6 @@ public class BODController : MonoBehaviour
         if (currentState == BossState.Dead) return;
 
         currentHP -= damage;
-        fillHP.fillAmount = currentHP / maxHP;
         animator.SetTrigger("hurt");
 
         if (currentHP <= 0)
@@ -229,7 +226,6 @@ public class BODController : MonoBehaviour
 
     void Die()
     {
-        hpUI.SetActive(false);
         ChangeState(BossState.Dead);
         animator.SetTrigger("death");
         rb.velocity = Vector2.zero;

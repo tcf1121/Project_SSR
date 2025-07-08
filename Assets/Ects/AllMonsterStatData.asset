@@ -20,9 +20,6 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    wallMask:
-      serializedVersion: 2
-      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -81,9 +78,6 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    wallMask:
-      serializedVersion: 2
-      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -142,9 +136,6 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    wallMask:
-      serializedVersion: 2
-      m_Bits: 8192
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -203,9 +194,6 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    wallMask:
-      serializedVersion: 2
-      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -264,9 +252,6 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    wallMask:
-      serializedVersion: 2
-      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -325,9 +310,6 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    wallMask:
-      serializedVersion: 2
-      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -386,9 +368,6 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    wallMask:
-      serializedVersion: 2
-      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -447,9 +426,6 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    wallMask:
-      serializedVersion: 2
-      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -508,9 +484,6 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    wallMask:
-      serializedVersion: 2
-      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -569,9 +542,6 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    wallMask:
-      serializedVersion: 2
-      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
@@ -630,9 +600,6 @@ MonoBehaviour:
     ladderMask:
       serializedVersion: 2
       m_Bits: 2048
-    wallMask:
-      serializedVersion: 2
-      m_Bits: 0
     playerLayer:
       serializedVersion: 2
       m_Bits: 64

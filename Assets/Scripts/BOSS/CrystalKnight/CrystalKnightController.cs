@@ -3,28 +3,49 @@ using System.Collections;
 
 public class CrystalKnightController : MonoBehaviour
 {
-    [Header("스탯")]
+    public enum State { Idle, Chase, PrepareAttack, MeleeAttack, RangedAttack, Wait, Transform, Summon, Die }
+    public State currentState = State.Idle;
+
+    [Header("1페이즈 스탯")]
     public float maxHP = 3625f;
     public float currentHP;
     public float attackPower = 48f;
     public float moveSpeed = 2f;
+
+    [Header("2페이즈 스탯 강화")]
+    public float phase2AttackPowerMultiplier = 1.5f;
+    public float phase2MoveSpeedMultiplier = 1.2f;
+    public float phase2AttackCooldownMultiplier = 0.7f;
+
+    [Header("감지 및 공격 범위")]
     public float detectRange = 10f;
+    public float attackRange = 1.5f;
+    public float rangedAttackMinRange = 3f;
+    public float rangedAttackMaxRange = 7f;
+    public float idealHoldingDistance = 4f;
 
     private Transform player;
     private Animator animator;
-    private bool isAttacking = false;
+    private float lastAttackTime;
+    private float lastSummonTime;
+    private bool isPhase2 = false;
 
-    [Header("공격")]
-    public GameObject attackPrefab;
+    [Header("원거리 공격 설정")]
+    public GameObject projectilePrefab;
     public Transform firePoint;
-    public float attackCooldown = 2f;
-    public float rangedAttackMinRange = 3f;
-    public float rangedAttackMaxRange = 5f;
-    public float projectileSpeed = 10f;
+    public float rangedAttackDamageMultiplier = 1.2f;
 
-    [Header("근거리 공격 (콜라이더 기반)")]
-    public float meleeDamageInterval = 1f; // 근접 공격 데미지 간격
-    private Coroutine currentMeleeDamageCoroutine;
+    [Header("분신 소환 설정 (2페이즈)")]
+    public GameObject clonePrefab;
+    public Transform[] summonPositions;
+    public float summonCooldown = 15f;
+
+    [Header("공격 쿨타임")]
+    public float attackCooldown = 2f;
+
+    [Header("패턴 설정")]
+    public float prepareAttackDuration = 0.5f;
+    public float waitAfterAttackDuration = 1.0f;
 
     void Awake()
     {
@@ -33,121 +54,215 @@ public class CrystalKnightController : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    void Update()
+    void Start()
     {
-        // 플레이어 감지 및 추적
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
-        if (distanceToPlayer <= detectRange)
-        {
-            MoveTowardsPlayer();
+        ChangeState(State.Idle);
+        lastSummonTime = -summonCooldown;
+    }
 
-            if (!isAttacking)
-            {
-                StartCoroutine(AttackRoutine(distanceToPlayer));
-            }
+    void ChangeState(State newState)
+    {
+        if (currentState == State.Die) return;
+        StopAllCoroutines();
+        currentState = newState;
+
+        switch (currentState)
+        {
+            case State.Idle: StartCoroutine(IdleState()); break;
+            case State.Chase: StartCoroutine(ChaseState()); break;
+            case State.PrepareAttack: StartCoroutine(PrepareAttackState()); break;
+            case State.MeleeAttack: StartCoroutine(MeleeAttackState()); break;
+            case State.RangedAttack: StartCoroutine(RangedAttackState()); break;
+            case State.Wait: StartCoroutine(WaitState()); break;
+            case State.Transform: StartCoroutine(TransformState()); break;
+            case State.Summon: StartCoroutine(SummonState()); break;
+            case State.Die: StartCoroutine(DieState()); break;
         }
     }
 
-    void MoveTowardsPlayer()
+    public void TakeDamage(float damage)
     {
-        Vector2 direction = (player.position - transform.position).normalized;
-        transform.position += (Vector3)(direction * moveSpeed * Time.deltaTime);
-    }
-
-    IEnumerator AttackRoutine(float distance)
-    {
-        isAttacking = true;
-
-        // 근접 공격은 OnTriggerEnter2D에서 처리되므로 여기서는 제외
-        if (distance >= rangedAttackMinRange && distance <= rangedAttackMaxRange)
+        if (currentState == State.Die || currentState == State.Transform) return;
+        currentHP -= damage;
+        if (!isPhase2 && currentHP / maxHP <= 0.4f)
         {
-            yield return StartCoroutine(DoRangedAttack());
+            ChangeState(State.Transform);
         }
-        // 만약 어떤 공격도 해당되지 않으면, 쿨타임만 적용하고 다음 공격 기회 대기
-        else
+        else if (currentHP <= 0)
         {
-            isAttacking = false; // 공격을 하지 않았으므로 isAttacking을 바로 해제
-            yield break; // 코루틴 종료
-        }
-
-        yield return new WaitForSeconds(attackCooldown);
-        isAttacking = false;
-    }
-
-    IEnumerator DoMeleeAttack()
-    {
-        animator.SetTrigger("Attack");
-        yield return new WaitForSeconds(attackCooldown);
-        isAttacking = false;
-    }
-
-    // 콜라이더 진입 시 근접 공격 시작
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            animator.SetTrigger("Attack");
-
-            if (currentMeleeDamageCoroutine != null)
-            {
-                StopCoroutine(currentMeleeDamageCoroutine);
-            }
-
-            currentMeleeDamageCoroutine = StartCoroutine(ApplyMeleeDamageOverTime(other.gameObject));
+            ChangeState(State.Die);
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            if (currentMeleeDamageCoroutine != null)
-            {
-                StopCoroutine(currentMeleeDamageCoroutine);
-                currentMeleeDamageCoroutine = null;
-            }
-        }
-    }
 
-    // 시간 간격으로 데미지 적용
-    IEnumerator ApplyMeleeDamageOverTime(GameObject playerObject)
+    IEnumerator IdleState()
     {
-        PlayerStats playerStats = playerObject.GetComponent<PlayerStats>();
-        if (playerStats == null)
-        {
-            Debug.LogWarning("PlayerStats component not found on player object!");
-            yield break;
-        }
-
+        animator.SetBool("Move", false);
         while (true)
         {
-            playerStats.TakeDamage(attackPower * 0.7f);
-            yield return new WaitForSeconds(meleeDamageInterval);
+            if (player != null && Vector2.Distance(transform.position, player.position) <= detectRange)
+            {
+                ChangeState(State.Chase);
+            }
+            yield return null;
         }
     }
 
-    IEnumerator DoRangedAttack()
+    IEnumerator ChaseState()
     {
-        if (animator == null) yield break;
-        animator.SetTrigger("Attack2");
-        // 투사체 생성 로직
-        if (attackPrefab != null && firePoint != null)
+        while (true)
         {
-            Vector2 direction = (player.position - firePoint.position).normalized;
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            GameObject projectile = Instantiate(attackPrefab, firePoint.position, Quaternion.Euler(0, 0, angle));
-            Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
-            if (rb != null)
+            if (player == null) { ChangeState(State.Idle); yield break; }
+
+            float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+
+            if (distanceToPlayer > idealHoldingDistance)
             {
-                rb.velocity = direction * projectileSpeed;
+                MoveTowardsPlayer();
+                animator.SetBool("Move", true);
+            }
+            else
+            {
+                animator.SetBool("Move", false);
+            }
+
+            if (isPhase2 && Time.time >= lastSummonTime + summonCooldown)
+            {
+                ChangeState(State.Summon);
+                yield break;
+            }
+
+            if (Time.time >= lastAttackTime + attackCooldown)
+            {
+                if (distanceToPlayer <= rangedAttackMaxRange)
+                {
+                    ChangeState(State.PrepareAttack);
+                    yield break;
+                }
+            }
+
+            if (distanceToPlayer > detectRange)
+            {
+                ChangeState(State.Idle);
+            }
+            yield return null;
+        }
+    }
+
+    IEnumerator PrepareAttackState()
+    {
+        animator.SetBool("Move", false);
+        yield return new WaitForSeconds(prepareAttackDuration);
+
+        float dist = Vector2.Distance(transform.position, player.position);
+        if (dist >= rangedAttackMinRange && dist <= rangedAttackMaxRange)
+        {
+            ChangeState(State.RangedAttack);
+        }
+        else if (dist <= attackRange)
+        {
+            ChangeState(State.MeleeAttack);
+        }
+        else
+        {
+            ChangeState(State.Chase);
+        }
+    }
+
+    IEnumerator MeleeAttackState()
+    {
+        animator.SetTrigger("Attack");
+        lastAttackTime = Time.time;
+        yield return null;
+        float animLen = animator.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(animLen);
+        ChangeState(State.Wait);
+    }
+
+    IEnumerator RangedAttackState()
+    {
+        animator.SetTrigger("Attack2");
+        lastAttackTime = Time.time;
+        if (projectilePrefab != null && firePoint != null && player != null)
+        {
+            Vector2 dir = (player.position - firePoint.position).normalized;
+            GameObject proj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+            CKSpell spell = proj.GetComponent<CKSpell>();
+            if (spell != null)
+            {
+                spell.SetDirection(dir);
+                spell.damage = attackPower * rangedAttackDamageMultiplier;
             }
         }
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+        ChangeState(State.Wait);
     }
 
-    private void OnDrawGizmosSelected()
+    IEnumerator WaitState()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectRange);
+        animator.SetBool("Move", false);
+        yield return new WaitForSeconds(waitAfterAttackDuration);
+        ChangeState(State.Chase);
+    }
+
+    IEnumerator TransformState()
+    {
+        animator.SetBool("Move", false);
+        animator.SetTrigger("Transform");
+        yield return null;
+        float animationLength = animator.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(animationLength);
+        isPhase2 = true;
+        attackPower *= phase2AttackPowerMultiplier;
+        moveSpeed *= phase2MoveSpeedMultiplier;
+        attackCooldown *= phase2AttackCooldownMultiplier;
+        lastSummonTime = Time.time;
+        ChangeState(State.Chase);
+    }
+
+    IEnumerator SummonState()
+    {
+        animator.SetBool("Move", false);
+        lastSummonTime = Time.time;
+        animator.SetTrigger("Summon");
+        yield return new WaitForSeconds(1.0f);
+        foreach (Transform pos in summonPositions)
+        {
+            if (clonePrefab != null) Instantiate(clonePrefab, pos.position, pos.rotation);
+        }
+        yield return new WaitForSeconds(0.5f);
+        ChangeState(State.Wait);
+    }
+
+    IEnumerator DieState()
+    {
+        animator.SetBool("Move", false);
+        animator.SetTrigger("Die");
+        Destroy(gameObject, 2f);
+        yield return null;
+    }
+
+
+    void MoveTowardsPlayer()
+    {
+        if (player == null) return;
+        Vector2 dir = (player.position - transform.position).normalized;
+        transform.position += (Vector3)dir * moveSpeed * Time.deltaTime;
+        if (dir.x > 0)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+        else if (dir.x < 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+    }
+
+    public void OnMeleeAttackHit()
+    {
+        if (player != null && Vector2.Distance(transform.position, player.position) <= attackRange)
+        {
+            player.GetComponent<PlayerStats>()?.TakeDamage(attackPower);
+        }
     }
 }

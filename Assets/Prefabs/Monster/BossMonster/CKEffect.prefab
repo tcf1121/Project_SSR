@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3019482749762325312}
   - component: {fileID: 713005517842140024}
   m_Layer: 0
-  m_Name: CrystalKnightEffect
+  m_Name: CKEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

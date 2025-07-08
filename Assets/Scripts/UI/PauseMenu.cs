@@ -82,6 +82,7 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
+        SoundManager.Instance.PlaySFX("Click"); // 클릭 사운드 재생
         pauseMenuPanel.SetActive(true);
         Time.timeScale = 0f; // 게임 시간을 0으로 만들어 일시정지
         isPaused = true;
@@ -89,6 +90,7 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        SoundManager.Instance.PlaySFX("Click"); // 클릭 사운드 재생
         pauseMenuPanel.SetActive(false); // 메뉴 패널 비활성화
         Time.timeScale = 1f; // 게임 시간을 원래대로
         isPaused = false;
@@ -96,8 +98,10 @@ public class PauseMenu : MonoBehaviour
 
     public void GoToLobby()
     {
+        SoundManager.Instance.PlaySFX("Click"); // 클릭 사운드 재생
         Time.timeScale = 1f;
-        SceneManager.LoadScene("로비 씬 이름을 넣어야함");
+        //SceneManager.LoadScene("로비 씬 이름을 넣어야함"); 
+        GameManager.Instance.GameOver();
     }
 
     public void SetMasterVolume(float volume)
@@ -118,11 +122,15 @@ public class PauseMenu : MonoBehaviour
 
     public void OnClickGoToTitle() // "타이틀" 버튼 클릭시
     {
+        SoundManager.Instance.PlaySFX("Click"); // 클릭 사운드 재생
+        
         warningPopup.SetActive(true);
+
     }
 
     public void ConfirmGoToTitle() // 팝업에서 "예" 선택시
     {
+        SoundManager.Instance.PlaySFX("Click"); // 클릭 사운드 재생
         Time.timeScale = 1f;
         warningPopup.SetActive(false);
         pauseMenuPanel.SetActive(false);

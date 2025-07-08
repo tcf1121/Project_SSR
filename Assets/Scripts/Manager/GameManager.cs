@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
         SetSingleton();
         _stage = 1;
         _itemManager = GetComponent<ItemManager>();
+        
+
     }
     private void SetSingleton()
     {
@@ -71,14 +73,17 @@ public class GameManager : MonoBehaviour
 #endif
     }
 
+
     public void PauseMenu()
     {
         pauseMenu.PauseGame();
     }
 
-
     public void StartGame()
     {
+       
+        SoundManager.Instance.PlaySFX("Click");
+
         NextStage();
         GameObject PlayerGO = Instantiate(_playerPrefab);
         PlayerGO.transform.parent = this.transform;

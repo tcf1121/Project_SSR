@@ -202,7 +202,7 @@ MonoBehaviour:
     \uB3CC\uC544\uAC11\uB2C8\uB2E4.\n\n\n\n\n\n\n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 81e90034c40f2ef4daf62035f391faa4, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: f933bd8f26e35784ebefaadf8c26d355, type: 2}
+  m_sharedMaterial: {fileID: 790091814167191064, guid: 81e90034c40f2ef4daf62035f391faa4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -307,7 +307,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4532529421497184718
 RectTransform:
   m_ObjectHideFlags: 0

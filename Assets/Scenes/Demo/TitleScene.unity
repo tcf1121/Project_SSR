@@ -2020,6 +2020,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2263065238227689680, guid: 7547a22333a700d46aa65751a53e8716, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3798916165380660726, guid: 7547a22333a700d46aa65751a53e8716, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2077,3 +2081,5 @@ SceneRoots:
   - {fileID: 1027234082}
   - {fileID: 1876265487}
   - {fileID: 8984344595227015222}
+  - {fileID: 469238016}
+  - {fileID: 219775588}

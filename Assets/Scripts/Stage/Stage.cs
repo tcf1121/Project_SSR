@@ -14,12 +14,20 @@ public class Stage : MonoBehaviour
     [SerializeField] private AudioClip stage4;
 
 
-    private void Start()
+    private void OnEnable()
     {
-
-        // audioSource.clip = Selectauido(StageNum);
-        // audioSource.Play();
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        audioSource.clip = Selectauido(_stageNum);
+        
+        audioSource.Play();
     }
+
+
+
 
     AudioClip Selectauido(int number)
     {

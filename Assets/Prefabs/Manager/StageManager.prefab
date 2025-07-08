@@ -152,16 +152,7 @@ MonoBehaviour:
   Alive: 0
   _creadit: 0
   monsters:
-  - {fileID: 791453546196760718, guid: 4f5120156c5b9cd48899d51db0d7341c, type: 3}
   - {fileID: 7354574312957129920, guid: cef7275a3a4895b489e522d2083dedde, type: 3}
-  - {fileID: 3244448039656585745, guid: 076a8184c6000404d8f9b4c9b9985d55, type: 3}
-  - {fileID: 4508440944917376088, guid: 8c9c0e91c12ec8147ad1f1a9c94695e5, type: 3}
-  - {fileID: 4620529640536476045, guid: 4a00f3406d91a4f46817f8af2e6ac450, type: 3}
-  - {fileID: 4843681419477648835, guid: a1ce3608ae02f7149bf255ba8774fbea, type: 3}
-  - {fileID: 5806015760297862262, guid: 98c6a857d48ce6c44a19cf4d9ac6caa4, type: 3}
-  - {fileID: 5092664873903176952, guid: f81e7c85bc05dec45b967577d4360c3a, type: 3}
-  - {fileID: 6461290185162387325, guid: 8b60a5956ac3f5f4c999684a7ff32afa, type: 3}
-  - {fileID: 6314588065134394440, guid: 6b671e4329d426d4f9e890f98d010973, type: 3}
 --- !u!1 &3980820809779315763
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,6 +256,7 @@ GameObject:
   - component: {fileID: 978170570134272729}
   - component: {fileID: 6188266495006637393}
   - component: {fileID: 96942799368056190}
+  - component: {fileID: 8184544344109277937}
   m_Layer: 0
   m_Name: StageManager
   m_TagString: Untagged
@@ -323,19 +315,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mapLists:
-  - {fileID: 892661351868798771, guid: f29825d5d07250b48b5b46d2ee05e6b6, type: 3}
-  - {fileID: 8894005925830626686, guid: 8e57c0a25fd6e004aa6ef030262139ce, type: 3}
-  - {fileID: 3457879738680599334, guid: a0406dfbbe9737942bcf1bd8e336c185, type: 3}
-  - {fileID: 1988137510313101988, guid: ebce2060522cd3849ae8ad43c755798d, type: 3}
-  - {fileID: 5033356164225632655, guid: 71f354e51c4971641ba21e869d134841, type: 3}
-  - {fileID: 764964671155687377, guid: b4ecbd8ac958c7449b4051b11ff41969, type: 3}
-  - {fileID: 188611611168422265, guid: 10fbc57448a17c641ad03d6aaa6d877f, type: 3}
-  - {fileID: 1551059887427478987, guid: d983a824670013a47a2da0835f2a9c81, type: 3}
+  - {fileID: 4518416962479083804, guid: 571698d1ad2c34d46aa30af32dce6a2b, type: 3}
   _camera: {fileID: 0}
   _confiner: {fileID: 0}
   _itemSpawner: {fileID: 8658651099754444374}
   stageMap: {fileID: 0}
   dangerIndexManager: {fileID: 2737021908531165996}
+  stageBoss: {fileID: 8184544344109277937}
 --- !u!114 &96942799368056190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -381,6 +367,22 @@ MonoBehaviour:
     PoolCount: 1
     overlappingPrefab: {fileID: 3985796151101589788, guid: e6fc1d0f41be5c1419dfd87e59ee26eb, type: 3}
     container: {fileID: 7702345431664973117}
+--- !u!114 &8184544344109277937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5867768822643544186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 397535e76b641ac4991e479f35beb8b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BossPrefab:
+  - {fileID: 3165990421664879337, guid: 48a258eb8c8e6204aac2fb7b9506a37f, type: 3}
+  - {fileID: 1258477866283267251, guid: 6d549c5b5507f8447b74ca517bddc4df, type: 3}
+  - {fileID: 3951859377888011945, guid: 1e267c38368133b4190316f89c165a01, type: 3}
 --- !u!1 &7203758837766829466
 GameObject:
   m_ObjectHideFlags: 0
@@ -567,7 +569,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5057501581446469651, guid: 765659a05d0084c488f2b0c9d280ff2c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5494927959147247878, guid: 765659a05d0084c488f2b0c9d280ff2c, type: 3}
       propertyPath: overlappingPrefab.Array.size

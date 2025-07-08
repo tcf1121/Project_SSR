@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     private static StageManager _stageManager;
     public static ItemManager ItemManager { get => _itemManager; }
     private static ItemManager _itemManager;
+    [SerializeField] private DeadUi deadUi;
+    [SerializeField] private PauseMenu pauseMenu;
 
     private void Awake()
     {
@@ -56,7 +58,8 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        LoadingSceneManager.LoadScene(0);
+        deadUi.PlayerDead();
+
     }
 
     public void EndGame()
@@ -66,6 +69,11 @@ public class GameManager : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    public void PauseMenu()
+    {
+        pauseMenu.PauseGame();
     }
 
 
@@ -81,8 +89,8 @@ public class GameManager : MonoBehaviour
     public static void StageClear()
     {
         _stage++;
-        if (_stage > 1)
-            _stage = 1;
+        if (_stage > 4)
+            _stage = 4;
     }
 
     public static void SetStageManager(StageManager stageManager)

@@ -57,10 +57,12 @@ namespace Utill
                 if (hit.collider != null)
                 {
                     groundPos.y = hit.point.y + 0.5f;
-                    RaycastHit2D hitdouble = Physics2D.Raycast(groundPos, Vector2.down, 0.5f, layerMask);
+                    RaycastHit2D hitdouble = Physics2D.Raycast(groundPos, Vector2.down, 1f, layerMask);
                     if (hitdouble.collider != null)
-                        groundPos.y = hit.point.y;
-                    hitGround = true;
+                    {
+                        groundPos.y = hit.point.y + 0.25f;
+                        hitGround = true;
+                    }
                 }
                 if (time > 10)
                     break;

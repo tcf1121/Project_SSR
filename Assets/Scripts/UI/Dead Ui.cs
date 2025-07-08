@@ -12,31 +12,39 @@ public class DeadUi : MonoBehaviour
     public TMP_Text result;
     public void AnykeyGoToLobby()
     {
+        stopGamePanel.SetActive(false);
         Time.timeScale = 1f;
-        GameManager.Instance.GameOver();
+        LoadingSceneManager.LoadScene(0);
     }
 
     public void PlayerDead()
     {
+        SetResult();
         stopGamePanel.SetActive(true);
-        Time.timeScale = 0f; // 게임 시간을 0으로 만들어 일시정지
-        
+
+        StartCoroutine(timeCor()); // 게임 시간을 0으로 만들어 일시정지
+
     }
-    private void Start()
+
+    private IEnumerator timeCor()
     {
-        
+        float time = 1f;
+        while (time > 0)
+        {
+            time -= Time.deltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+        Time.timeScale = 0f;
     }
 
 
-
-
-    private void OnEnable()
+    private void SetResult()
     {
         int level = GameManager.Player.PlayerStats.Level;
         float danger = DangerIndexManager.Instance.GetDangerIndex();
         float money = GameManager.Player.PlayerStats.Money;
         float time = DangerIndexManager.Instance.GetCount();
 
-        result.text = string.Format($"Level :{level}\t\t Danger : {danger}\t\t Money : {money}\t\t Time : {time}");
+        result.text = string.Format($"레벨 :{level}\t\t 위험도 : {danger}\t\t 획득 골드 : {money}\t\t 플레이 타임 : {time}");
     }
 }

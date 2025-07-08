@@ -20,7 +20,6 @@ public class RangeAttackState : AttackState
 
     public void Enter()
     {
-        if (_monster.Brain.IsDead) return;
         if (_statData.hasIdleAnim)
             _monster.PlayAnim(AnimNames.Attack);
 
@@ -126,9 +125,5 @@ public class RangeAttackState : AttackState
         Vector3 sc = _monster.Transfrom.localScale;
         sc.x = Mathf.Abs(sc.x) * sign;
         _monster.Transfrom.localScale = sc;
-    }
-    public void CancelAttack()
-    {
-   
     }
 }

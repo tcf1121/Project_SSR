@@ -20,7 +20,6 @@ public class MonsterStats : MonoBehaviour
     [SerializeField] private int _exp;
     [SerializeField] private bool _isDead;
 
-
     public int MaxHP { get => _maxHP; }
     public int CurrentHP { get => _currentHP; }
     public int Damage { get => _damage; }

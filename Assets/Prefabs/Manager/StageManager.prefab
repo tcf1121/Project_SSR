@@ -265,6 +265,7 @@ GameObject:
   - component: {fileID: 978170570134272729}
   - component: {fileID: 6188266495006637393}
   - component: {fileID: 96942799368056190}
+  - component: {fileID: 8817842430611768858}
   m_Layer: 0
   m_Name: StageManager
   m_TagString: Untagged
@@ -325,17 +326,18 @@ MonoBehaviour:
   _mapLists:
   - {fileID: 892661351868798771, guid: f29825d5d07250b48b5b46d2ee05e6b6, type: 3}
   - {fileID: 8894005925830626686, guid: 8e57c0a25fd6e004aa6ef030262139ce, type: 3}
-  - {fileID: 3457879738680599334, guid: a0406dfbbe9737942bcf1bd8e336c185, type: 3}
-  - {fileID: 1988137510313101988, guid: ebce2060522cd3849ae8ad43c755798d, type: 3}
-  - {fileID: 5033356164225632655, guid: 71f354e51c4971641ba21e869d134841, type: 3}
-  - {fileID: 764964671155687377, guid: b4ecbd8ac958c7449b4051b11ff41969, type: 3}
-  - {fileID: 188611611168422265, guid: 10fbc57448a17c641ad03d6aaa6d877f, type: 3}
-  - {fileID: 1551059887427478987, guid: d983a824670013a47a2da0835f2a9c81, type: 3}
+  - {fileID: 3986992873557339169, guid: a0406dfbbe9737942bcf1bd8e336c185, type: 3}
+  - {fileID: 7584620868595688846, guid: 79f45c1d43769be4c91178f450fca097, type: 3}
+  - {fileID: 7211834284916677325, guid: deda262d5b46bbf4ebd3836645af2c38, type: 3}
+  - {fileID: 6661873837702847208, guid: bf954bb0a48dfc44ba2b141d0b497f22, type: 3}
+  - {fileID: 3339658598083214891, guid: 10fbc57448a17c641ad03d6aaa6d877f, type: 3}
+  - {fileID: 8631251671859111773, guid: ab3bff3a3cef06e4d9cfc3aefb07ae0b, type: 3}
   _camera: {fileID: 0}
   _confiner: {fileID: 0}
   _itemSpawner: {fileID: 8658651099754444374}
   stageMap: {fileID: 0}
   dangerIndexManager: {fileID: 2737021908531165996}
+  _bossSpawner: {fileID: 8817842430611768858}
 --- !u!114 &96942799368056190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -381,6 +383,21 @@ MonoBehaviour:
     PoolCount: 1
     overlappingPrefab: {fileID: 3985796151101589788, guid: e6fc1d0f41be5c1419dfd87e59ee26eb, type: 3}
     container: {fileID: 7702345431664973117}
+--- !u!114 &8817842430611768858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5867768822643544186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a393b70931885a4499e87810b4763e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossPrefab:
+  - {fileID: 3165990421664879337, guid: 48a258eb8c8e6204aac2fb7b9506a37f, type: 3}
+  - {fileID: 1258477866283267251, guid: 6d549c5b5507f8447b74ca517bddc4df, type: 3}
 --- !u!1 &7203758837766829466
 GameObject:
   m_ObjectHideFlags: 0

@@ -81,8 +81,8 @@ public class GameManager : MonoBehaviour
     public static void StageClear()
     {
         _stage++;
-        if (_stage > 1)
-            _stage = 1;
+        if (_stage > 4)
+            _stage = 4;
     }
 
     public static void SetStageManager(StageManager stageManager)

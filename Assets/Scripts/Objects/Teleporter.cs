@@ -8,7 +8,8 @@ public class Teleporter : MonoBehaviour
     [SerializeField] private GameObject bossPrefab; // 보스 프리팹
     [SerializeField] Transform bossSpawnPoint; // 보스 스폰 위치
     [SerializeField] private float eventDuration = 90f; // 이벤트 지속 시간
-
+   
+    
 
     private bool isEventStart = false; // 이벤트 시작 여부
     private bool isTimerFinished = false; // 90초 타이머가 끝났는지
@@ -21,6 +22,7 @@ public class Teleporter : MonoBehaviour
     private UnityAction isDie;
     private UnityAction isClear;
     private BoxCollider2D _collider;
+
     [SerializeField] private Animator _animator;
 
     private void Awake()
@@ -30,6 +32,8 @@ public class Teleporter : MonoBehaviour
             bossSpawnPoint = this.transform;
         }
         _collider = GetComponent<BoxCollider2D>();
+        
+
         isDie += KillBoss;
         isClear += CheckClear;
     }
@@ -53,6 +57,7 @@ public class Teleporter : MonoBehaviour
 
         else if (isTeleporterActivated)
         {
+            SoundManager.Instance.PlaySFX("Teleport_move_02");
             LoadNextScene();
         }
     }
@@ -99,6 +104,7 @@ public class Teleporter : MonoBehaviour
     {
         if (bossPrefab != null)
         {
+            SoundManager.Instance.PlaySFX("Boss_appearance_warning"); // 보스 소환 사운드 재생
             // 보스 스폰위치가 설정되어 있으면 해당 위치에 소환 아니면 텔레포터 위치에 소환
             Vector3 spawnPos = (bossSpawnPoint != null) ? bossSpawnPoint.position : transform.position;
             currentBoss = Instantiate(bossPrefab, spawnPos, Quaternion.identity);

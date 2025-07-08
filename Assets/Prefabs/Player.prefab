@@ -461,6 +461,7 @@ MonoBehaviour:
     Speed: 0
     Jump: 0
   DieClip: {fileID: 8300000, guid: 74e9e630d6f3be543b420c553a45f4bc, type: 3}
+  LevelUpClip: {fileID: 8300000, guid: c0030cce64f1a3d459a60f577c62157e, type: 3}
 --- !u!114 &5349406287190802432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1292,7 +1293,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1656097421859354425, guid: 52604541fb57c2a4594321a94cbe1d62, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 72.81
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1656097421859354425, guid: 52604541fb57c2a4594321a94cbe1d62, type: 3}
       propertyPath: m_AnchoredPosition.x

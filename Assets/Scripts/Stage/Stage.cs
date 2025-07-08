@@ -17,17 +17,17 @@ public class Stage : MonoBehaviour
     private void Start()
     {
 
-        audioSource.clip = Selectauido(StageNum);
-        audioSource.Play();
+        // audioSource.clip = Selectauido(StageNum);
+        // audioSource.Play();
     }
 
     AudioClip Selectauido(int number)
     {
-        if(number == 1) return stage1;
-        else if(number == 2) return stage2;
-        else if(number == 3) return stage3;
+        if (number == 1) return stage1;
+        else if (number == 2) return stage2;
+        else if (number == 3) return stage3;
         else return stage4;
-        
+
     }
 }
 

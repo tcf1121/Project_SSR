@@ -167,7 +167,7 @@ GameObject:
   - component: {fileID: 8091736925305925873}
   m_Layer: 14
   m_Name: Teleport
-  m_TagString: Untagged
+  m_TagString: Teleport
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -346,7 +346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bossSpawnPoint: {fileID: 0}
-  eventDuration: 90
+  eventDuration: 10
   _animator: {fileID: 5554068923174692671}
   _TimeLeftUI: {fileID: 8767928003596807714}
   _timeFill: {fileID: 5372905903859819638}

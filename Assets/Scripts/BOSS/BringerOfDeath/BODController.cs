@@ -219,12 +219,13 @@ public class BODController : MonoBehaviour
 
         currentHP -= damage;
         fillHP.fillAmount = currentHP / maxHP;
-        animator.SetTrigger("hurt");
-
         if (currentHP <= 0)
         {
             Die();
         }
+        animator.SetTrigger("hurt");
+
+
     }
 
     void Die()
@@ -234,6 +235,7 @@ public class BODController : MonoBehaviour
         animator.SetTrigger("death");
         rb.velocity = Vector2.zero;
         GetComponent<Collider2D>().enabled = false; // 보스가 죽으면 콜라이더 끄기
+        GameObject.FindWithTag("Teleport").GetComponent<Teleporter>().IsDie?.Invoke();
         Destroy(gameObject, 3f);
     }
 

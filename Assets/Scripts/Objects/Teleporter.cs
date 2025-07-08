@@ -74,7 +74,7 @@ public class Teleporter : MonoBehaviour
 
     }
 
-    private void KillBoss()
+    public void KillBoss()
     {
         isBossDied = true;
         _animator.SetTrigger("KillBoss");
@@ -99,12 +99,20 @@ public class Teleporter : MonoBehaviour
 
     private void SpawnBoss()
     {
-        // if (bossPrefab != null)
-        // {
-        //     // 보스 스폰위치가 설정되어 있으면 해당 위치에 소환 아니면 텔레포터 위치에 소환
-        //     Vector3 spawnPos = (bossSpawnPoint != null) ? bossSpawnPoint.position : transform.position;
-        //     currentBoss = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
-        // }
+        GameObject Boss = GameManager.StageManager.StageBoss.GetStageBoss();
+        if (Boss != null)
+        {
+            // 보스 스폰위치가 설정되어 있으면 해당 위치에 소환 아니면 텔레포터 위치에 소환
+            Vector3 spawnPos = (bossSpawnPoint != null) ? bossSpawnPoint.position : transform.position;
+            currentBoss = Instantiate(Boss, spawnPos, Quaternion.identity);
+        }
+        else
+        {
+            isTimerFinished = true;
+            isBossDied = true;
+            CheckClear();
+        }
+
     }
 
     private IEnumerator EventTimerRoutine()

@@ -12,8 +12,8 @@ public class DeadUi : MonoBehaviour
     public TMP_Text result;
     public void AnykeyGoToLobby()
     {
-        stopGamePanel.SetActive(false);
         Time.timeScale = 1f;
+        stopGamePanel.SetActive(false);
         LoadingSceneManager.LoadScene(0);
     }
 

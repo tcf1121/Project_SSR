@@ -14,12 +14,21 @@ public class DeadState : IState
 
     public void Enter()
     {
+        if (_monster.AudioSource != null && _monster.deathSoundClip != null)
+        {
+            _monster.AudioSource.PlayOneShot(_monster.deathSoundClip);
+        }
         _monster.Death();
     }
 
     public void Tick() { }
 
-    public void Exit() { }
+    public void Exit() 
+    {
+        _monster.Brain.SetIsDead(false);
+       
+
+    }
 
 
 }

@@ -1,4 +1,3 @@
-
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +7,7 @@ using UnityEngine.UI;
 public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
 {
     [SerializeField] private Monster _monster;
+    public bool IsDead { get; private set; }
     public Monster Monster { get => _monster; }
 
     public Vector2 LastGroundCheckPos => jumper.LastGroundCheckPos;
@@ -38,6 +38,7 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
     #region Ladder
     private IMonsterClimber climber;
     public IMonsterClimber Climber => climber;
+
     #endregion
 
     // 낙하 데미지 관련 변수
@@ -74,8 +75,8 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
         // 사다리 시스템 인터페이스 연결
         if (StatData.enableLadderClimb)
         {
-            // 사다리 기능이 있으면, 실제 LadderClimber를 생성
             climber = new LadderClimber();
+            climber.Init(_monster.Brain);
         }
         else
         {
@@ -95,7 +96,7 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
         IState floatChaseState = new FloatChaseState(_monster);
 
 
-        stateMachine = new StateMachine();
+        stateMachine = new StateMachine(_monster);
         stateMachine.Register(StateID.Idle, idle);
         stateMachine.Register(StateID.Patrol, patrol);
         stateMachine.Register(StateID.Chase, normalChase);
@@ -115,14 +116,38 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
     {
         jumper?.UpdateTimer(Time.fixedDeltaTime);
         stateMachine?.Tick();
-
         // --- 낙하 데미지 감지 및 적용 ---
         HandleFallDamage();
+    }
+    public void SetIsDead(bool deadStatus)
+    {
+        IsDead = deadStatus;
+        // 몬스터가 죽었을 때 Rigidbody2D 물리력을 정지
+        if (deadStatus)
+        {
+            if (_monster.Rigid != null)
+            {
+                _monster.Rigid.velocity = Vector2.zero;
+                _monster.Rigid.isKinematic = true; // 죽으면 물리 영향을 안 받도록
+            }
+            if (_monster.HitBox != null) _monster.HitBox.enabled = false;
+            if (_monster.AttackBoxCol != null) _monster.AttackBoxCol.enabled = false;
+        }
+        else // 다시 활성화될 때
+        {
+            if (_monster.Rigid != null)
+            {
+                _monster.Rigid.isKinematic = false; // 다시 물리 영향을 받도록
+            }
+            if (_monster.HitBox != null) _monster.HitBox.enabled = true;
+            if (_monster.AttackBoxCol != null) _monster.AttackBoxCol.enabled = false;
+        }
     }
 
     public void ChangeState(StateID id)
     {
         if (stateMachine == null) return;
+        if (IsDead && id != StateID.Dead) return;
 
         bool usePatrolFlag = StatData != null ? StatData.usePatrol
                                              : (_monster.MonsterStats != null && _monster.MonsterStats.UsePatrol);
@@ -135,6 +160,7 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
 
     public void EnterDamageState(int damage)
     {
+        attack.CancelAttack();
         takeDamage.SetDamage(damage);
         stateMachine.Register(StateID.TakeDamage, takeDamage);
         stateMachine.ChangeState(StateID.TakeDamage);
@@ -191,12 +217,19 @@ public partial class MonsterBrain : MonoBehaviour, IMonsterJumper
 
     public void Attack()
     {
+        if (_monster.Brain.StateMachine.CurrentStateID != StateID.Attack)
+            return;
+        if (_monster.AudioSource != null && _monster.AttackSoundClip != null)
+        {
+            _monster.AudioSource.PlayOneShot(_monster.AttackSoundClip);
+        }
         attack.Attack();
     }
 
     public void FinishAttack()
     {
-        attack.FinishAttack();
+        if (_monster.Brain.StateMachine.CurrentStateID != StateID.Attack)
+            attack.FinishAttack();
     }
 
 }

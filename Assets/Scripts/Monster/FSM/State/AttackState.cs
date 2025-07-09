@@ -6,4 +6,6 @@ public interface AttackState : IState
 {
     void Attack();
     void FinishAttack();
+
+    void CancelAttack();
 }

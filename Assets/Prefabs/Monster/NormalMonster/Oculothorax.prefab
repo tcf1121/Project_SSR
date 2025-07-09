@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 9194826378569386092}
   - component: {fileID: 7929684807927383348}
   - component: {fileID: 7371404042282487334}
+  - component: {fileID: 6742932843859019840}
   m_Layer: 12
   m_Name: Oculothorax
   m_TagString: Monster
@@ -131,6 +132,9 @@ MonoBehaviour:
   _transfrom: {fileID: 285229468927482884}
   _hpBar: {fileID: 647853863683627207}
   _hpBarFill: {fileID: 4929562378133731345}
+  _audioSource: {fileID: 6742932843859019840}
+  _attackSoundClip: {fileID: 8300000, guid: 8422302b3d53cbe48af90e1c376eef3f, type: 3}
+  deathSoundClip: {fileID: 8300000, guid: ea481b3f50f90c044b0802e83a334e35, type: 3}
 --- !u!114 &2195055762248198624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,6 +148,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monster: {fileID: 6461290185162387325}
+  _minFallDistanceForDamage: 3
+  _baseFallDamage: 10
+  _damageMultiplierPerMeter: 5
 --- !u!114 &8915342835581327519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,6 +175,7 @@ MonoBehaviour:
   _usePatrol: 0
   _gold: 0
   _exp: 0
+  _isDead: 0
 --- !u!114 &6971999322390742240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,6 +307,102 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.3, y: 0.3}
   m_EdgeRadius: 0
+--- !u!82 &6742932843859019840
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4638884299391897615}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &5812151063868684332
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,6 +555,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 365e7b9b85ce68f4a8d8de3d9331d54e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _damage: 0
 --- !u!1 &9054487725784699257
 GameObject:
   m_ObjectHideFlags: 0

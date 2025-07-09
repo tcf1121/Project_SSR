@@ -126,4 +126,10 @@ public class RangeAttackState : AttackState
         sc.x = Mathf.Abs(sc.x) * sign;
         _monster.Transfrom.localScale = sc;
     }
+
+    public void CancelAttack()
+    {
+
+    }
+
 }

@@ -15,6 +15,7 @@ public class IdleState : IState
     public void Enter()
     {
         _monster.Rigid.velocity = Vector2.zero;
+        _monster.MonsterStats.enabled = true;
 
         if (_monster.Brain.StatData.hasIdleAnim)
             _monster.PlayAnim(AnimNames.Idle);
@@ -22,7 +23,10 @@ public class IdleState : IState
     public void Tick()
     {
         if (_statData == null) return;             // 안전 방어
-
+        if(_monster.Brain.IsDead)
+        {
+            _monster.Brain.SetIsDead(false);
+        }
 
         /* ── 순찰 플래그가 켜져 있으면 즉시 Patrol ── */
         if (_statData.usePatrol)

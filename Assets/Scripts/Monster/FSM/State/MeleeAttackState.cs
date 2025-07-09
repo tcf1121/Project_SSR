@@ -93,4 +93,10 @@ public class MeleeAttackState : AttackState
     // Animation Event
     public void Attack() => _attackBox.enabled = true;
     public void FinishAttack() => _attackBox.enabled = false;
+
+    public void CancelAttack()
+    {
+        isAttacking = false;
+        _attackBox.enabled = false;    // 어떤 프레임이 오더라도 타격 박스 OFF
+    }
 }

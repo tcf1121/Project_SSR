@@ -22,20 +22,20 @@ MonoBehaviour:
       m_Bits: 2048
     wallMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 8192
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 80
-    damage: 12
-    moveSpeed: 2
+    damage: 6
+    moveSpeed: 9
     rushMultiplier: 0
     maxClimbableHeight: 4
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 1
-    chaseRange: 3
+    patrolRange: 7
+    chaseRange: 12
     attackRange: 0.3
     chargeRange: 0
     enableJump: 1
@@ -83,20 +83,20 @@ MonoBehaviour:
       m_Bits: 2048
     wallMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 8192
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 60
-    damage: 10
-    moveSpeed: 0.5
-    rushMultiplier: 2
+    damage: 5
+    moveSpeed: 7
+    rushMultiplier: 1.5
     maxClimbableHeight: 2
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 6
-    chaseRange: 12
+    patrolRange: 5
+    chaseRange: 7
     attackRange: 0.3
     chargeRange: 2.5
     enableJump: 0
@@ -144,20 +144,20 @@ MonoBehaviour:
       m_Bits: 2048
     wallMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 8192
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
-    maxHP: 100
-    damage: 10
-    moveSpeed: 2
+    maxHP: 120
+    damage: 7
+    moveSpeed: 6
     rushMultiplier: 2
     maxClimbableHeight: 2
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 2
-    chaseRange: 4
+    patrolRange: 4
+    chaseRange: 30
     attackRange: 0.5
     chargeRange: 0
     enableJump: 1
@@ -188,8 +188,8 @@ MonoBehaviour:
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 0.35
     climbSpeed: 3
-    expReward: 10
-    goldReward: 5
+    expReward: 0
+    goldReward: 0
     rewardCoefficient: 1
     hasIdleAnim: 1
     hasWalkAnim: 1
@@ -205,22 +205,22 @@ MonoBehaviour:
       m_Bits: 2048
     wallMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 8192
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
     maxHP: 100
     damage: 10
-    moveSpeed: 1
+    moveSpeed: 4
     rushMultiplier: 2
     maxClimbableHeight: 3
     staggerThreshold: 15
     knockbackForce: 1
     knockbackDuration: 0.07
-    patrolRange: 3
-    chaseRange: 4
+    patrolRange: 4
+    chaseRange: 7
     attackRange: 0.3
-    chargeRange: 1.68
+    chargeRange: 0
     enableJump: 1
     jumpHorizontalFactor: 0.303
     jumpForce: 4
@@ -272,14 +272,14 @@ MonoBehaviour:
       m_Bits: 64
     maxHP: 100
     damage: 10
-    moveSpeed: 1.5
+    moveSpeed: 8
     rushMultiplier: 0
     maxClimbableHeight: 2
     staggerThreshold: 15
     knockbackForce: 1
     knockbackDuration: 0.07
     patrolRange: 4
-    chaseRange: 6
+    chaseRange: 7
     attackRange: 0.7
     chargeRange: 0
     enableJump: 1
@@ -310,8 +310,8 @@ MonoBehaviour:
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 1
     climbSpeed: 1
-    expReward: 10
-    goldReward: 5
+    expReward: 20
+    goldReward: 20
     rewardCoefficient: 1
     hasIdleAnim: 1
     hasWalkAnim: 1
@@ -327,22 +327,22 @@ MonoBehaviour:
       m_Bits: 2048
     wallMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 8192
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
-    maxHP: 100
-    damage: 10
+    maxHP: 40
+    damage: 4
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 2
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 8
-    chaseRange: 9
-    attackRange: 6
-    chargeRange: 4
+    patrolRange: 4
+    chaseRange: 6
+    attackRange: 2
+    chargeRange: 0
     enableJump: 0
     jumpHorizontalFactor: 0.6
     jumpForce: 2
@@ -352,11 +352,11 @@ MonoBehaviour:
     groundCheckRadius: 0.12
     usePatrol: 1
     idleMode: 0
-    rangedCooldown: 3
+    rangedCooldown: 5
     projectileprefab: {fileID: -4595588588518355158, guid: 6d727b2ffdf049d40b7b74472effffbf, type: 3}
     readyRange: 10
-    projectileSpeed: 2
-    projectileLife: 3
+    projectileSpeed: 1.5
+    projectileLife: 1.5
     firePattern: 1
     pelletCount: 3
     spreadAngle: 30
@@ -371,8 +371,8 @@ MonoBehaviour:
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 0.35
     climbSpeed: 3
-    expReward: 10
-    goldReward: 5
+    expReward: 5
+    goldReward: 2
     rewardCoefficient: 1
     hasIdleAnim: 1
     hasWalkAnim: 1
@@ -388,22 +388,22 @@ MonoBehaviour:
       m_Bits: 2048
     wallMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 8192
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
-    maxHP: 100
-    damage: 10
-    moveSpeed: 2
+    maxHP: 60
+    damage: 5
+    moveSpeed: 4
     rushMultiplier: 1.5
     maxClimbableHeight: 2
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 8
-    chaseRange: 10
-    attackRange: 6
-    chargeRange: 2.5
+    patrolRange: 5
+    chaseRange: 7
+    attackRange: 3
+    chargeRange: 0
     enableJump: 0
     jumpHorizontalFactor: 0.6
     jumpForce: 4
@@ -413,13 +413,13 @@ MonoBehaviour:
     groundCheckRadius: 0.12
     usePatrol: 1
     idleMode: 0
-    rangedCooldown: 2
+    rangedCooldown: 5
     projectileprefab: {fileID: 1941247834333990247, guid: c7d6d6b83b9fcf34bb19b50bd379aa35, type: 3}
     readyRange: 11
-    projectileSpeed: 2
-    projectileLife: 3
+    projectileSpeed: 1.5
+    projectileLife: 1.8
     firePattern: 0
-    pelletCount: 5
+    pelletCount: 1
     spreadAngle: 60
     meleeCooldown: 0.6
     attackAnimationTotalDuration: 0.6
@@ -432,8 +432,8 @@ MonoBehaviour:
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 0.35
     climbSpeed: 3
-    expReward: 10
-    goldReward: 5
+    expReward: 8
+    goldReward: 4
     rewardCoefficient: 1
     hasIdleAnim: 1
     hasWalkAnim: 1
@@ -453,18 +453,18 @@ MonoBehaviour:
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
-    maxHP: 100
-    damage: 10
-    moveSpeed: 2
-    rushMultiplier: 1.5
+    maxHP: 60
+    damage: 4
+    moveSpeed: 5
+    rushMultiplier: 2
     maxClimbableHeight: 2
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 10
-    chaseRange: 10
+    patrolRange: 20
+    chaseRange: 30
     attackRange: 0.2
-    chargeRange: 2.5
+    chargeRange: 3
     enableJump: 0
     jumpHorizontalFactor: 0.6
     jumpForce: 4
@@ -493,8 +493,8 @@ MonoBehaviour:
     ladderForwardOffset: {x: 0.15, y: 0}
     ladderDetectRadius: 0.35
     climbSpeed: 3
-    expReward: 10
-    goldReward: 5
+    expReward: 5
+    goldReward: 2
     rewardCoefficient: 1
     hasIdleAnim: 1
     hasWalkAnim: 1
@@ -514,8 +514,8 @@ MonoBehaviour:
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
-    maxHP: 100
-    damage: 10
+    maxHP: 50
+    damage: 8
     moveSpeed: 2
     rushMultiplier: 1.5
     maxClimbableHeight: 2
@@ -575,17 +575,17 @@ MonoBehaviour:
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
-    maxHP: 100
-    damage: 10
-    moveSpeed: 2
-    rushMultiplier: 4
+    maxHP: 60
+    damage: 7
+    moveSpeed: 3
+    rushMultiplier: 0
     maxClimbableHeight: 2
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 6
+    patrolRange: 5
     chaseRange: 9
-    attackRange: 8
+    attackRange: 4
     chargeRange: 0
     enableJump: 1
     jumpHorizontalFactor: 0.777
@@ -596,13 +596,13 @@ MonoBehaviour:
     groundCheckRadius: 0.34
     usePatrol: 1
     idleMode: 0
-    rangedCooldown: 2
+    rangedCooldown: 4
     projectileprefab: {fileID: 5756601596482412224, guid: 914b883013a6c6a49a499a2a69aee692, type: 3}
     readyRange: 10
-    projectileSpeed: 3
-    projectileLife: 3
+    projectileSpeed: 1.5
+    projectileLife: 2
     firePattern: 0
-    pelletCount: 3
+    pelletCount: 0
     spreadAngle: 127
     meleeCooldown: 0.6
     attackAnimationTotalDuration: 0.6
@@ -636,18 +636,18 @@ MonoBehaviour:
     playerLayer:
       serializedVersion: 2
       m_Bits: 64
-    maxHP: 100
-    damage: 10
-    moveSpeed: 1
+    maxHP: 80
+    damage: 4
+    moveSpeed: 6
     rushMultiplier: 2
     maxClimbableHeight: 2
     staggerThreshold: 15
     knockbackForce: 3
     knockbackDuration: 0.07
-    patrolRange: 7
-    chaseRange: 10
+    patrolRange: 20
+    chaseRange: 30
     attackRange: 0.3
-    chargeRange: 0
+    chargeRange: 4
     enableJump: 0
     jumpHorizontalFactor: 0.6
     jumpForce: 4

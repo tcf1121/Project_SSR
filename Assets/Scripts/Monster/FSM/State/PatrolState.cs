@@ -149,7 +149,7 @@ public class PatrolState : IState
         if (_statData.enableLadderClimb && _monster.PlayerInRange(_statData.patrolRange))
         {
             if (_monster.Target != null)
-                _monster.Brain.Climber?.TryFindAndClimb(dir);
+                _monster.Brain.Climber?.TryFindAndClimb(dir, _monster.Target.position);
         }
     }
 

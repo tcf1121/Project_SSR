@@ -14,10 +14,10 @@ public struct Stats
     public void BaseStats()
     {
         MaxHp = 100f;
-        Atk = 10f;
+        Atk = 20f;
         HpRegen = 0.2f;
         Speed = 7f;
-        Jump = 1f;
+        Jump = 5f;
     }
 
     public void ResetStats()
@@ -77,7 +77,7 @@ public struct Stats
 public class PlayerStats : MonoBehaviour
 {
     private Player player;
-    
+
 
     [Header("케릭터 기본 정보")] // 후에 프라이빗으로 변경
     [SerializeField] private int _level = 1;

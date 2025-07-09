@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class CrystalKnightController : MonoBehaviour
 {
@@ -46,6 +47,8 @@ public class CrystalKnightController : MonoBehaviour
     [Header("패턴 설정")]
     public float prepareAttackDuration = 0.5f;
     public float waitAfterAttackDuration = 1.0f;
+    [SerializeField] private GameObject hpUI;
+    [SerializeField] private Image fillHP;
 
     void Awake()
     {
@@ -84,6 +87,7 @@ public class CrystalKnightController : MonoBehaviour
     {
         if (currentState == State.Die || currentState == State.Transform) return;
         currentHP -= damage;
+        fillHP.fillAmount = currentHP / maxHP;
         if (!isPhase2 && currentHP / maxHP <= 0.4f)
         {
             ChangeState(State.Transform);
@@ -236,6 +240,7 @@ public class CrystalKnightController : MonoBehaviour
 
     IEnumerator DieState()
     {
+        hpUI.SetActive(false);
         animator.SetBool("Move", false);
         animator.SetTrigger("Die");
         Destroy(gameObject, 2f);

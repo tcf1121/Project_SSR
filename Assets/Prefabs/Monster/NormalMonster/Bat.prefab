@@ -148,7 +148,7 @@ MonoBehaviour:
   _monsterType: 2
   _monsterSpecies: 7
   _allMonsterStatData: {fileID: 11400000, guid: 5d1a1762b5e86fa4b96a7ebafe528dcb, type: 2}
-  _creadit: 1
+  _creadit: 5
   _monsterBrain: {fileID: 7165791748911689024}
   _monsterStats: {fileID: 227645487992305897}
   _sprite: {fileID: 7015042846525706413}
@@ -176,6 +176,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _monster: {fileID: 791453546196760718}
+  _minFallDistanceForDamage: 3
+  _baseFallDamage: 10
+  _damageMultiplierPerMeter: 5
 --- !u!114 &227645487992305897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,6 +203,7 @@ MonoBehaviour:
   _usePatrol: 0
   _gold: 0
   _exp: 0
+  _isDead: 0
 --- !u!114 &8233406238580421000
 MonoBehaviour:
   m_ObjectHideFlags: 0

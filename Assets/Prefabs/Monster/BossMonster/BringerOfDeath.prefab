@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -7096614236042888529}
   - component: {fileID: 6358297965551723835}
   - component: {fileID: 2398978262259095590}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: BringerOfDeath
   m_TagString: Boss
   m_Icon: {fileID: 0}
@@ -224,9 +224,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5792269148908069863}
     m_Modifications:
+    - target: {fileID: 1347602137642223065, guid: 5d528199141e1c646a19a05f14c9c6ac, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2084914537295751139, guid: 5d528199141e1c646a19a05f14c9c6ac, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 5232001819699434087, guid: 5d528199141e1c646a19a05f14c9c6ac, type: 3}
       propertyPath: m_Name
       value: HPUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232001819699434087, guid: 5d528199141e1c646a19a05f14c9c6ac, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7754928412342803055, guid: 5d528199141e1c646a19a05f14c9c6ac, type: 3}
       propertyPath: m_Pivot.x
